@@ -1,0 +1,64 @@
+{
+  "name": "pip-webui-test",
+  "version": "1.0.1",
+  "author": "Digital Living Software Corp. <www.digitallivingsoftware.com>",
+  "description": "Test framework for Pip.WebUI",
+  "contributors": [
+    {
+      "name": "Sergey Seroukhov",
+      "email": "seroukhov@gmail.com"
+    },
+    {
+      "name": "Anastas Fonotov",
+      "email": "anastasf@gmail.com"
+    }
+  ],
+  "keywords": [
+    "pip",
+    "webui",
+    "framework",
+    "test"
+  ],
+  "noAnalyze": true,
+  "license": "Commercial",
+  "private": true,
+  "scripts": {
+    "build": "gulp build",
+    "jshint": "gulp jshint",
+    "test": "mocha -t 5000 -R spec --recursive ./test"
+  },
+  "dependencies": {
+    "pip-webui-lib": "git+ssh://git@github.com:pip-webui/pip-webui-lib.git"
+  },
+  "devDependencies": {
+    "angular-mocks": "*",
+    "karma": "*",
+    "karma-chrome-launcher": "*",
+    "karma-phantomjs-launcher": "*",
+    "karma-mocha": "*",
+    "karma-chai": "*",
+    "karma-sinon": "*",
+    "jshint": "*",
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-less": "*",
+    "gulp-rename": "*",
+    "gulp-clean-css": "*",
+    "gulp-uglify": "*",
+    "gulp-minify-html": "*",
+    "gulp-minify-css": "*",
+    "gulp-ng-annotate": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-ng-html2js": "*",
+    "gulp-merge": "*",
+    "gulp-typescript": "*",
+    "gulp-jshint": "*",
+    "gulp-replace": "*",
+    "gulp-add-src": "*",
+    "gulp-webserver": "*",
+    "gulp-awspublish": "*",
+    "event-stream": "*",
+    "concurrent-transform": "*",
+    "del": "*"
+  }
+}
