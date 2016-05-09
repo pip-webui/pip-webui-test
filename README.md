@@ -1,4 +1,4 @@
-# Pip.WebUI Test Framework [(http://git.pipdevs.com/pip-webui/pip-webui-test)](http://git.pipdevs.com/pip-webui/pip-webui-test)
+# Pip.WebUI Test Framework [(http://github.com/pip-webui/pip-webui-test)](http://github.com/pip-webui/pip-webui-test)
 
 Test Framework 
 
@@ -83,9 +83,9 @@ Change to your project's root directory.
 
 ```bash
 # To install only core services with dependencies.
-npm install git+ssh://git@git.pipdevs.com:pip-webui/pip-webui-lib.git
-npm install git+ssh://git@git.pipdevs.com:pip-webui/pip-webui-test.git
+npm install git+ssh://git@github.com:pip-webui/pip-webui-lib.git
+npm install git+ssh://git@github.com:pip-webui/pip-webui-test.git
 
 # To install the entire pip-webui library
-npm install git+ssh://git@git.pipdevs.com:pip-webui/pip-webui.git
+npm install git+ssh://git@github.com:pip-webui/pip-webui.git
 ```
