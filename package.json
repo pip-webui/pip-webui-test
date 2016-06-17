@@ -25,7 +25,7 @@
   "scripts": {
     "build": "gulp build",
     "jshint": "gulp jshint",
-    "test": "mocha -t 5000 -R spec --recursive ./test"
+    "samples": "gulp launch"
   },
   "dependencies": {
     "pip-webui-lib": "git+ssh://git@github.com:pip-webui/pip-webui-lib.git"
