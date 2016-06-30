@@ -3,8 +3,6 @@
  * @copyright Digital Living Software Corp. 2014-2015
  */
 
-/* global angular */
-
 (function () {
     'use strict';
 
@@ -15,10 +13,6 @@
         'pipTest.UserParty',
         'pipTest.General',
         'pipTest.Content'
-
-
     ]);
 
 })();
-
-
