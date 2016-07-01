@@ -288,7 +288,7 @@
  * @copyright Digital Living Software Corp. 2014-2015
  */
 
-(function (angular, _, chance) {
+(function (_, chance) {
     'use strict';
 
     var thisModule = angular.module('pipTest.Entity', ['pipTest.DataSet', 'pipTest.General']);
@@ -436,16 +436,40 @@
             return collection;
         }
 
+        // function getTags() {
+            // {
+            //    'party_id': '55f1ee67880929ec46ec394c',
+            //    'tags': [
+            //    {
+            //        'tag': 'first tag',
+            //        'used': '2015-11-19T14:45:57.901Z',
+            //        'count': 39
+            //    },
+            //    {
+            //        'tag': '6',
+            //        'used': '2015-09-16T12:08:11.316Z',
+            //        'count': 1
+            //    },
+            //    {
+            //        'tag': 'yyyyyyyyyyyyyyy',
+            //        'used': '2015-09-24T16:20:09.244Z',
+            //        'count': 4
+            //    }
+            // ],
+            //    'id': '55f5edcf8175ba46db9dec74'
+            // }
+        // }
+
     }]);
 
-})(window.angular, window._, window.chance);
+})(window._, window.chance);
 
 /**
  * @file Service provide utils
  * @copyright Digital Living Software Corp. 2014-2015
  */
 
-(function (angular, _, chance) {
+(function (_, chance) {
     'use strict';
 
     var thisModule = angular.module('pipTest.General', ['pipTest.DataSet']);
@@ -482,7 +506,7 @@
 
     }]);
 
-})(window.angular, window._, window.chance);
+})(window._, window.chance);
 
 /**
  * @file Registration of WebUI tests
