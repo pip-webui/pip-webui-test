@@ -1,25 +1,88 @@
-/* global angular */
-
-(function () {
+(function (chance) {
     'use strict';
 
     var thisModule = angular.module('appTestServices',
         [
             // 3rd Party Modules
             'ui.router', 'ui.utils', 'ngResource', 'ngAria', 'ngCookies', 'ngSanitize', 'ngMessages',
-            'ngMaterial', 'wu.masonry', 'LocalStorageModule', 'angularFileUpload', 'ngAnimate', 'ngTouch',
-            'pipWebuiTests'
+            'ngMaterial', 'wu.masonry', 'LocalStorageModule', 'angularFileUpload', 'ngAnimate',
+            'pipWebuiTests', 'pipLayout', 'pipCore', 'pipRest.State', 'pipNav'
         ]
     );
 
-    thisModule.controller('AppController', 
-        function ($scope, $rootScope, pipTestGeneral, pipTestDataSet, pipTestContent, pipTestUserParty) {
+    thisModule.config(function (pipStateProvider, $urlRouterProvider) {
+        pipStateProvider
+            .state('account', {
+                url: '/account',
+                controller: 'pipTestAccountController',
+                templateUrl: 'account/account.html'
+            })
+            .state('content', {
+                url: '/content',
+                controller: 'pipTestContentController',
+                templateUrl: 'content/content.html'
+            })
+            .state('data-set', {
+                url: '/data-set',
+                controller: 'pipTestDataSetController',
+                templateUrl: 'data-set/data-set.html'
+            })
+            .state('entity', {
+                url: '/entity',
+                controller: 'pipTestEntityController',
+                templateUrl: 'entity/entity.html'
+            })
+            .state('general', {
+                url: '/general',
+                controller: 'pipTestGeneralController',
+                templateUrl: 'general/general.html'
+            })
+            .state('user-party', {
+                url: '/user-party',
+                controller: 'pipTestUserPartyController',
+                templateUrl: 'user-party/user-party.html'
+            });
 
-            var poolObjectId = pipTestDataSet.ABCD + pipTestDataSet.DIGIT,
-                poolWord =  pipTestDataSet.ABCD +  pipTestDataSet.ABCD_CAPITALIZE;
+        $urlRouterProvider.otherwise('/account');
+    });
 
+    thisModule.controller('AppController',
+        function ($scope, $rootScope, $state, pipTheme, pipTestGeneral,
+                  pipTestDataSet, pipTestContent, pipTestUserParty) {
+
+            pipTheme.setCurrentTheme('blue');
+
+            $scope.pages = [{
+                state: 'account',
+                title: 'pipTestAccount'
+            }, {
+                state: 'content',
+                title: 'pipTestContent'
+            }, {
+                state: 'data-set',
+                title: 'pipTestDataSet'
+            }, {
+                state: 'entity',
+                title: 'pipTestEntity'
+            }, {
+                state: 'general',
+                title: 'pipTestGeneral'
+            }, {
+                state: 'user-party',
+                title: 'pipTestUserParty'
+            }];
+
+            $scope.onNavigationSelect = function (state) {
+                $state.go(state);
+            };
+
+            $scope.onDropdownSelect = function (state) {
+                $scope.onNavigationSelect(state.state);
+            };
+
+            // --------------
             chance.mixin({
-                'user': function() {
+                user: function () {
                     return {
                         first: chance.first(),
                         last: chance.last(),
@@ -28,19 +91,18 @@
                 }
             });
 
-
             $scope.objectId = pipTestGeneral.getObjectId();
             $scope.oneWord = pipTestGeneral.getOneWord(10);
 
             $scope.sentence = chance.sentence();
-            $scope.sentence5 = chance.sentence({words: 5}) ;
+            $scope.sentence5 = chance.sentence({words: 5});
             $scope.paragraph = chance.paragraph();
             $scope.paragraph5 = chance.paragraph({sentences: 5});
 
-            //$scope.li_word = loremIpsum({ count: 1, units: 'word'});
-            //$scope.li_sentence = loremIpsum({ count: 1, units: 'sentences'});
-            //$scope.li_paragraph = loremIpsum({ count: 1, units: 'paragraphs'});
-            //$scope.li_text = loremIpsum({ count: 5, units: 'paragraphs', paragraphLowerBound: 3, paragraphUpperBound: 7 });
+            // $scope.li_word = loremIpsum({ count: 1, units: 'word'});
+            // $scope.li_sentence = loremIpsum({ count: 1, units: 'sentences'});
+            // $scope.li_paragraph = loremIpsum({ count: 1, units: 'paragraphs'});
+            // $scope.li_text = loremIpsum({ count: 5, units: 'paragraphs', paragraphLowerBound: 3, paragraphUpperBound: 7 });
 
             $scope.first = chance.first();
             $scope.last = chance.last();
@@ -67,8 +129,7 @@
             $scope.getParty = pipTestUserParty.getParty();
             $scope.getConnection = pipTestUserParty.getConnection($scope.getParty);
             $scope.getPartyAccess = pipTestUserParty.getPartyAccess();
-
         }
     );
 
-})();
+})(window.chance);

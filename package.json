@@ -49,6 +49,11 @@
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.4",
-    "gulp-webserver": "^0.9.1"
+    "gulp-webserver": "^0.9.1",
+    "pip-webui-core": "git+ssh://git@github.com:pip-webui/pip-webui-core.git",
+    "pip-webui-css": "git+ssh://git@github.com:pip-webui/pip-webui-css.git",
+    "pip-webui-layouts": "git+ssh://git@github.com:pip-webui/pip-webui-layouts.git",
+    "pip-webui-nav": "git+ssh://git@github.com:pip-webui/pip-webui-nav.git",
+    "pip-webui-rest": "git+ssh://git@github.com:pip-webui/pip-webui-rest.git"
   }
 }
