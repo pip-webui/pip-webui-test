@@ -10,15 +10,13 @@
 To install the module using Bower add dependency to **bower.json** file. 
 If you use NPM add similar dependency to **package.json** file.
 ```javascript
-{
+...
+"dependencies": {
   ...
-  "dependencies": {
-    ...
-    "pip-webui-test": "*"
-    ...
-  }
+  "pip-webui-test": "*"
   ...
 }
+...
 ```
 
 You can also install the module manually using bower:
