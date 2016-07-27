@@ -1,4 +1,4 @@
-# Testing primitives for Pip.WebUI projects
+# <img src="https://github.com/pip-webui/pip-webui/blob/master/doc/Logo.png" alt="Pip.WebUI Logo" style="max-width:30%"> <br/> Testing primitives
 
 This module provides primitives for testing across all Pip.WebUI projects:
 * Random data generators
