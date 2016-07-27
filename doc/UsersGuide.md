@@ -7,8 +7,7 @@
 
 ## <a name="install"></a> Installing
 
-To install the module using Bower add dependency to **bower.json** file. 
-If you use NPM add similar dependency to **package.json** file.
+Add dependency to pip-webui module your **bower.json** or **package.json** file depending what you use.
 ```javascript
 ...
 "dependencies": {
@@ -19,7 +18,7 @@ If you use NPM add similar dependency to **package.json** file.
 ...
 ```
 
-You can also install the module manually using bower:
+Alternatively you can install the module manually using bower:
 ```bash
 bower install pip-webui-test
 ```
@@ -29,7 +28,7 @@ or install it using npm:
 npm install pip-webui-test
 ```
 
-The last step is to load the module and its dependencies into your application:
+Add references to module artifacts into your web application.
 ```html
 ...
 <link rel="stylesheet" href=".../pip-webui-lib.min.css"/>
