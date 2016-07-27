@@ -27,17 +27,27 @@
     // });
 
     thisModule.run(
-        function($httpBackend) {
+        function($httpBackend, pipFakeDataModelUsers) {
 
             // config this
             var serverUrl = 'http://alpha.pipservices.net';
         
             $httpBackend.whenGET(serverUrl + '/api/signin').respond(function(method, url, data) {
-                 var games = ServerDataModel.findAll();
+                var user = pipFakeDataModelUsers.findOne('565f12ef8ff2161b1dfeedbf')
 
-                return [200, games, {}];
+                    console.log('signin get', method, url, data);
+
+                return user;
             });
        
+            $httpBackend.whenPOST(serverUrl + '/api/signin').respond(function(method, url, data) {
+                var user = pipFakeDataModelUsers.findOne('565f12ef8ff2161b1dfeedbf')
+
+                    console.log('signin post', method, url, data);
+
+                return user;
+            });
+
             $httpBackend.whenGET(/samples\//).passThrough();
 
             // // do real request
