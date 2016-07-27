@@ -13,31 +13,37 @@
     thisModule.config(function (pipStateProvider, $urlRouterProvider) {
         pipStateProvider
             .state('account', {
+                auth: false,
                 url: '/account',
                 controller: 'pipTestAccountController',
                 templateUrl: 'account/account.html'
             })
             .state('content', {
+                auth: false,
                 url: '/content',
                 controller: 'pipTestContentController',
                 templateUrl: 'content/content.html'
             })
             .state('data-set', {
+                auth: false,
                 url: '/data-set',
                 controller: 'pipTestDataSetController',
                 templateUrl: 'data-set/data-set.html'
             })
             .state('entity', {
+                auth: false,
                 url: '/entity',
                 controller: 'pipTestEntityController',
                 templateUrl: 'entity/entity.html'
             })
             .state('general', {
+                auth: false,
                 url: '/general',
                 controller: 'pipTestGeneralController',
                 templateUrl: 'general/general.html'
             })
             .state('user-party', {
+                auth: false,
                 url: '/user-party',
                 controller: 'pipTestUserPartyController',
                 templateUrl: 'user-party/user-party.html'
