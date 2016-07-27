@@ -99,4 +99,4 @@ npm publish
 ## <a name="contrib"></a> Contributing
 
 For those who would like to contribute to the project as external contributor or become a part of Pip.WebUI team, 
-please read [Contributor's Guide](https://github.com/pip-webui/pip-webui/blob/master/doc/ContributorsGuide.md).
+please, read [Contributor's Guide](https://github.com/pip-webui/pip-webui/blob/master/doc/ContributorsGuide.md).
