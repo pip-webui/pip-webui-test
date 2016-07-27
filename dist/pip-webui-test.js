@@ -712,177 +712,6 @@
 
 })(window._, window.chance);
 
-/**
- * @file Mocks for REST API
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-/* API list
-
-/api/users/current
-/api/users/:id
-/api/users/:party_id/sessions/:id
-/api/parties/:id
-
-
-/api/parties/:party_id/settings
-
-/api/image_sets/:id
-/api/images/search
-
-/api/guides/:id
-/api/tips/:id
-/api/feedbacks/:id
-/api/announcements/:id
-
-/api/signup_validate
-/api/verify_email
-/api/users/:party_id/resend_email_verification
-/api/change_password
-/api/reset_password
-/api/recover_password
-/api/signup
-/api/signout
-/api/signin
-*/
-
-
-(function () {
-    'use strict';
-
-    angular.module('pipMocks', [
-        'pipMocks.Users',
-        'pipMocks.Files',
-        'pipMocks.Settings',
-        'pipMocks.Entry'
-    ]);
-
-})();
-
-/*
- * Mocks for Files REST API
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocks.Files', []);
-
-    thisModule.config(function() {
-
-    });
-
-    thisModule.run(
-        ['$httpBackend', function($httpBackend) {
-        
-          
-        }]
-    );
-
-})();
-
-/*
- * Mocks for Settings REST API
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocks.Settings', []);
-
-    thisModule.config(function() {
-
-    });
-
-    thisModule.run(
-        ['$httpBackend', function($httpBackend) {
-        
-          
-        }]
-    );
-
-})();
-
-/*
- * Mocks for Users REST API
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocks.Users', []);
-
-    thisModule.config(function() {
-
-    });
-
-    thisModule.run(
-        ['$httpBackend', 'pipFakeDataModelUsers', function($httpBackend, pipFakeDataModelUsers) {
-        
-          
-        }]
-    );
-
-})();
-
-/*
- * Mocks for Entry REST API
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/*
-/api/signin
-/api/signup
-/api/signout
-/api/signup_validate
-/api/verify_email
-/api/users/:party_id/resend_email_verification
-/api/change_password
-/api/reset_password
-/api/recover_password
-*/
-
-/* global angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocks.Entry', ['ngMockE2E', 'ngResource']);
-
-    // thisModule.config(function($provide) {
-    //     $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
-    // });
-
-    thisModule.run(
-        ['$httpBackend', function($httpBackend) {
-
-            // config this
-            var serverUrl = 'http://alpha.pipservices.net';
-        
-            $httpBackend.whenGET(serverUrl + '/api/signin').respond(function(method, url, data) {
-                 var games = ServerDataModel.findAll();
-
-                return [200, games, {}];
-            });
-       
-            $httpBackend.whenGET(/samples\//).passThrough();
-
-            // // do real request
-            // $httpBackend.whenJSONP().passThrough();
-        }]
-    );
-
-})();
-
 /*
  *
  * (с) Digital Living Software Corp. 2014-2016
@@ -1077,5 +906,176 @@
     }]);
 
 })(window._);
+
+/**
+ * @file Mocks for REST API
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+/* API list
+
+/api/users/current
+/api/users/:id
+/api/users/:party_id/sessions/:id
+/api/parties/:id
+
+
+/api/parties/:party_id/settings
+
+/api/image_sets/:id
+/api/images/search
+
+/api/guides/:id
+/api/tips/:id
+/api/feedbacks/:id
+/api/announcements/:id
+
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+/api/signup
+/api/signout
+/api/signin
+*/
+
+
+(function () {
+    'use strict';
+
+    angular.module('pipMocks', [
+        'pipMocks.Users',
+        'pipMocks.Files',
+        'pipMocks.Settings',
+        'pipMocks.Entry'
+    ]);
+
+})();
+
+/*
+ * Mocks for Files REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Files', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
+        
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Settings REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Settings', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
+        
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Users REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Users', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', 'pipFakeDataModelUsers', function($httpBackend, pipFakeDataModelUsers) {
+        
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Entry REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/*
+/api/signin
+/api/signup
+/api/signout
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+*/
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Entry', ['ngMockE2E', 'ngResource']);
+
+    // thisModule.config(function($provide) {
+    //     $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
+    // });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
+
+            // config this
+            var serverUrl = 'http://alpha.pipservices.net';
+        
+            $httpBackend.whenGET(serverUrl + '/api/signin').respond(function(method, url, data) {
+                 var games = ServerDataModel.findAll();
+
+                return [200, games, {}];
+            });
+       
+            $httpBackend.whenGET(/samples\//).passThrough();
+
+            // // do real request
+            // $httpBackend.whenJSONP().passThrough();
+        }]
+    );
+
+})();
 
 //# sourceMappingURL=pip-webui-test.js.map
