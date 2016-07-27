@@ -1,6 +1,6 @@
 # Pip.WebUI.Test User's Guide
 
-## Contents
+## <a name="contents"></a> Contents
 - [Installing](#install)
 - [Using](#usage)
 - [Questions and Bugs](#issues)
