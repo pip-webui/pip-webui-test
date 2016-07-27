@@ -24,7 +24,7 @@ You can also install the module manually using bower:
 bower install pip-webui-test
 ```
 
-Of install it using npm:
+or install it using npm:
 ```bash
 npm install pip-webui-test
 ```
