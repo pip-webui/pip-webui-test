@@ -1,5 +1,7 @@
 # <img src="https://github.com/pip-webui/pip-webui/blob/master/doc/Logo.png" alt="Pip.WebUI Logo" style="max-width:30%"> <br/> Testing primitives
 
+![](https://img.shields.io/badge/license-MIT-blue.svg)
+
 This module provides primitives for testing across all Pip.WebUI projects:
 * Random data generators
 * Resource mocks for standard REST API supported by Pip.WebUI connected controls
