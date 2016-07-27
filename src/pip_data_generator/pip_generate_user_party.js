@@ -43,7 +43,7 @@
                 user = {
                     pwd_last_fail: null,
                     pwd_fail_count: 0,
-                    name: chance.first() + ' ' + chance.name(),
+                    name: pipDataGeneratorGeneral.getName(),
                     email: chance.email(),
                     language: pipDataGeneratorGeneral.getOne(['en', 'ru', 'fr']),
                     paid: chance.bool({likelihood: 30}),

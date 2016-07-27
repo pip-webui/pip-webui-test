@@ -50,8 +50,8 @@
             });
 
             // config this?
-            $httpBackend.whenGET(/samples\//).passThrough();
-
+            // $httpBackend.whenGET(/samples\//).passThrough();
+            $httpBackend.whenGET(/^(http:\/\/alpha.pipservices.net\/api\/){0}.*?/).passThrough();
         }
     );
 

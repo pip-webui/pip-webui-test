@@ -28,6 +28,7 @@
             getPassword: getPassword,
             getEmail: getEmail,
             serverUrl:serverUrl,
+            getName: getName,
             getOne: getOne
         };
 
@@ -67,6 +68,12 @@
                 poolWord = ABCD + ABCD_CAPITALIZE;
 
             return chance.word({length: length, pool: poolWord});
+        }
+
+        function getName() {
+            var name = chance.first() + ' ' + chance.name();
+
+            return name;
         }
 
     });
