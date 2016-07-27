@@ -5,7 +5,7 @@ This module provides primitives for testing across all Pip.WebUI projects:
 * Resource mocks for standard REST API supported by Pip.WebUI connected controls
 * Resource mocks for sample REST API used in tests and samples
 
-TBD: Add samples how to use mocks and data generators
+TBD: Add samples to demonstrate how to use mocks and data generators
 
 ## Learn more about the module
 
