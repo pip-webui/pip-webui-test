@@ -1,5 +1,62 @@
 <h2 class="text-title tm0 bm24">User Generators {{:: 'SAMPLE' | translate }}:</h2>
-<md-button class="md-raised md-primary"
-           ng-click="onGenerate()">
-    Generate Users
+
+<md-button class="lm0 md-raised md-accent flat" 
+           ng-click="onGenerate($event)">
+           {{ ::'GENERATE_USERS' | translate }}
 </md-button>
+<md-button class="lm0 md-raised md-accent flat" 
+           ng-click="onSetUsers($event)">
+           {{ ::'SET_USERS' | translate }}
+</md-button>
+<md-button class="lm0 md-raised md-accent flat" 
+           ng-click="onClearUsers($event)">
+           {{ ::'CLEAR_USERS' | translate }}
+</md-button>
+<md-button class="lm0 md-raised md-accent flat" 
+           ng-click="onAddOne($event)">
+           {{ ::'ADD_ONE' | translate }}
+</md-button>
+<md-button class="lm0 md-raised md-accent flat" 
+           ng-click="onFindOne($event)">
+           {{ ::'FIND_ONE' | translate }}
+</md-button>
+<md-button class="lm0 md-raised md-accent flat" 
+           ng-click="onFindMany($event)">
+           {{ ::'FIND_MANY' | translate }}
+</md-button>
+
+<table>
+    <tr>
+        <th>
+            №
+        </th>
+        <th>
+            {{ ::'USERS_DATA' | translate }}
+        </th>
+        <th>
+            {{ ::'OPERATIONS' | translate }}
+        </th>
+    </tr>
+    <tr ng-repeat="user in userCollection track by user.id">
+        <td>
+            {{$index}}
+        </td>
+        <td>
+            <md-button ng-click="onCollapse($event, $index)" class="md-accent">{{user.id}} : {{user.name}} </md-button>
+            <pre ng-if="user.collapse" class="m0 text-body1 color-window-bg p16">
+                    {{getCode(user)}}
+            </pre>    
+        </td>
+        <td>
+            <md-button class="lm0 md-raised md-accent flat" 
+                ng-click="onDeleteUser($event, $index)">
+                {{ 'DELETE' | translate }}
+            </md-button>
+            <md-button class="lm0 md-raised md-accent flat" 
+                    ng-click="onUpdateUser($event, $index)">
+                    {{ 'UPDATE' | translate }}
+            </md-button>
+        </td>        
+    </tr>
+</table>    
+
