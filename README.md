@@ -13,11 +13,12 @@ TBD: Add samples to demonstrate how to use mocks and data generators
 - [Online samples](http://webui.pipdevs.com/pip-webui-test/index.html)
 - [User's guide](doc/UsersGuide.md)
 - [Developer's guide](doc/DevelopersGuide.md)
+- [Changelog](CHANGELOG.md)
 - [Pip.WebUI project website](http://www.pipwebui.org)
 
 ## <a name="dependencies"></a>Module dependencies
 
-* <a href="https://github.com/pip-webui/pip-webui-lib">pip-webui-lib</a>
+* <a href="https://github.com/pip-webui/pip-webui-lib">pip-webui-lib</a>: use Angular, Angular mocks, Chance and other 3rd party libraries
 
 ## <a name="license"></a>License
 
