@@ -31,7 +31,7 @@
 
             // String translations
             pipTranslateProvider.translations('en', {
-                CONTROLS: 'Moks',
+                CONTROLS: 'Mocks',
                 SIGNOUT: 'Sign out'
             });
 
@@ -45,7 +45,7 @@
                 $stateProvider.state(contentItem.state, contentItem);
             }
 
-            $urlRouterProvider.otherwise('/moks');
+            $urlRouterProvider.otherwise('/mocks');
 
             // Configure REST API
             pipRestProvider.serverUrl('http://alpha.pipservices.net');
@@ -53,7 +53,7 @@
             // Configure navigation menu
             pipSideNavProvider.sections([
                 {
-                    links: [{title: 'Moks', url: '/moks'}]
+                    links: [{title: 'Mocks', url: '/mocks'}]
                 }
             ]);
         }
