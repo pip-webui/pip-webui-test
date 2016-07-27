@@ -7,7 +7,7 @@
 
 ## <a name="install"></a> Installing
 
-Add dependency to pip-webui module your **bower.json** or **package.json** file depending what you use.
+Add dependency to pip-webui-test module into your **bower.json** or **package.json** file depending what you use.
 ```javascript
 ...
 "dependencies": {
