@@ -7,7 +7,7 @@
     'use strict';
 
     angular.module('pipWebuiTests', [
-        'pipTests',
+        'pipDataGenerator',
         'pipFakeDataModel',
         'pipMocks'
     ]);
