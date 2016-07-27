@@ -1,4 +1,20 @@
 /**
+ * @file Registration of WebUI tests
+ * @copyright Digital Living Software Corp. 2014-2015
+ */
+
+(function () {
+    'use strict';
+
+    angular.module('pipWebuiTests', [
+        'pipTests',
+        'pipFakeDataModel',
+        'pipMocks'
+    ]);
+
+})();
+
+/**
  * @file Provides a service to work with mocked user
  * @copyright Digital Living Software Corp. 2014-2015
  */
@@ -509,14 +525,14 @@
 })(window._, window.chance);
 
 /**
- * @file Registration of WebUI tests
+ * @file Registration of tests
  * @copyright Digital Living Software Corp. 2014-2015
  */
 
 (function () {
     'use strict';
 
-    angular.module('pipWebuiTests', [
+    angular.module('pipTests', [
         'pipTest.DataSet',
         'pipTest.Account',
         'pipTest.Entity',
@@ -695,5 +711,371 @@
     }]);
 
 })(window._, window.chance);
+
+/**
+ * @file Mocks for REST API
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+/* API list
+
+/api/users/current
+/api/users/:id
+/api/users/:party_id/sessions/:id
+/api/parties/:id
+
+
+/api/parties/:party_id/settings
+
+/api/image_sets/:id
+/api/images/search
+
+/api/guides/:id
+/api/tips/:id
+/api/feedbacks/:id
+/api/announcements/:id
+
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+/api/signup
+/api/signout
+/api/signin
+*/
+
+
+(function () {
+    'use strict';
+
+    angular.module('pipMocks', [
+        'pipMocks.Users',
+        'pipMocks.Files',
+        'pipMocks.Settings',
+        'pipMocks.Entry'
+    ]);
+
+})();
+
+/*
+ * Mocks for Files REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Files', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
+        
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Settings REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Settings', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
+        
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Users REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Users', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', 'pipFakeDataModelUsers', function($httpBackend, pipFakeDataModelUsers) {
+        
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Entry REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/*
+/api/signin
+/api/signup
+/api/signout
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+*/
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Entry', ['ngMockE2E', 'ngResource']);
+
+    // thisModule.config(function($provide) {
+    //     $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
+    // });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
+
+            // config this
+            var serverUrl = 'http://alpha.pipservices.net';
+        
+            $httpBackend.whenGET(serverUrl + '/api/signin').respond(function(method, url, data) {
+                 var games = ServerDataModel.findAll();
+
+                return [200, games, {}];
+            });
+       
+            $httpBackend.whenGET(/samples\//).passThrough();
+
+            // // do real request
+            // $httpBackend.whenJSONP().passThrough();
+        }]
+    );
+
+})();
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Entry', []);
+
+    thisModule.service('pipFakeDataModelEntry', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+
+    }]);
+
+})(window._);
+
+/**
+ * @file Registration of Fake Data Model
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    angular.module('pipFakeDataModel', [
+        'pipFakeDataModel.Users',
+        'pipFakeDataModel.Files',
+        'pipFakeDataModel.Settings',
+        'pipFakeDataModel.Entry'
+    ]);
+
+})();
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Files', []);
+
+    thisModule.service('pipFakeDataModelFiles', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+
+    }]);
+
+})(window._);
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Settings', []);
+
+    thisModule.service('pipFakeDataModelSettings', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+
+    }]);
+
+})(window._);
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Users', []);
+
+    thisModule.service('pipFakeDataModelUsers', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+        this.getData = function() {
+            return this.data;
+        };
+        
+        this.setData = function(data) {
+            this.data = data;
+        };
+    
+        this.findOne = function(userId) {
+            // find the user that matches that id
+            var user;
+
+            return user;
+        };
+    
+        this.findAll = function() {
+            return this.getData();
+        };
+        
+        this.findMany = function(options) {
+            var users;
+
+            return users;       
+        };
+        
+        this.addOne = function(newUser) {
+            // must calculate a unique ID to add the new data
+            var newId = this.newId();
+            newUser.id = newId;
+            this.data.push(newUser);
+
+            return newUser;
+        };
+        
+        // return an id to insert a new data item at
+        this.newId = function() {
+            var newId = pipTestGeneral.getObjectId();
+
+            return newId;
+        };
+        
+        this.updateOne = function(userId, user) {
+            // find the user that matches that id
+            var users = this.getData(),
+                match = null,
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = users[i];
+                    break;
+                }
+            }
+
+            if(!angular.isObject(match)) {
+                return {};
+            }
+
+            angular.extend(match, user);
+
+            return match;
+        };
+        
+        this.deleteOne = function(userId) {
+            // find the user that matches that id
+            var users = this.getData(),
+                match = false, 
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = true;
+                    users.splice(i, 1);
+                    break;
+                }
+            }
+
+            return match;
+        };
+    }]);
+
+})(window._);
 
 //# sourceMappingURL=pip-webui-test.js.map
