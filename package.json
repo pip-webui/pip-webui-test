@@ -2,7 +2,7 @@
     "name": "pip-webui-test",
     "version": "1.0.0",
     "author": "Digital Living Software Corp. <www.digitallivingsoftware.com>",
-    "description": "Test framework for Pip.WebUI",
+    "description": "Testing primitives for Pip.WebUI projects",
     "contributors": [
         {
             "name": "Sergey Seroukhov",
