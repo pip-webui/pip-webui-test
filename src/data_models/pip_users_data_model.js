@@ -82,7 +82,7 @@
     
         this.findOne = function(userId) {
             // find the user that matches that id
-            var user;
+            var user = this.data[0];
 
             return user;
         };

@@ -27,20 +27,20 @@
             return;
 
             function signIn() {
-                $http.post('http://alpha.pipservices.net/api/signin', {});
-                // pipSession.signin(
-                //     {
-                //         serverUrl: 'http://alpha.pipservices.net', // $scope.serverUrl,
-                //         email: '1@1.com', // $scope.sampleAccount.email,
-                //         password: '123456', // $scope.sampleAccount.password
-                //     },
-                //     function (user) {
-                //         console.log('SignIn', user);
-                //     },
-                //     function (error) {
-                //         console.log(error);
-                //     }
-                // );
+                // $http.post('http://alpha.pipservices.net/api/signin', {});
+                pipSession.signin(
+                    {
+                        serverUrl: 'http://alpha.pipservices.net', // $scope.serverUrl,
+                        email: '1@1.com', // $scope.sampleAccount.email,
+                        password: '123456', // $scope.sampleAccount.password
+                    },
+                    function (user) {
+                        console.log('SignIn', user);
+                    },
+                    function (error) {
+                        console.log(error);
+                    }
+                );
             }            
 
         }
