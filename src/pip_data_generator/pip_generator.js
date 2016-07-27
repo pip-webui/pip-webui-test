@@ -15,7 +15,7 @@
             DIGIT = '0123456789',
             SIGN = ' .,;:-!?',
 
-            SERVER_URL = 'http://alpha.pipservices.net',
+            SERVER_URL = 'http://alpha.pipservices.net';
 
         return {
             ABCD: ABCD,

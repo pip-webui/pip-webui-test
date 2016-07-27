@@ -27,31 +27,31 @@
     // });
 
     thisModule.run(
-        function($httpBackend, pipFakeDataModelUsers) {
+        function($httpBackend, pipFakeDataModelUsers, pipDataGeneratorGeneral) {
+
+            var SIGNIN = '/api/signin',
+                SIGNUP = '/api/signup';
 
             // config this
-            var serverUrl = 'http://alpha.pipservices.net';
+            var serverUrl = pipDataGeneratorGeneral.serverUrl;
         
-            $httpBackend.whenGET(serverUrl + '/api/signin').respond(function(method, url, data) {
-                var user = pipFakeDataModelUsers.findOne('565f12ef8ff2161b1dfeedbf')
+            $httpBackend.whenGET(serverUrl + SIGNIN).respond(function(method, url, data) {
+                var requestData = data ? JSON.parse(data) : {},
+                    user = pipFakeDataModelUsers.addOne({email: data["email"]});
 
-                    console.log('signin get', method, url, data);
-                    console.log('signin return', user);
                 return [200, user, user];
             });
        
-            $httpBackend.whenPOST(serverUrl + '/api/signin').respond(function(method, url, data, headers) {
-                var user = pipFakeDataModelUsers.findOne('565f12ef8ff2161b1dfeedbf')
+            $httpBackend.whenPOST(serverUrl + SIGNIN).respond(function(method, url, data, headers) {
+                var requestData = data ? JSON.parse(data) : {},
+                    user = pipFakeDataModelUsers.addOne({email: requestData["email"]});
 
-                    console.log('signin post', method, url, data);
-                    console.log('signin return', user);
                 return [200, user, user];
             });
 
+            // config this?
             $httpBackend.whenGET(/samples\//).passThrough();
 
-            // // do real request
-            // $httpBackend.whenJSONP().passThrough();
         }
     );
 

@@ -13,7 +13,7 @@
     });
 
     thisModule.controller('MocksController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http) {
+        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral) {
 
             $scope.signIn = signIn;
 

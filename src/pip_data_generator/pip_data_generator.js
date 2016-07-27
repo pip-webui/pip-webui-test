@@ -8,7 +8,7 @@
 
     angular.module('pipDataGenerator', [
         'pipDataGenerator.General',
-        'pipDataGenerator.UserPartty'
+        'pipDataGenerator.UserParty'
     ]);
 
 })();

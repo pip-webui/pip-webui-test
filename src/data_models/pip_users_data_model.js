@@ -10,112 +10,74 @@
 
     var thisModule = angular.module('pipFakeDataModel.Users', []);
 
-    thisModule.service('pipFakeDataModelUsers', function (pipTestGeneral) {
+    thisModule.service('pipFakeDataModelUsers', function (pipDataGeneratorGeneral, pipDataGeneratorUserParty) {
 
-        this.data = [
-            {
-                "name": "Миньошка",
-                "email": "1@1.com",
-                "language": "en",
-                "pwd_fail_count": 0,
-                "pwd_last_fail": null,
-                "theme": "orange",
-                "email_config": {
-                    "engage": true,
-                    "due": true,
-                    "comment": true,
-                    "join": true,
-                    "follow": false,
-                    "response": true,
-                    "invite": false,
-                    "message": false
-                },
-                "paid": false,
-                "admin": true,
-                "party_access": [
-                    {
-                        "share_level": 3,
-                        "type": "member",
-                        "party_name": "киця1",
-                        "party_id": "56b0a214e8540ddb54705fd4",
-                        "contributor": true,
-                        "manager": true,
-                        "id": "56b0a215e8540ddb54705fd8"
-                    },
-                    {
-                        "share_level": 0,
-                        "type": "partner",
-                        "party_name": "kitty",
-                        "party_id": "56740d3886153bef572804f5",
-                        "contributor": false,
-                        "manager": false,
-                        "id": "56b36e322dd75a9663fc79c8"
-                    }
-                ],
-                "sessions": [
-                    {
-                        "address": "176.37.183.138",
-                        "client": "chrome",
-                        "platform": "mobile",
-                        "last_req": "2016-07-27T13:52:52.041Z",
-                        "opened": "2016-07-27T11:02:23.445Z",
-                        "id": "579894bf58270790720df9ee"
-                    }
-                ],
-                "signin": "2016-07-27T13:53:03.049Z",
-                "signup": "2015-12-02T15:49:03.466Z",
-                "active": true,
-                "lock": false,
-                "email_ver": false,
-                "id": "565f12ef8ff2161b1dfeedbf",
-                "last_session_id": "579894bf58270790720df9ee"
-            }    
-        ];
-        
-        this.getData = function() {
-            return this.data;
+        var usersCollection = [];
+
+        return {
+            dataGenerate: dataGenerate,
+            getData: getData,
+            setData: setData,
+            findOne: findOne,
+            findAll: findAll,
+            findMany: findMany,
+            addOne: addOne,
+            updateOne: updateOne,
+            deleteOne: deleteOne
         };
+
+        function dataGenerate (n) {
+            var newUser, i,
+                length = n > 0 ? n : 10;
+
+            usersCollection = [];
+
+            for (i = 0; i < length; i++) {
+                newUser = pipDataGeneratorUserParty.getOneUser();
+                usersCollection.push(newUser);
+            }
+
+            return usersCollection;
+        }
         
-        this.setData = function(data) {
-            this.data = data;
-        };
+        function getData () {
+            return usersCollection;
+        }
+        
+        function setData (data) {
+            usersCollection = data;
+        }
     
-        this.findOne = function(userId) {
-            // find the user that matches that id
-            var user = this.data[0];
+        function findOne (params) {
+            // find the user that matches that params
+            var user = _.find(usersCollection, params) || [];
 
-            return user;
-        };
+            return user[0] || null;
+        }
     
-        this.findAll = function() {
-            return this.getData();
-        };
+        function findAll () {
+            return getData();
+        }
         
-        this.findMany = function(options) {
-            var users;
+        function findMany(params) {
+            var users = _.find(usersCollection, params) || [];
 
-            return users;       
-        };
+            return users;
+        }
         
-        this.addOne = function(newUser) {
+        function addOne(data) {
             // must calculate a unique ID to add the new data
-            var newId = this.newId();
-            newUser.id = newId;
-            this.data.push(newUser);
+            var newUser;
+
+            newUser = pipDataGeneratorUserParty.getOneUser(data);
+            usersCollection.push(newUser);
 
             return newUser;
-        };
+        }
         
-        // return an id to insert a new data item at
-        this.newId = function() {
-            var newId = pipTestGeneral.getObjectId();
-
-            return newId;
-        };
-        
-        this.updateOne = function(userId, user) {
+        function updateOne(userId, user) {
             // find the user that matches that id
-            var users = this.getData(),
+            var users = getData(),
                 match = null,
                 i;
 
@@ -133,11 +95,11 @@
             angular.extend(match, user);
 
             return match;
-        };
+        }
         
-        this.deleteOne = function(userId) {
+        function deleteOne (userId) {
             // find the user that matches that id
-            var users = this.getData(),
+            var users = getData(),
                 match = false, 
                 i;
 
@@ -150,7 +112,7 @@
             }
 
             return match;
-        };
+        }
     });
 
 })(window._);

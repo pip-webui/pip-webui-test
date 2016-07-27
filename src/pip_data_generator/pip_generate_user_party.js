@@ -6,13 +6,12 @@
 (function (_, chance) {
     'use strict';
 
-    var thisModule = angular.module('pipDataGenerator.UserParty', ['pipDataGenerator.UserPartty']);
+    var thisModule = angular.module('pipDataGenerator.UserParty', []);
 
     thisModule.service('pipDataGeneratorUserParty', function (pipDataGeneratorGeneral) {
 
         return {
             getOneUser: getOneUser,
-            getSettings: getSettings,
             getParty: getParty,
             getConnection: getConnection,
             getPartyAccess: getPartyAccess
