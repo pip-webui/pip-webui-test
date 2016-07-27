@@ -1,9 +1,10 @@
 # Changelog
 
-### 1.0.0 (2016-05-20)
------
+## 1.0.0 (2016-07-30)
 
-#### Enhancements:
+Initial release of pip-webui-test module
+
+### Features:
 
 * **pipTestAccount** - Service provides an account information
 * **pipTestContent** - Utils for generate some specific content data, such as checklist content, composite content,
