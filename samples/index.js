@@ -12,7 +12,7 @@
             'pipLayout', 'pipCore', 'pipRest.State', 'pipNav',
             
             'pipWebuiTests',
-            'appTests.Mocks'
+            'appTests.Mocks', 'appTests.GenerateUsers'
         ]
     );
 
@@ -22,7 +22,10 @@
             $scope.pages = [ 
                 { title: 'Mocks', state: 'mocks', url: '/mocks',
                     controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' 
-                }
+                },
+                { title: 'User Generator', state: 'user_generator', url: '/user_generator',
+                    controller: 'GenerateUsersController', templateUrl: '../samples/data_generators/user_generator.html'
+                }              
             ];
             
             $scope.selected = {};

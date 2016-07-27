@@ -20,10 +20,14 @@
             
             var content = [
                 { title: 'Mocks', state: 'mocks', url: '/mocks',
-                    controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' }
+                    controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' },
+                { title: 'User Generator', state: 'user_generator', url: '/user_generator',
+                    controller: 'GenerateUsersController', templateUrl: '../samples/data_generators/user_generator.html' 
+                },                      
                 ],
                 links = [
-                    { title: 'Mocks test', href: '/pip-webui-test/index.html'}
+                    { title: 'Mocks test', href: '/pip-webui-test/index.html'},
+                    { title: 'User generator', href: '/pip-webui-test/index.html'}
                 ],
                 contentItem, i;
 
@@ -53,8 +57,15 @@
             // Configure navigation menu
             pipSideNavProvider.sections([
                 {
-                    links: [{title: 'Mocks', url: '/mocks'}]
-                }
+                    links: [
+                        {title: 'Mocks', url: '/mocks'}
+                    ]
+                },
+                {
+                    links: [
+                        {title: 'User Generator', url: '/user_generator'}
+                    ]
+                },                
             ]);
         }
     );
