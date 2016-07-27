@@ -75,7 +75,7 @@ Uploading samples and API documentation to S3 static websites:
 gulp publish
 ```
 
-## <a name="releasing"></a> Releasing
+## <a name="release"></a> Releasing
 
 1\. Check and update **CHANGELOG.md** file.
 
