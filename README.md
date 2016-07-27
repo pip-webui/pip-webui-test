@@ -17,7 +17,6 @@ TBD: Add samples to demonstrate how to use mocks and data generators
 
 ## <a name="dependencies"></a>Module dependencies
 
-* <a href="https://github.com/pip-webui/pip-webui-tasks">pip-webui-tasks</a>
 * <a href="https://github.com/pip-webui/pip-webui-lib">pip-webui-lib</a>
 
 ## <a name="license"></a>License
