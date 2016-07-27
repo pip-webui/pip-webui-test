@@ -25,6 +25,9 @@
 
             getObjectId: getObjectId,
             getOneWord: getOneWord,
+            getPassword: getPassword,
+            getEmail: getEmail,
+            serverUrl:serverUrl,
             getOne: getOne
         };
 
@@ -37,9 +40,25 @@
             return chance.string({length: length, pool: pool});
         }
 
+        function getEmail() {
+            return chance.email();
+        }
+
+        function getPassword() {
+            return getOneWord(8);
+        }
+
         // Returns random one from the passed asset
         function getOne(arr) {
             return _.sample(arr);
+        }
+
+        function serverUrl(serverUrl) {
+            if (serverUrl) {
+                SERVER_URL = serverUrl;
+            }
+
+            return SERVER_URL;
         }
 
         // Returns random word
