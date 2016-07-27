@@ -19,19 +19,15 @@
             $httpProvider.useApplyAsync(true);
             
             var content = [
-                { title: 'Moks', state: 'moks', url: '/moks',
-                    controller: 'MoksController', templateUrl: '../samples/moks/moks.html' }
+                { title: 'Mocks', state: 'mocks', url: '/mocks',
+                    controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' }
                 ],
                 links = [
-                    { title: 'Moks test', href: '/pip-webui-test/index.html'}
+                    { title: 'Mocks test', href: '/pip-webui-test/index.html'}
                 ],
                 contentItem, i;
 
             $mdIconProvider.iconSet('icons', 'images/icons.svg', 512);
-
-            // pipAppBarProvider.globalSecondaryActions([
-            //     {name: 'global.signout', title: 'SIGNOUT', state: 'signout'}
-            // ]);
 
             // String translations
             pipTranslateProvider.translations('en', {
@@ -49,9 +45,6 @@
                 $stateProvider.state(contentItem.state, contentItem);
             }
 
-            // pipAuthStateProvider.unauthorizedState('signin');
-            // pipAuthStateProvider.authorizedState('progress');
-
             $urlRouterProvider.otherwise('/moks');
 
             // Configure REST API
@@ -61,15 +54,7 @@
             pipSideNavProvider.sections([
                 {
                     links: [{title: 'Moks', url: '/moks'}]
-                }/*, Links only for publishing samples
-                {
-                    links: links
                 }
-
-                /*,
-                {
-                    links: [{title: 'SIGNOUT', url: '/signout'}]
-                }*/
             ]);
         }
     );

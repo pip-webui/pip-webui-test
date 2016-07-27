@@ -12,7 +12,7 @@
             'pipLayout', 'pipCore', 'pipRest.State', 'pipNav',
             
             'pipWebuiTests',
-            'appTests.Moks'
+            'appTests.Mocks'
         ]
     );
 
@@ -20,8 +20,8 @@
         function ($scope, $rootScope, $state, $mdSidenav, $timeout, pipTranslate, $mdTheming, pipTheme, $mdMedia) {
 
             $scope.pages = [ 
-                { title: 'Moks', state: 'moks', url: '/moks',
-                    controller: 'MoksController', templateUrl: '../samples/moks/moks.html' 
+                { title: 'Mocks', state: 'mocks', url: '/mocks',
+                    controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' 
                 }
             ];
             

@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    var thisModule = angular.module('appTests.Moks', []);
+    var thisModule = angular.module('appTests.Mocks', []);
 
     thisModule.config(function (pipTranslateProvider) {
         pipTranslateProvider.translations('en', {
@@ -12,27 +12,23 @@
         });
     });
 
-    thisModule.controller('MoksController',
-        function ($scope, pipAppBar, $timeout, pipSession, pipTestAccount, $http) {
-
-        //    $scope.serverUrl = pipTestAccount.getServerUrl();
-        //    $scope.sampleAccount = pipTestAccount.getSamplerAccount();
+    thisModule.controller('MocksController',
+        function ($scope, pipAppBar, $timeout, pipSession, $http) {
 
             $scope.signIn = signIn;
 
             pipAppBar.showMenuNavIcon();
             pipAppBar.showLanguage();
-            pipAppBar.showTitleText('MOKS');
+            pipAppBar.showTitleText('MOCKS');
 
             return;
 
             function signIn() {
-                // $http.post('http://alpha.pipservices.net/api/signin', {});
                 pipSession.signin(
                     {
-                        serverUrl: 'http://alpha.pipservices.net', // $scope.serverUrl,
-                        email: '1@1.com', // $scope.sampleAccount.email,
-                        password: '123456', // $scope.sampleAccount.password
+                        serverUrl: pipDataGeneratorGeneral.serverUrl, 
+                        email: pipDataGeneratorGeneral.getEmail(),
+                        password: pipDataGeneratorGeneral.getPassword(),
                     },
                     function (user) {
                         console.log('SignIn', user);
