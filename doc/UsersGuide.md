@@ -9,13 +9,11 @@
 
 Add dependency to pip-webui-test module into your **bower.json** or **package.json** file depending what you use.
 ```javascript
-...
 "dependencies": {
   ...
   "pip-webui-test": "*"
   ...
 }
-...
 ```
 
 Alternatively you can install the module manually using bower:
@@ -32,10 +30,8 @@ Add references to module artifacts into your web application.
 ```html
 ...
 <link rel="stylesheet" href=".../pip-webui-lib.min.css"/>
-...
 <script src=".../pip-webui-lib.min.js"></script>
 <script src=".../pip-webui-test.min.js"></script>
-...
 ```
 
 Keep in mind, that this is an optional module that is not included into pip-webui package.
