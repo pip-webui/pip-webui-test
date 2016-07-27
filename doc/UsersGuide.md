@@ -28,8 +28,8 @@ npm install pip-webui-test
 
 Add references to module artifacts into your web application.
 ```html
-...
 <link rel="stylesheet" href=".../pip-webui-lib.min.css"/>
+...
 <script src=".../pip-webui-lib.min.js"></script>
 <script src=".../pip-webui-test.min.js"></script>
 ```
