@@ -1,15 +1,15 @@
 module.exports = {
     module: {
-        name: 'pipTest',
-        index: 'test'
+        name: 'pipTest'
     },
     build: {
         js: true,
-        ts: true,
-        html: true,
-        css: true,
+        ts: false,
+        html: false,
+        css: false,
         lib: true,
-        images: true
+        images: true,
+        dist: false
     },
     file: {
         lib: [
@@ -32,6 +32,12 @@ module.exports = {
             // '../pip-webui-support/dist/**/*',
             // '../pip-webui-help/dist/**/*'
         ]
+    },
+    samples: {
+        port: 8010,
+    },
+    api: {
+        port: 8011,
     },
   eslint: {
     "extends": "standard",
