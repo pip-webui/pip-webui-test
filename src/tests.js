@@ -6,10 +6,24 @@
 (function () {
     'use strict';
 
-    angular.module('pipWebuiTests', [
+    var thisModule = angular.module('pipWebuiTests', [
         'pipDataGenerator',
         'pipFakeDataModel',
-        'pipMocks'
+        'pipMocked',
+        'pipGenerators.User',
+        'pipGenerators'
     ]);
+
+
+    thisModule.run(
+        function(pipMockedResource, MockedResource, MockedUsersResource, UnMockedResource) {
+
+            pipMockedResource.addMocks(UnMockedResource);
+            pipMockedResource.addMocks(MockedUsersResource);
+
+            pipMockedResource.registerStandardResources();
+
+        }
+    );
 
 })();

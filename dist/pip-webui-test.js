@@ -6,224 +6,394 @@
 (function () {
     'use strict';
 
-    angular.module('pipWebuiTests', [
+    var thisModule = angular.module('pipWebuiTests', [
         'pipDataGenerator',
         'pipFakeDataModel',
-        'pipMocks'
+        'pipMocked',
+        'pipGenerators.User',
+        'pipGenerators'
     ]);
+
+
+    thisModule.run(
+        ['pipMockedResource', 'MockedResource', 'MockedUsersResource', 'UnMockedResource', function(pipMockedResource, MockedResource, MockedUsersResource, UnMockedResource) {
+
+            pipMockedResource.addMocks(UnMockedResource);
+            pipMockedResource.addMocks(MockedUsersResource);
+
+            pipMockedResource.registerStandardResources();
+
+        }]
+    );
 
 })();
 
-/*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Entry', []);
-
-    thisModule.service('pipFakeDataModelEntry', ['pipTestGeneral', function (pipTestGeneral) {
-
-        this.data = [
-            {
-
-            }     
-        ];
-        
-
-    }]);
-
-})(window._);
-
 /**
- * @file Registration of Fake Data Model
+ * @file pipMocked
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
 (function () {
     'use strict';
 
-    angular.module('pipFakeDataModel', [
-        'pipFakeDataModel.Users',
-        'pipFakeDataModel.Files',
-        'pipFakeDataModel.Settings',
-        'pipFakeDataModel.Entry'
+    var thisModule = angular.module('pipMocked', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('pipMockedResource', function () {
+
+        // var newFakeServerUrl = '';
+
+        var mocks = [];
+
+        // this.fakeServerUrl = function (newFakeServerUrl) {
+        //     if (newFakeServerUrl)
+        //         fakeServerUrl = newFakeServerUrl;
+        //     return newFakeServerUrl;
+        // };
+
+        return {
+            addMocks: addMocks,
+            registerStandardResources: registerStandardResources
+        };
+
+        function registerStandardResources() {
+            for (var i = 0; i < mocks.length; i++) {
+                var obj = mocks[i];
+                obj.register();
+            }
+        }
+
+        function registerSampleResources() {
+
+        }
+
+        function addMocks(extension) {
+            console.log('addMocks', extension);
+            if (extension && angular.isObject(extension)) {
+                mocks.push(extension);
+            }
+        };
+
+    });
+
+    thisModule.factory('MockedResource', ['$httpBackend', '$log', function ($httpBackend, $log) {
+            this.api = '';
+            this.fakeUrl = 'http://alpha.pipservices.net';
+
+            this.register = function() {}
+
+        return this;
+    }]);
+
+    thisModule.factory('UnMockedResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+            var child = Object.create(MockedResource);
+
+            child.api = '';
+
+            child.register = function() {
+                $httpBackend.whenGET(/^(http:\/\/alpha.pipservices.net\/api\/){0}.*?/).passThrough();           
+            }
+            return child;
+    }]);
+
+    thisModule.factory('MockedUsersResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/users';
+
+        child.register = function() {
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            }); 
+        }
+
+        return child;
+    }]);
+
+})();
+ 
+/**
+ * @file pipDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators', []);
+
+    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
+
+        var someClass = function(name, refs) {
+            this.name = name;
+            // List of references collection names
+            this.refs = refs; // string?    
+
+                this.initObject = initObject;
+                this.newObject = newObject;
+                this.newObjectList = newObjectList;
+                this.initObjectList = initObjectList;
+                this.updateObject = updateObject;
+        }
+            // // Collection name
+            // this.name = null;
+            // // List of references collection names
+            // this.refs = ''; // string?
+
+            // return {
+            //     initObject: initObject,
+            //     newObject: newObject,
+            //     newObjectList: newObjectList,
+            //     initObjectList: initObjectList,
+            //     updateObject: updateObject
+            // }
+
+            function initObject(obj) {
+                var result;
+
+                return result;
+            }
+
+            function newObject(refs) {
+                var result;
+
+                return result;                
+            }
+
+            function newObjectList(count, refs) {
+                var result = [];
+
+                return result;                
+            }
+
+            function initObjectList(obj) {
+                var result = [];
+
+                return result;                
+            }
+
+            function updateObject(index, obj, refs) {
+                var result;
+
+                return result;                 
+            }
+
+            return someClass;
+
+        }]
+    );
+
+})();
+ 
+/**
+ * @file pipUserDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.User', []);
+
+    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', '$log', function (pipDataGenerator, $log) {
+            // var child = Object.create(pipDataGenerator);
+            var child = new pipDataGenerator('Users', '');
+
+
+            // child.name = 'Users';
+
+            // child.refs = '';
+            child.party = true;
+
+            return child;
+    }]);
+
+})();
+ 
+/**
+ * @file Mocks for REST API
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+/* API list
+
+/api/users/current
+/api/users/:id
+/api/users/:party_id/sessions/:id
+/api/parties/:id
+
+
+/api/parties/:party_id/settings
+
+/api/image_sets/:id
+/api/images/search
+
+/api/guides/:id
+/api/tips/:id
+/api/feedbacks/:id
+/api/announcements/:id
+
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+/api/signup
+/api/signout
+/api/signin
+*/
+
+
+(function () {
+    'use strict';
+
+    angular.module('pipMocks', [
+        'pipMocks.Files',
+        'pipMocks.Settings',
+        'pipMocks.Entry',
+        'pipMocks.Users'        
     ]);
 
 })();
 
 /*
- *
+ * Mocks for Entry REST API
  * (с) Digital Living Software Corp. 2014-2016
  */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Files', []);
-
-    thisModule.service('pipFakeDataModelFiles', ['pipTestGeneral', function (pipTestGeneral) {
-
-        this.data = [
-            {
-
-            }     
-        ];
-        
-
-    }]);
-
-})(window._);
 
 /*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
+/api/signin
+/api/signup
+/api/signout
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+*/
 
 /* global angular */
 
-(function (_) {
+(function () {
     'use strict';
 
-    var thisModule = angular.module('pipFakeDataModel.Settings', []);
+    var thisModule = angular.module('pipMocks.Entry', ['ngMockE2E', 'ngResource']);
 
-    thisModule.service('pipFakeDataModelSettings', ['pipTestGeneral', function (pipTestGeneral) {
+    thisModule.run(
+        ['$httpBackend', 'pipFakeDataModelUsers', 'pipDataGeneratorGeneral', function($httpBackend, pipFakeDataModelUsers, pipDataGeneratorGeneral) {
 
-        this.data = [
-            {
-
-            }     
-        ];
+            var SIGNIN = '/api/signin',
+                SIGNUP = '/api/signup';
+        console.log('pipMocks.Entry');
+            // config this
+            var serverUrl = pipDataGeneratorGeneral.serverUrl();
         
+            $httpBackend.whenGET(serverUrl + SIGNIN).respond(function(method, url, data, headers, params) {
+                var requestData = data ? JSON.parse(data) : {},
+                    user = pipFakeDataModelUsers.addOne({email: data["email"]});
 
-    }]);
+                return [200, user, user];
+            });
+       
+            $httpBackend.whenPOST(serverUrl + SIGNIN).respond(function(method, url, data, headers, params) {
+                var requestData = data ? JSON.parse(data) : {},
+                    user = pipFakeDataModelUsers.addOne({email: requestData["email"]});
 
-})(window._);
+                return [200, user, user];
+            });
+
+
+            // config this?
+            // $httpBackend.whenGET(/samples\//).passThrough();
+            $httpBackend.whenGET(/^(http:\/\/alpha.pipservices.net\/api\/){0}.*?/).passThrough();
+        }]
+    );
+
+})();
 
 /*
- *
+ * Mocks for Files REST API
  * (с) Digital Living Software Corp. 2014-2016
  */
 
 /* global angular */
 
-(function (_) {
+(function () {
     'use strict';
 
-    var thisModule = angular.module('pipFakeDataModel.Users', []);
+    var thisModule = angular.module('pipMocks.Files', []);
 
-    thisModule.service('pipFakeDataModelUsers', ['pipDataGeneratorGeneral', 'pipDataGeneratorUserParty', function (pipDataGeneratorGeneral, pipDataGeneratorUserParty) {
+    thisModule.config(function() {
 
-        var usersCollection = [];
+    });
 
-        return {
-            dataGenerate: dataGenerate,
-            getData: getData,
-            setData: setData,
-            findOne: findOne,
-            findAll: findAll,
-            findMany: findMany,
-            addOne: addOne,
-            updateOne: updateOne,
-            deleteOne: deleteOne
-        };
-
-        function dataGenerate (n) {
-            var newUser, i,
-                length = n > 0 ? n : 10;
-
-            usersCollection = [];
-
-            for (i = 0; i < length; i++) {
-                newUser = pipDataGeneratorUserParty.getOneUser();
-                usersCollection.push(newUser);
-            }
-
-            return usersCollection;
-        }
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
         
-        function getData () {
-            return usersCollection;
-        }
+          
+        }]
+    );
+
+})();
+
+/*
+ * Mocks for Settings REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocks.Settings', []);
+
+    thisModule.config(function() {
+
+    });
+
+    thisModule.run(
+        ['$httpBackend', function($httpBackend) {
         
-        function setData (data) {
-            usersCollection = data;
-        }
-    
-        function findOne (params) {
-            // find the user that matches that params
-            var user = _.find(usersCollection, params) || [];
+          
+        }]
+    );
 
-            return user[0] || null;
-        }
-    
-        function findAll () {
-            return getData();
-        }
-        
-        function findMany(params) {
-            var users = _.find(usersCollection, params) || [];
+})();
 
-            return users;
-        }
-        
-        function addOne(data) {
-            // must calculate a unique ID to add the new data
-            var newUser;
+/*
+ * Mocks for Users REST API
+ * (с) Digital Living Software Corp. 2014-2016
+ */
 
-            newUser = pipDataGeneratorUserParty.getOneUser(data);
-            usersCollection.push(newUser);
+/* global angular */
 
-            return newUser;
-        }
-        
-        function updateOne(userId, user) {
-            // find the user that matches that id
-            var users = getData(),
-                match = null,
-                i;
+(function () {
+    'use strict';
 
-            for (i = 0; i < users.length; i++) {
-                if(users[i].id == userId) {
-                    match = users[i];
-                    break;
-                }
-            }
+    var thisModule = angular.module('pipMocks.Users', ['ngMockE2E', 'ngResource']);
 
-            if(!angular.isObject(match)) {
-                return {};
-            }
+    thisModule.run(
+        ['$httpBackend', 'pipFakeDataModelUsers', 'pipDataGeneratorGeneral', function($httpBackend, pipFakeDataModelUsers, pipDataGeneratorGeneral) {
+            var USERS = '/api/users';
 
-            angular.extend(match, user);
+        console.log('pipMocks.Users');
+            // config this
+            var serverUrl = pipDataGeneratorGeneral.serverUrl();
 
-            return match;
-        }
-        
-        function deleteOne (userId) {
-            // find the user that matches that id
-            var users = getData(),
-                match = false, 
-                i;
+       
+            $httpBackend.whenPOST(serverUrl + USERS).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+                return [200, {}, {}];
+            });
 
-            for (i = 0; i < users.length; i++) {
-                if(users[i].id == userId) {
-                    match = true;
-                    users.splice(i, 1);
-                    break;
-                }
-            }
+        }]
+    );
 
-            return match;
-        }
-    }]);
-
-})(window._);
+})();
 
 /**
  * @file Pip Data Generator
@@ -484,191 +654,215 @@
 
 })(window._, window.chance);
 
-/**
- * @file Mocks for REST API
- * @copyright Digital Living Software Corp. 2014-2016
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
  */
 
-/* API list
+/* global angular */
 
-/api/users/current
-/api/users/:id
-/api/users/:party_id/sessions/:id
-/api/parties/:id
+(function (_) {
+    'use strict';
 
+    var thisModule = angular.module('pipFakeDataModel.Entry', []);
 
-/api/parties/:party_id/settings
+    thisModule.service('pipFakeDataModelEntry', ['pipTestGeneral', function (pipTestGeneral) {
 
-/api/image_sets/:id
-/api/images/search
+        this.data = [
+            {
 
-/api/guides/:id
-/api/tips/:id
-/api/feedbacks/:id
-/api/announcements/:id
+            }     
+        ];
+        
 
-/api/signup_validate
-/api/verify_email
-/api/users/:party_id/resend_email_verification
-/api/change_password
-/api/reset_password
-/api/recover_password
-/api/signup
-/api/signout
-/api/signin
-*/
+    }]);
 
+})(window._);
+
+/**
+ * @file Registration of Fake Data Model
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
 
 (function () {
     'use strict';
 
-    angular.module('pipMocks', [
-        'pipMocks.Files',
-        'pipMocks.Settings',
-        'pipMocks.Entry',
-        'pipMocks.Users'        
+    angular.module('pipFakeDataModel', [
+        'pipFakeDataModel.Users',
+        'pipFakeDataModel.Files',
+        'pipFakeDataModel.Settings',
+        'pipFakeDataModel.Entry'
     ]);
 
 })();
 
 /*
- * Mocks for Files REST API
+ *
  * (с) Digital Living Software Corp. 2014-2016
  */
 
 /* global angular */
 
-(function () {
+(function (_) {
     'use strict';
 
-    var thisModule = angular.module('pipMocks.Files', []);
+    var thisModule = angular.module('pipFakeDataModel.Files', []);
 
-    thisModule.config(function() {
+    thisModule.service('pipFakeDataModelFiles', ['pipTestGeneral', function (pipTestGeneral) {
 
-    });
+        this.data = [
+            {
 
-    thisModule.run(
-        ['$httpBackend', function($httpBackend) {
+            }     
+        ];
         
-          
-        }]
-    );
 
-})();
+    }]);
+
+})(window._);
 
 /*
- * Mocks for Settings REST API
+ *
  * (с) Digital Living Software Corp. 2014-2016
  */
 
 /* global angular */
 
-(function () {
+(function (_) {
     'use strict';
 
-    var thisModule = angular.module('pipMocks.Settings', []);
+    var thisModule = angular.module('pipFakeDataModel.Settings', []);
 
-    thisModule.config(function() {
+    thisModule.service('pipFakeDataModelSettings', ['pipTestGeneral', function (pipTestGeneral) {
 
-    });
+        this.data = [
+            {
 
-    thisModule.run(
-        ['$httpBackend', function($httpBackend) {
+            }     
+        ];
         
-          
-        }]
-    );
 
-})();
+    }]);
+
+})(window._);
 
 /*
- * Mocks for Users REST API
+ *
  * (с) Digital Living Software Corp. 2014-2016
  */
 
 /* global angular */
 
-(function () {
+(function (_) {
     'use strict';
 
-    var thisModule = angular.module('pipMocks.Users', ['ngMockE2E', 'ngResource']);
+    var thisModule = angular.module('pipFakeDataModel.Users', []);
 
-    thisModule.run(
-        ['$httpBackend', 'pipFakeDataModelUsers', 'pipDataGeneratorGeneral', function($httpBackend, pipFakeDataModelUsers, pipDataGeneratorGeneral) {
-            var USER_ID = '/api/users/:id',
-                USERS = '/api/users';
+    thisModule.service('pipFakeDataModelUsers', ['pipDataGeneratorGeneral', 'pipDataGeneratorUserParty', function (pipDataGeneratorGeneral, pipDataGeneratorUserParty) {
 
-        console.log('pipMocks.Users');
-            // config this
-            var serverUrl = pipDataGeneratorGeneral.serverUrl();
+        var usersCollection = [];
 
-       
-            $httpBackend.whenPOST(serverUrl + USERS).respond(function(method, url, data, headers, params) {
-                // var requestData = data ? JSON.parse(data) : {},
-                //     user = pipFakeDataModelUsers.addOne({email: requestData["email"]});
-console.log('pipMocks.Users22222', data, headers, params);
-                return [200, user, user];
-            });
+        return {
+            dataGenerate: dataGenerate,
+            getData: getData,
+            setData: setData,
+            findOne: findOne,
+            findAll: findAll,
+            findMany: findMany,
+            addOne: addOne,
+            updateOne: updateOne,
+            deleteOne: deleteOne
+        };
 
-        }]
-    );
+        function dataGenerate (n) {
+            var newUser, i,
+                length = n > 0 ? n : 10;
 
-})();
+            usersCollection = [];
 
-/*
- * Mocks for Entry REST API
- * (с) Digital Living Software Corp. 2014-2016
- */
+            for (i = 0; i < length; i++) {
+                newUser = pipDataGeneratorUserParty.getOneUser();
+                usersCollection.push(newUser);
+            }
 
-/*
-/api/signin
-/api/signup
-/api/signout
-/api/signup_validate
-/api/verify_email
-/api/users/:party_id/resend_email_verification
-/api/change_password
-/api/reset_password
-/api/recover_password
-*/
-
-/* global angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocks.Entry', ['ngMockE2E', 'ngResource']);
-
-    thisModule.run(
-        ['$httpBackend', 'pipFakeDataModelUsers', 'pipDataGeneratorGeneral', function($httpBackend, pipFakeDataModelUsers, pipDataGeneratorGeneral) {
-
-            var SIGNIN = '/api/signin',
-                SIGNUP = '/api/signup';
-        console.log('pipMocks.Entry');
-            // config this
-            var serverUrl = pipDataGeneratorGeneral.serverUrl();
+            return usersCollection;
+        }
         
-            $httpBackend.whenGET(serverUrl + SIGNIN).respond(function(method, url, data, headers, params) {
-                var requestData = data ? JSON.parse(data) : {},
-                    user = pipFakeDataModelUsers.addOne({email: data["email"]});
+        function getData () {
+            return usersCollection;
+        }
+        
+        function setData (data) {
+            usersCollection = data;
+        }
+    
+        function findOne (params) {
+            // find the user that matches that params
+            var user = _.find(usersCollection, params) || [];
 
-                return [200, user, user];
-            });
-       
-            $httpBackend.whenPOST(serverUrl + SIGNIN).respond(function(method, url, data, headers, params) {
-                var requestData = data ? JSON.parse(data) : {},
-                    user = pipFakeDataModelUsers.addOne({email: requestData["email"]});
+            return user[0] || null;
+        }
+    
+        function findAll () {
+            return getData();
+        }
+        
+        function findMany(params) {
+            var users = _.find(usersCollection, params) || [];
 
-                return [200, user, user];
-            });
+            return users;
+        }
+        
+        function addOne(data) {
+            // must calculate a unique ID to add the new data
+            var newUser;
 
+            newUser = pipDataGeneratorUserParty.getOneUser(data);
+            usersCollection.push(newUser);
 
-            // config this?
-            // $httpBackend.whenGET(/samples\//).passThrough();
-            $httpBackend.whenGET(/^(http:\/\/alpha.pipservices.net\/api\/){0}.*?/).passThrough();
-        }]
-    );
+            return newUser;
+        }
+        
+        function updateOne(userId, user) {
+            // find the user that matches that id
+            var users = getData(),
+                match = null,
+                i;
 
-})();
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = users[i];
+                    break;
+                }
+            }
+
+            if(!angular.isObject(match)) {
+                return {};
+            }
+
+            angular.extend(match, user);
+
+            return match;
+        }
+        
+        function deleteOne (userId) {
+            // find the user that matches that id
+            var users = getData(),
+                match = false, 
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = true;
+                    users.splice(i, 1);
+                    break;
+                }
+            }
+
+            return match;
+        }
+    }]);
+
+})(window._);
 
 //# sourceMappingURL=pip-webui-test.js.map

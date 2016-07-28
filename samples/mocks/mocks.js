@@ -13,16 +13,19 @@
     });
 
     thisModule.controller('MocksController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers) {
+        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers,
+        pipUserDataGenerator, pipDataGenerator) {
 
             $scope.signIn = signIn;
 
             $scope.onUser = onUser;
 
-
             pipAppBar.showMenuNavIcon();
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('MOCKS');
+
+console.log('pipDataGenerator1', new pipDataGenerator('new name', 'refs1'));
+console.log('pipUserDataGenerator1', pipUserDataGenerator);
 
             return;
 
