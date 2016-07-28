@@ -10,8 +10,10 @@
         'pipDataGenerator',
         'pipFakeDataModel',
         'pipMocked',
+
+        'pipGenerators',
         'pipGenerators.User',
-        'pipGenerators'
+        'pipTestCollection'
     ]);
 
 

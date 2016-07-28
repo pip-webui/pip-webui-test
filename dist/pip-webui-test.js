@@ -10,8 +10,10 @@
         'pipDataGenerator',
         'pipFakeDataModel',
         'pipMocked',
+
+        'pipGenerators',
         'pipGenerators.User',
-        'pipGenerators'
+        'pipTestCollection'
     ]);
 
 
@@ -109,104 +111,6 @@
         }
 
         return child;
-    }]);
-
-})();
- 
-/**
- * @file pipDataGenerators
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators', []);
-
-    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
-
-        var someClass = function(name, refs) {
-            this.name = name;
-            // List of references collection names
-            this.refs = refs; // string?    
-
-                this.initObject = initObject;
-                this.newObject = newObject;
-                this.newObjectList = newObjectList;
-                this.initObjectList = initObjectList;
-                this.updateObject = updateObject;
-        }
-            // // Collection name
-            // this.name = null;
-            // // List of references collection names
-            // this.refs = ''; // string?
-
-            // return {
-            //     initObject: initObject,
-            //     newObject: newObject,
-            //     newObjectList: newObjectList,
-            //     initObjectList: initObjectList,
-            //     updateObject: updateObject
-            // }
-
-            function initObject(obj) {
-                var result;
-
-                return result;
-            }
-
-            function newObject(refs) {
-                var result;
-
-                return result;                
-            }
-
-            function newObjectList(count, refs) {
-                var result = [];
-
-                return result;                
-            }
-
-            function initObjectList(obj) {
-                var result = [];
-
-                return result;                
-            }
-
-            function updateObject(index, obj, refs) {
-                var result;
-
-                return result;                 
-            }
-
-            return someClass;
-
-        }]
-    );
-
-})();
- 
-/**
- * @file pipUserDataGenerators
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.User', []);
-
-    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', '$log', function (pipDataGenerator, $log) {
-            // var child = Object.create(pipDataGenerator);
-            var child = new pipDataGenerator('Users', '');
-
-
-            // child.name = 'Users';
-
-            // child.refs = '';
-            child.party = true;
-
-            return child;
     }]);
 
 })();
@@ -395,6 +299,122 @@
 
 })();
 
+/**
+ * @file pipDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators', []);
+
+    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
+
+        var dataGenerator = function(name, refs) {
+            this.name = name;
+            // List of references collection names
+            this.refs = refs; // string?    
+
+            this.initObject = initObject;
+            this.newObject = newObject;
+            this.newObjectList = newObjectList;
+            this.initObjectList = initObjectList;
+            this.updateObject = updateObject;
+        }
+            // // Collection name
+            // this.name = null;
+            // // List of references collection names
+            // this.refs = ''; // string?
+
+            // return {
+            //     initObject: initObject,
+            //     newObject: newObject,
+            //     newObjectList: newObjectList,
+            //     initObjectList: initObjectList,
+            //     updateObject: updateObject
+            // }
+
+            function initObject(obj) {
+                var result;
+
+                return result;
+            }
+
+            function newObject(refs) {
+                var result;
+
+                return result;                
+            }
+
+            function newObjectList(count, refs) {
+                var result = [];
+
+                return result;                
+            }
+
+            function initObjectList(obj) {
+                var result = [];
+
+                return result;                
+            }
+
+            function updateObject(index, obj, refs) {
+                var result;
+
+                return result;                 
+            }
+
+        return dataGenerator;
+
+    }]);
+
+})();
+ 
+/**
+ * @file pipTestCollection
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipTestCollection', []);
+
+    thisModule.factory('pipTestCollection', ['$log', function ($log) {
+
+        var testCollection = function(generator) { // generator: pipDataGenerator
+            this.constructor(generator);
+
+        }
+
+
+        return testCollection;
+
+    }]);
+
+})();
+/**
+ * @file pipUserDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.User', []);
+
+    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', '$log', function (pipDataGenerator, $log) {
+            // var child = Object.create(pipDataGenerator);
+            var child = new pipDataGenerator('User', 'User refs');
+
+            child.someproperty = true;
+
+            return child;
+    }]);
+
+})();
+ 
 /**
  * @file Pip Data Generator
  * @copyright Digital Living Software Corp. 2014-2016

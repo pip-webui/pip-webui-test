@@ -64,10 +64,9 @@
                 return result;                 
             }
 
-            return someClass;
+        return dataGenerator;
 
-        }
-    );
+    });
 
 })();
  
