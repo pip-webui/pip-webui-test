@@ -2,12 +2,17 @@
 
 ![](https://img.shields.io/badge/license-MIT-blue.svg)
 
-This module provides primitives for testing across all Pip.WebUI projects:
-* Random data generators
-* Resource mocks for standard REST API supported by Pip.WebUI connected controls
-* Resource mocks for sample REST API used in tests and samples
+Automated testing in web applications often requires to mock RESTful calls and substitude server data
+with predictable test databases. Pip.WebUI.Test modules contains data generators and mocked REST resources
+that used across all Pip.WebUI modules. They also used in Pip.WebUI samples and can help in testing final applications.
 
-TBD: Add samples to demonstrate how to use mocks and data generators
+## Test data generators
+
+Todo: Add code snippet to demonstrate use of data generators
+
+## Mocks for REST resources
+
+Todo: Add code snippet to demonstrate use of mocked rest resources (how to plug standard and custom resources).
 
 ## Learn more about the module
 
