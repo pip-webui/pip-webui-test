@@ -6,11 +6,17 @@ Automated testing in web applications often requires to mock RESTful calls and s
 with predictable test databases. Pip.WebUI.Test modules contains data generators and mocked REST resources
 that used across all Pip.WebUI modules. They also used in Pip.WebUI samples and can help in testing final applications.
 
-## Test data generators
+### Test data generators
+
+Data generators allow to create predefined or random data objects, or update existing object with random changes.
 
 Todo: Add code snippet to demonstrate use of data generators
 
-## Mocks for REST resources
+### Mocks for REST resources
+
+Connected controls in Pip.WebUI rely on certain server REST API. Framework user is responsible for implementing that API 
+according to specifications. For testing that API can replaced with mocked resources from this module. 
+The resources shall be registered in pipRest services as shown on the snippet below.
 
 Todo: Add code snippet to demonstrate use of mocked rest resources (how to plug standard and custom resources).
 
