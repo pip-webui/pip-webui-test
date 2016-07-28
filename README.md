@@ -28,6 +28,9 @@ Todo: Add code snippet to demonstrate use of mocked rest resources (how to plug 
 - [Developer's guide](doc/DevelopersGuide.md)
 - [Changelog](CHANGELOG.md)
 - [Pip.WebUI project website](http://www.pipwebui.org)
+- [Pip.WebUI project wiki](https://github.com/pip-webui/pip-webui/wiki)
+- [Pip.WebUI discussion forum](https://groups.google.com/forum/#!forum/pip-webui)
+- [Pip.WebUI team blog](https://pip-webui.blogspot.com/)
 
 ## <a name="dependencies"></a>Module dependencies
 
