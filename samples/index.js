@@ -20,10 +20,10 @@
         function ($scope, $rootScope, $state, $mdSidenav, $timeout, pipTranslate, $mdTheming, pipTheme, $mdMedia) {
 
             $scope.pages = [ 
-                { title: 'Mocks', state: 'mocks', url: '/mocks',
+                { title: 'Mocks', state: 'mocks', url: '/mocks', auth: false,
                     controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' 
                 },
-                { title: 'User Generator', state: 'user_generator', url: '/user_generator',
+                { title: 'User Generator', state: 'user_generator', url: '/user_generator', auth: false,
                     controller: 'GenerateUsersController', templateUrl: '../samples/data_generators/user_generator.html'
                 }              
             ];

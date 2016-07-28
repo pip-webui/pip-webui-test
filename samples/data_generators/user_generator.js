@@ -15,7 +15,7 @@
     thisModule.controller('GenerateUsersController',
         function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers) {
 
-            $scope.userCollection = [];
+            $scope.userCollection = pipFakeDataModelUsers.getData();
 
             $scope.onGenerate = onGenerate;
             $scope.onSetUsers = onSetUsers;
@@ -34,9 +34,12 @@
 
             return;
 
-            function onGenerate() {
-                $scope.userCollection = pipFakeDataModelUsers.dataGenerate();
-            }            
+            function getCode(user) {
+                var str = JSON.stringify(user, "", 4);
+
+                return str.replace(/^\s*/,'').replace(/\s*$/,'');
+
+            } 
 
             function getCode(user) {
                 var str = JSON.stringify(user, "", 4);

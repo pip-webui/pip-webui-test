@@ -37,10 +37,10 @@
     'use strict';
 
     angular.module('pipMocks', [
-        'pipMocks.Users',
         'pipMocks.Files',
         'pipMocks.Settings',
-        'pipMocks.Entry'
+        'pipMocks.Entry',
+        'pipMocks.Users'        
     ]);
 
 })();

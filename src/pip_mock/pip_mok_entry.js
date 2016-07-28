@@ -22,32 +22,29 @@
 
     var thisModule = angular.module('pipMocks.Entry', ['ngMockE2E', 'ngResource']);
 
-    // thisModule.config(function($provide) {
-    //     $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
-    // });
-
     thisModule.run(
         function($httpBackend, pipFakeDataModelUsers, pipDataGeneratorGeneral) {
 
             var SIGNIN = '/api/signin',
                 SIGNUP = '/api/signup';
-
+        console.log('pipMocks.Entry');
             // config this
-            var serverUrl = pipDataGeneratorGeneral.serverUrl;
+            var serverUrl = pipDataGeneratorGeneral.serverUrl();
         
-            $httpBackend.whenGET(serverUrl + SIGNIN).respond(function(method, url, data) {
+            $httpBackend.whenGET(serverUrl + SIGNIN).respond(function(method, url, data, headers, params) {
                 var requestData = data ? JSON.parse(data) : {},
                     user = pipFakeDataModelUsers.addOne({email: data["email"]});
 
                 return [200, user, user];
             });
        
-            $httpBackend.whenPOST(serverUrl + SIGNIN).respond(function(method, url, data, headers) {
+            $httpBackend.whenPOST(serverUrl + SIGNIN).respond(function(method, url, data, headers, params) {
                 var requestData = data ? JSON.parse(data) : {},
                     user = pipFakeDataModelUsers.addOne({email: requestData["email"]});
 
                 return [200, user, user];
             });
+
 
             // config this?
             // $httpBackend.whenGET(/samples\//).passThrough();

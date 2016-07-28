@@ -13,9 +13,12 @@
     });
 
     thisModule.controller('MocksController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral) {
+        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers) {
 
             $scope.signIn = signIn;
+
+            $scope.onUser = onUser;
+
 
             pipAppBar.showMenuNavIcon();
             pipAppBar.showLanguage();
@@ -24,20 +27,42 @@
             return;
 
             function signIn() {
-                pipSession.signin(
-                    {
-                        serverUrl: pipDataGeneratorGeneral.serverUrl, 
-                        email: pipDataGeneratorGeneral.getEmail(),
-                        password: pipDataGeneratorGeneral.getPassword(),
-                    },
-                    function (user) {
-                        console.log('SignIn', user);
-                    },
-                    function (error) {
-                        console.log(error);
+                var requestUrl = pipDataGeneratorGeneral.serverUrl() + '/api/signin';
+                
+                $http['post'](requestUrl, {email: pipDataGeneratorGeneral.getEmail(), password: pipDataGeneratorGeneral.getPassword()})
+                    .success(function (result) {
+                        console.log('SignIn user:', result);
+                    })
+                    .error(function (error) {
+                        console.log('SignIn error:', error);
                     }
                 );
-            }            
+            }    
+
+            function onUser() {
+                var requestUrl,
+                    user = pipFakeDataModelUsers.addOne();
+                console.log('onUser', user);
+
+                if (!user || !user.id) {
+                    return;
+                }
+
+
+                requestUrl = pipDataGeneratorGeneral.serverUrl() + '/api/users';
+                console.log('onUser requestUrl', requestUrl);
+
+                $http['post'](requestUrl, {})
+                    .success(function (result) {
+                        console.log('onUser result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onUser error', error); 
+                    }
+                );
+             
+            }          
+
 
         }
     );
