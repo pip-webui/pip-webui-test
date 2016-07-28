@@ -22,16 +22,16 @@ Todo: Add code snippet to demonstrate use of mocked rest resources (how to plug 
 
 ## Learn more about the module
 
-- [API reference](http://webui-api.pipdevs.com/pip-webui-test/index.html)
-- [Online samples](http://webui.pipdevs.com/pip-webui-test/index.html)
 - [User's guide](doc/UsersGuide.md)
+- [Online samples](http://webui.pipdevs.com/pip-webui-test/index.html)
+- [API reference](http://webui-api.pipdevs.com/pip-webui-test/index.html)
 - [Developer's guide](doc/DevelopersGuide.md)
 - [Changelog](CHANGELOG.md)
 - [Pip.WebUI project website](http://www.pipwebui.org)
 
 ## <a name="dependencies"></a>Module dependencies
 
-* <a href="https://github.com/pip-webui/pip-webui-lib">pip-webui-lib</a>: use Angular, Angular mocks, Chance and other 3rd party libraries
+* [pip-webui-lib](https://github.com/pip-webui/pip-webui-lib): angular, angular-mocks, chance and other 3rd party libraries
 
 ## <a name="license"></a>License
 
