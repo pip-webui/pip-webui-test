@@ -31,6 +31,122 @@
 })();
 
 /**
+ * @file pipDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators', []);
+
+    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
+
+        var dataGenerator = function(name, refs) {
+            this.name = name;
+            // List of references collection names
+            this.refs = refs; // string?    
+
+            this.initObject = initObject;
+            this.newObject = newObject;
+            this.newObjectList = newObjectList;
+            this.initObjectList = initObjectList;
+            this.updateObject = updateObject;
+        }
+            // // Collection name
+            // this.name = null;
+            // // List of references collection names
+            // this.refs = ''; // string?
+
+            // return {
+            //     initObject: initObject,
+            //     newObject: newObject,
+            //     newObjectList: newObjectList,
+            //     initObjectList: initObjectList,
+            //     updateObject: updateObject
+            // }
+
+            function initObject(obj) {
+                var result;
+
+                return result;
+            }
+
+            function newObject(refs) {
+                var result;
+
+                return result;                
+            }
+
+            function newObjectList(count, refs) {
+                var result = [];
+
+                return result;                
+            }
+
+            function initObjectList(obj) {
+                var result = [];
+
+                return result;                
+            }
+
+            function updateObject(index, obj, refs) {
+                var result;
+
+                return result;                 
+            }
+
+        return dataGenerator;
+
+    }]);
+
+})();
+ 
+/**
+ * @file pipTestCollection
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipTestCollection', []);
+
+    thisModule.factory('pipTestCollection', ['$log', function ($log) {
+
+        var testCollection = function(generator) { // generator: pipDataGenerator
+            this.constructor(generator);
+
+        }
+
+
+        return testCollection;
+
+    }]);
+
+})();
+/**
+ * @file pipUserDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.User', []);
+
+    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', '$log', function (pipDataGenerator, $log) {
+            // var child = Object.create(pipDataGenerator);
+            var child = new pipDataGenerator('User', 'User refs');
+
+            child.someproperty = true;
+
+            return child;
+    }]);
+
+})();
+ 
+/**
  * @file pipMocked
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -299,122 +415,217 @@
 
 })();
 
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Entry', []);
+
+    thisModule.service('pipFakeDataModelEntry', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+
+    }]);
+
+})(window._);
+
 /**
- * @file pipDataGenerators
+ * @file Registration of Fake Data Model
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
 (function () {
     'use strict';
 
-    var thisModule = angular.module('pipGenerators', []);
+    angular.module('pipFakeDataModel', [
+        'pipFakeDataModel.Users',
+        'pipFakeDataModel.Files',
+        'pipFakeDataModel.Settings',
+        'pipFakeDataModel.Entry'
+    ]);
 
-    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
+})();
 
-        var dataGenerator = function(name, refs) {
-            this.name = name;
-            // List of references collection names
-            this.refs = refs; // string?    
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
 
-            this.initObject = initObject;
-            this.newObject = newObject;
-            this.newObjectList = newObjectList;
-            this.initObjectList = initObjectList;
-            this.updateObject = updateObject;
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Files', []);
+
+    thisModule.service('pipFakeDataModelFiles', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+
+    }]);
+
+})(window._);
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Settings', []);
+
+    thisModule.service('pipFakeDataModelSettings', ['pipTestGeneral', function (pipTestGeneral) {
+
+        this.data = [
+            {
+
+            }     
+        ];
+        
+
+    }]);
+
+})(window._);
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Users', []);
+
+    thisModule.service('pipFakeDataModelUsers', ['pipDataGeneratorGeneral', 'pipDataGeneratorUserParty', function (pipDataGeneratorGeneral, pipDataGeneratorUserParty) {
+
+        var usersCollection = [];
+
+        return {
+            dataGenerate: dataGenerate,
+            getData: getData,
+            setData: setData,
+            findOne: findOne,
+            findAll: findAll,
+            findMany: findMany,
+            addOne: addOne,
+            updateOne: updateOne,
+            deleteOne: deleteOne
+        };
+
+        function dataGenerate (n) {
+            var newUser, i,
+                length = n > 0 ? n : 10;
+
+            usersCollection = [];
+
+            for (i = 0; i < length; i++) {
+                newUser = pipDataGeneratorUserParty.getOneUser();
+                usersCollection.push(newUser);
+            }
+
+            return usersCollection;
         }
-            // // Collection name
-            // this.name = null;
-            // // List of references collection names
-            // this.refs = ''; // string?
-
-            // return {
-            //     initObject: initObject,
-            //     newObject: newObject,
-            //     newObjectList: newObjectList,
-            //     initObjectList: initObjectList,
-            //     updateObject: updateObject
-            // }
-
-            function initObject(obj) {
-                var result;
-
-                return result;
-            }
-
-            function newObject(refs) {
-                var result;
-
-                return result;                
-            }
-
-            function newObjectList(count, refs) {
-                var result = [];
-
-                return result;                
-            }
-
-            function initObjectList(obj) {
-                var result = [];
-
-                return result;                
-            }
-
-            function updateObject(index, obj, refs) {
-                var result;
-
-                return result;                 
-            }
-
-        return dataGenerator;
-
-    }]);
-
-})();
- 
-/**
- * @file pipTestCollection
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipTestCollection', []);
-
-    thisModule.factory('pipTestCollection', ['$log', function ($log) {
-
-        var testCollection = function(generator) { // generator: pipDataGenerator
-            this.constructor(generator);
-
+        
+        function getData () {
+            return usersCollection;
         }
+        
+        function setData (data) {
+            usersCollection = data;
+        }
+    
+        function findOne (params) {
+            // find the user that matches that params
+            var user = _.find(usersCollection, params) || [];
 
+            return user[0] || null;
+        }
+    
+        function findAll () {
+            return getData();
+        }
+        
+        function findMany(params) {
+            var users = _.find(usersCollection, params) || [];
 
-        return testCollection;
+            return users;
+        }
+        
+        function addOne(data) {
+            // must calculate a unique ID to add the new data
+            var newUser;
 
+            newUser = pipDataGeneratorUserParty.getOneUser(data);
+            usersCollection.push(newUser);
+
+            return newUser;
+        }
+        
+        function updateOne(userId, user) {
+            // find the user that matches that id
+            var users = getData(),
+                match = null,
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = users[i];
+                    break;
+                }
+            }
+
+            if(!angular.isObject(match)) {
+                return {};
+            }
+
+            angular.extend(match, user);
+
+            return match;
+        }
+        
+        function deleteOne (userId) {
+            // find the user that matches that id
+            var users = getData(),
+                match = false, 
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = true;
+                    users.splice(i, 1);
+                    break;
+                }
+            }
+
+            return match;
+        }
     }]);
 
-})();
-/**
- * @file pipUserDataGenerators
- * @copyright Digital Living Software Corp. 2014-2016
- */
+})(window._);
 
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.User', []);
-
-    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', '$log', function (pipDataGenerator, $log) {
-            // var child = Object.create(pipDataGenerator);
-            var child = new pipDataGenerator('User', 'User refs');
-
-            child.someproperty = true;
-
-            return child;
-    }]);
-
-})();
- 
 /**
  * @file Pip Data Generator
  * @copyright Digital Living Software Corp. 2014-2016
@@ -673,216 +884,5 @@
     });
 
 })(window._, window.chance);
-
-/*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Entry', []);
-
-    thisModule.service('pipFakeDataModelEntry', ['pipTestGeneral', function (pipTestGeneral) {
-
-        this.data = [
-            {
-
-            }     
-        ];
-        
-
-    }]);
-
-})(window._);
-
-/**
- * @file Registration of Fake Data Model
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    angular.module('pipFakeDataModel', [
-        'pipFakeDataModel.Users',
-        'pipFakeDataModel.Files',
-        'pipFakeDataModel.Settings',
-        'pipFakeDataModel.Entry'
-    ]);
-
-})();
-
-/*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Files', []);
-
-    thisModule.service('pipFakeDataModelFiles', ['pipTestGeneral', function (pipTestGeneral) {
-
-        this.data = [
-            {
-
-            }     
-        ];
-        
-
-    }]);
-
-})(window._);
-
-/*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Settings', []);
-
-    thisModule.service('pipFakeDataModelSettings', ['pipTestGeneral', function (pipTestGeneral) {
-
-        this.data = [
-            {
-
-            }     
-        ];
-        
-
-    }]);
-
-})(window._);
-
-/*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Users', []);
-
-    thisModule.service('pipFakeDataModelUsers', ['pipDataGeneratorGeneral', 'pipDataGeneratorUserParty', function (pipDataGeneratorGeneral, pipDataGeneratorUserParty) {
-
-        var usersCollection = [];
-
-        return {
-            dataGenerate: dataGenerate,
-            getData: getData,
-            setData: setData,
-            findOne: findOne,
-            findAll: findAll,
-            findMany: findMany,
-            addOne: addOne,
-            updateOne: updateOne,
-            deleteOne: deleteOne
-        };
-
-        function dataGenerate (n) {
-            var newUser, i,
-                length = n > 0 ? n : 10;
-
-            usersCollection = [];
-
-            for (i = 0; i < length; i++) {
-                newUser = pipDataGeneratorUserParty.getOneUser();
-                usersCollection.push(newUser);
-            }
-
-            return usersCollection;
-        }
-        
-        function getData () {
-            return usersCollection;
-        }
-        
-        function setData (data) {
-            usersCollection = data;
-        }
-    
-        function findOne (params) {
-            // find the user that matches that params
-            var user = _.find(usersCollection, params) || [];
-
-            return user[0] || null;
-        }
-    
-        function findAll () {
-            return getData();
-        }
-        
-        function findMany(params) {
-            var users = _.find(usersCollection, params) || [];
-
-            return users;
-        }
-        
-        function addOne(data) {
-            // must calculate a unique ID to add the new data
-            var newUser;
-
-            newUser = pipDataGeneratorUserParty.getOneUser(data);
-            usersCollection.push(newUser);
-
-            return newUser;
-        }
-        
-        function updateOne(userId, user) {
-            // find the user that matches that id
-            var users = getData(),
-                match = null,
-                i;
-
-            for (i = 0; i < users.length; i++) {
-                if(users[i].id == userId) {
-                    match = users[i];
-                    break;
-                }
-            }
-
-            if(!angular.isObject(match)) {
-                return {};
-            }
-
-            angular.extend(match, user);
-
-            return match;
-        }
-        
-        function deleteOne (userId) {
-            // find the user that matches that id
-            var users = getData(),
-                match = false, 
-                i;
-
-            for (i = 0; i < users.length; i++) {
-                if(users[i].id == userId) {
-                    match = true;
-                    users.splice(i, 1);
-                    break;
-                }
-            }
-
-            return match;
-        }
-    }]);
-
-})(window._);
 
 //# sourceMappingURL=pip-webui-test.js.map
