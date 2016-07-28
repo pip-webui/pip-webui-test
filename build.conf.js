@@ -39,5 +39,4 @@ module.exports = {
     api: {
         port: 8021
     }
-  }
 };
