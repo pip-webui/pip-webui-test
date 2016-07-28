@@ -34,10 +34,10 @@ module.exports = {
         ]
     },
     samples: {
-        port: 8010,
+        port: 8020,
     },
     api: {
-        port: 8011,
+        port: 8021,
     },
   eslint: {
     "extends": "standard",
