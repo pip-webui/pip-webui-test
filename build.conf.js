@@ -33,15 +33,6 @@ module.exports = {
             // '../pip-webui-help/dist/**/*'
         ]
     },
-    samples: {
-        port: 8004,
-        publish: {
-            bucket: 'webui.pipdevs.com',
-            accessKeyId: 'AKIAIEXTTAEEHYPHS3OQ',
-            secretAccessKey: 'otMg2vQLZjF4Nkb90j1prtugoUCNm3XqLS/KkHyc',
-            region: 'us-west-1'
-        }
-    },
   eslint: {
     "extends": "standard",
     "env"    : {
