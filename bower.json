@@ -1,0 +1,36 @@
+{
+  "name": "pip-webui-test",
+  "description": "Test framework for Pip.WebUI",
+  "version": "1.0.0",
+  "main": "",
+  "authors": [
+    {
+      "name": "Sergey Seroukhov",
+      "email": "seroukhov@gmail.com"
+    },
+    {
+      "name": "Anastas Fonotov",
+      "email": "anastasf@gmail.com"
+    }
+  ],
+  "license": "Commercial",
+  "keywords": [
+    "pip",
+    "webui",
+    "framework",
+    "test"
+  ],
+  "homepage": "https://github.com/pip-webui/pip-webui-test",
+  "ignore": [
+    ".gitignore",
+    "node_modules",
+    "bower_components",
+    "src",
+    "tests",
+    "samples",
+    "scripts",
+    "build.*",
+    "gulpfile.js",
+    "karma.conf.js"
+  ]
+}
