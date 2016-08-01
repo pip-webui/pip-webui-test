@@ -17,7 +17,8 @@
     );
 
     thisModule.controller('AppController',
-        function ($scope, $rootScope, $state, $mdSidenav, $timeout, pipTranslate, $mdTheming, pipTheme, $mdMedia) {
+        function ($scope, $rootScope, $state, $mdSidenav, $timeout, pipTranslate, $mdTheming, pipTheme, $mdMedia, pipAppBar) {
+
 
             $scope.pages = [ 
                 { title: 'Mocks', state: 'mocks', url: '/mocks', auth: false,
@@ -45,16 +46,9 @@
                 }
             };
 
-            $scope.isEntryPage = function () {
-                return $state.current.name === 'signin' || $state.current.name === 'signup' ||
-                    $state.current.name === 'recover_password' || $state.current.name === 'post_signup';
-            };
-
-            $scope.isPadding = function () {
-                return $rootScope.$state
-                    ? !($rootScope.$state.name === 'tabs' ||
-                    $rootScope.$state.name === 'dropdown' && $mdMedia('xs')) : true;
-            };
+            pipAppBar.showMenuNavIcon();
+            pipAppBar.showLanguage();
+            pipAppBar.showTitleText('NAVIGATION_CONTROLS');
 
         }
     );

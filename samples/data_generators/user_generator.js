@@ -41,11 +41,8 @@
 
             } 
 
-            function getCode(user) {
-                var str = JSON.stringify(user, "", 4);
-
-                return str.replace(/^\s*/,'').replace(/\s*$/,'');
-
+            function onGenerate($event) {
+                $scope.userCollection = pipFakeDataModelUsers.dataGenerate();
             } 
 
             function onCollapse($event, $index) {

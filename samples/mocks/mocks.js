@@ -24,8 +24,6 @@
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('MOCKS');
 
-console.log('pipDataGenerator1', new pipDataGenerator('new name', 'refs1'));
-console.log('pipUserDataGenerator1', pipUserDataGenerator);
 
             return;
 

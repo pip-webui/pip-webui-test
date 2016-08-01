@@ -18,9 +18,9 @@
 
 
     thisModule.run(
-        function(pipMockedResource, MockedResource, MockedUsersResource, UnMockedResource) {
+        function(pipMockedResource, MockedResource, MockedUsersResource, TruePathResource) {
 
-            pipMockedResource.addMocks(UnMockedResource);
+            pipMockedResource.addMocks(TruePathResource);
             pipMockedResource.addMocks(MockedUsersResource);
 
             pipMockedResource.registerStandardResources();
