@@ -1,9 +1,77 @@
 <h2 class="text-title tm0 bm24">Mocks {{:: 'SAMPLE' | translate }}:</h2>
-<md-button class="md-raised md-primary"
-           ng-click="signIn()">
-    SignIn
-</md-button>
-<md-button class="lm0 md-raised md-accent flat" 
-           ng-click="onUser($event)">
-           {{ ::'USER' | translate }}
-</md-button>
+<div> 
+
+    <h3>Entry</h3>
+    <md-button class="md-raised md-primary"
+            ng-click="onSignIn()">
+        SignIn
+    </md-button>
+
+    <md-button class="md-raised md-primary"
+            ng-click="onSignOut()">
+        SignOut
+    </md-button>
+
+    <md-button class="md-raised md-primary"
+            ng-click="onSignUp()">
+        SignUp
+    </md-button>
+
+    <md-button class="md-raised md-primary"
+            ng-click="onSignupValidate()">
+        SignupValidate
+    </md-button>
+
+    <md-button class="md-raised md-primary"
+            ng-click="onVerifyEmail()">
+        VerifyEmail
+    </md-button>
+    
+    <md-button class="md-raised md-primary"
+            ng-click="onRecoverPassword()">
+        RecoverPassword
+    </md-button>
+
+    <md-button class="md-raised md-primary"
+            ng-click="onResetPassword()">
+        ResetPassword
+    </md-button>
+    
+    <md-button class="md-raised md-primary"
+            ng-click="onChangePassword()">
+        ChangePassword
+    </md-button>    
+</div>
+
+<div>
+    <h3>Users</h3>
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUserPOST($event)">
+            {{ 'POST /api/users' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUsersGET($event)">
+            {{ 'GET /api/users' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUserGET($event)">
+            {{ 'GET /api/users/:id' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUserPUT($event)">
+            {{ 'PUT /api/users/:id' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUserDELETE($event)">
+            {{ 'DELETE /api/users/:id' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onCurrentUserGET($event)">
+            {{ 'GET /api/users/current' }}
+    </md-button>
+<div>

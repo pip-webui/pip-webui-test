@@ -41,6 +41,14 @@
             this.api = '';
             this.fakeUrl = 'http://alpha.pipservices.net';
 
+            this.regEsc = function (str) {
+                    //Escape string to be able to use it in a regular expression
+                    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            }
+
+            this.IdRegExp = /[a-zA-Z0-9]{24}$/.toString().slice(1, -1);
+            this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
+
             this.register = function() {}
 
         return this;
@@ -49,170 +57,11 @@
     thisModule.factory('TruePathResource', function ($httpBackend, $log, MockedResource) {
             var child = Object.create(MockedResource);
 
-            child.api = '';
-
             child.register = function() {
-                $httpBackend.whenGET(/^(http:\/\/alpha.pipservices.net\/api\/){0}.*?/).passThrough();           
+                $httpBackend.whenGET(/.*/).passThrough();           
             }
             return child;
     });
-
-    thisModule.factory('MockedUsersResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/users';
-
-        child.register = function() {
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenPOST', data, headers, params);
-
-                return [200, {}, {}];
-            }); 
-
-            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenGET', data, headers, params);
-
-                return [200, {}, {}];
-            }); 
-
-            $httpBackend.whenPUT(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenPUT', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    });
-
-    // thisModule.factory('MockedSigninResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/signin;
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // });    
-
-
-    // thisModule.factory('MockedSignupResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/signup';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // }); 
-
-    // thisModule.factory('MockedSignoutResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/signout';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // }); 
-
-    // thisModule.factory('MockedSignupValidateResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/signup_validate';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // }); 
-
-    // thisModule.factory('MockedVerifyEmailResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/signup_validate';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // }); 
-
-    // thisModule.factory('MockedRecoverPasswordResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/recover_password';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // }); 
-
-    // thisModule.factory('MockedResetPasswordResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/reset_password';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // });   
-
-    // thisModule.factory('MockedChangePasswordResource', function ($httpBackend, $log, MockedResource) {
-    //     var child = Object.create(MockedResource);
-
-    //     child.api = '/api/change_password';
-
-    //     child.register = function() {
-    //         $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-    //             console.log('pipMocks.Users22222', data, headers, params);
-
-    //             return [200, {}, {}];
-    //         }); 
-    //     }
-
-    //     return child;
-    // }); 
 
 })();
  

@@ -8,6 +8,7 @@
 
     var thisModule = angular.module('pipTestCollection', []);
 
+// todo: current user
     thisModule.factory('pipTestCollection', function ($log) {
 
         var testCollection = function(generator) { // generator: pipDataGenerator
