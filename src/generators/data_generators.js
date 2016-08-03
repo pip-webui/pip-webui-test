@@ -11,6 +11,8 @@
     thisModule.factory('pipDataGenerator', function ($log) {
 
         var dataGenerator = function(name, refs) {
+
+            // Collection name
             this.name = name;
             // List of references collection names
             this.refs = refs; // string?    
@@ -21,25 +23,15 @@
             this.initObjectList = initObjectList;
             this.updateObject = updateObject;
         }
-            // // Collection name
-            // this.name = null;
-            // // List of references collection names
-            // this.refs = ''; // string?
 
-            // return {
-            //     initObject: initObject,
-            //     newObject: newObject,
-            //     newObjectList: newObjectList,
-            //     initObjectList: initObjectList,
-            //     updateObject: updateObject
-            // }
-
+             // Initializes object with default fields
             function initObject(obj) {
                 var result;
 
                 return result;
             }
 
+            // Create a new random object
             function newObject(refs) {
                 var result;
 

@@ -8,7 +8,7 @@
 
     var thisModule = angular.module('pipDataGenerator.UserParty', []);
 
-    thisModule.service('pipDataGeneratorUserParty', function (pipDataGeneratorGeneral) {
+    thisModule.service('pipDataGeneratorUserParty', function (pipBasicGeneratorServices) {
 
         return {
             getOneUser: getOneUser,
@@ -21,11 +21,11 @@
             var date = new Date(chance.timestamp()),
                 session = {
                     address: chance.ip(),
-                    client: pipDataGeneratorGeneral.getOne(['chrome', 'mozilla', 'explorer']),
-                    platform: pipDataGeneratorGeneral.getOne(['windows 8', 'windows 7', 'linux']),
+                    client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']),
+                    platform: pipBasicGeneratorServices.getOne(['windows 8', 'windows 7', 'linux']),
                     last_req: date.toJSON(),
                     opened: date.toJSON(),
-                    id: pipDataGeneratorGeneral.getObjectId()
+                    id: pipBasicGeneratorServices.getObjectId()
                 };
 
             if (propertyValues) {
@@ -43,9 +43,9 @@
                 user = {
                     pwd_last_fail: null,
                     pwd_fail_count: 0,
-                    name: pipDataGeneratorGeneral.getName(),
+                    name: pipBasicGeneratorServices.getName(),
                     email: chance.email(),
-                    language: pipDataGeneratorGeneral.getOne(['en', 'ru', 'fr']),
+                    language: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']),
                     paid: chance.bool({likelihood: 30}),
                     admin: false,
                     party_access: getPartyAccess(),
@@ -55,8 +55,8 @@
                     active: true,
                     lock: false,
                     email_ver: false,
-                    id: pipDataGeneratorGeneral.getObjectId(),
-                    last_session_id: pipDataGeneratorGeneral.getObjectId()
+                    id: pipBasicGeneratorServices.getObjectId(),
+                    last_session_id: pipBasicGeneratorServices.getObjectId()
                 };
 
             if (propertyValues) {
@@ -80,10 +80,10 @@
                     share_level: 0,
                     type: 'partner',
                     party_name: chance.first() + ' ' + chance.name(),
-                    party_id: pipDataGeneratorGeneral.getObjectId(),
+                    party_id: pipBasicGeneratorServices.getObjectId(),
                     contributor: isContributor,
                     manager: isContributor ? chance.bool({likelihood: 30}) : false,
-                    id: pipDataGeneratorGeneral.getObjectId()
+                    id: pipBasicGeneratorServices.getObjectId()
                 };
 
                 if (propertyValues) {
@@ -115,7 +115,7 @@
                     join: 'approve', // todo ??
                     updated: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
                     created: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
-                    id: pipDataGeneratorGeneral.getObjectId()
+                    id: pipBasicGeneratorServices.getObjectId()
                 };
 
             if (propertyValues) {
@@ -135,7 +135,7 @@
                     party_id: party.id,
                     party_type: party.type,
                     party_name: party.name,
-                    to_party_id: pipDataGeneratorGeneral.getObjectId(),
+                    to_party_id: pipBasicGeneratorServices.getObjectId(),
                     to_party_name: chance.first() + ' ' + chance.name(),
                     to_party_type: 'person', // todo
                     type: 'partner', // todo
@@ -146,7 +146,7 @@
                     manager: isContributor ? chance.bool({likelihood: 30}) : false,
                     snoozed: false,
                     created: new Date(chance.timestamp()).toJSON(),
-                    id: pipDataGeneratorGeneral.getObjectId()
+                    id: pipBasicGeneratorServices.getObjectId()
                 };
 
             if (propertyValues) {

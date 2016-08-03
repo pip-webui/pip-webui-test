@@ -13,7 +13,7 @@
     });
 
     thisModule.controller('MocksController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers,
+        function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, pipFakeDataModelUsers,
         pipUserDataGenerator, pipDataGenerator) {
 
             var userId = '565f12ef8ff2161b1dfeedbf', // todo: get current user id
@@ -50,13 +50,13 @@
             function onSignIn() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/signin',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/signin',
                     headers: {
                       'Content-Type': undefined
                     },
                     data: {
-                        email: pipDataGeneratorGeneral.getEmail(), 
-                        password: pipDataGeneratorGeneral.getPassword(),
+                        email: pipBasicGeneratorServices.getEmail(), 
+                        password: pipBasicGeneratorServices.getPassword(),
                         remember: true
                     }
                 };
@@ -76,7 +76,7 @@
             function onSignOut() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/signout',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/signout',
                     headers: {
                       'Content-Type': undefined
                     },
@@ -98,15 +98,15 @@
             function onSignUp() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/signup',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/signup',
                     headers: {
                       'Content-Type': undefined
                     },
                     data: {
-                        email: pipDataGeneratorGeneral.getEmail(), 
-                        password: pipDataGeneratorGeneral.getPassword(),
-                        name: pipDataGeneratorGeneral.getName(),
-                        language: pipDataGeneratorGeneral.getOne(['en', 'ru'])
+                        email: pipBasicGeneratorServices.getEmail(), 
+                        password: pipBasicGeneratorServices.getPassword(),
+                        name: pipBasicGeneratorServices.getName(),
+                        language: pipBasicGeneratorServices.getOne(['en', 'ru'])
                     }
                 };
 
@@ -125,11 +125,11 @@
             function onSignupValidate() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/signup_validate',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/signup_validate',
                     headers: {
                       'Content-Type': undefined
                     },
-                    data: {email: pipDataGeneratorGeneral.getEmail()}
+                    data: {email: pipBasicGeneratorServices.getEmail()}
                 };
 
                 console.log('onSignupValidate req', req);
@@ -147,11 +147,11 @@
             function onVerifyEmail() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/verify_email',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/verify_email',
                     headers: {
                       'Content-Type': undefined
                     },
-                    data: {email: pipDataGeneratorGeneral.getEmail(), code: pipDataGeneratorGeneral.getPassword()}
+                    data: {email: pipBasicGeneratorServices.getEmail(), code: pipBasicGeneratorServices.getPassword()}
                 };
 
                 console.log('onVerifyEmail req', req);
@@ -169,11 +169,11 @@
             function onRecoverPassword() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/recover_password',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/recover_password',
                     headers: {
                       'Content-Type': undefined
                     },
-                    data: {email: pipDataGeneratorGeneral.getEmail()}
+                    data: {email: pipBasicGeneratorServices.getEmail()}
                 };
 
                 console.log('onRecoverPassword req', req);
@@ -191,14 +191,14 @@
             function onResetPassword() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/reset_password',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/reset_password',
                     headers: {
                       'Content-Type': undefined
                     },
                     data: {
-                        email: pipDataGeneratorGeneral.getEmail(), 
-                        password: pipDataGeneratorGeneral.getPassword(),
-                        code: pipDataGeneratorGeneral.getPassword()
+                        email: pipBasicGeneratorServices.getEmail(), 
+                        password: pipBasicGeneratorServices.getPassword(),
+                        code: pipBasicGeneratorServices.getPassword()
                     }
                 };
 
@@ -217,7 +217,7 @@
             function onChangePassword() {
                 var req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/change_password',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/change_password',
                     headers: {
                       'Content-Type': undefined
                     },
@@ -249,7 +249,7 @@
 
                 req = {
                     method: 'POST',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users',
                     headers: {
                       'Content-Type': undefined
                     },
@@ -271,7 +271,7 @@
             function onUsersGET() {
                 var req = {
                     method: 'GET',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users',
                     headers: {
                       'Content-Type': undefined
                     },
@@ -293,7 +293,7 @@
             function onUserGET() {
                 var req = {
                     method: 'GET',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId,
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId,
                     headers: {
                       'Content-Type': undefined
                     },
@@ -315,7 +315,7 @@
             function onUserPUT() {
                 var req = {
                     method: 'PUT',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId,
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId,
                     headers: {
                       'Content-Type': undefined
                     },
@@ -337,7 +337,7 @@
             function onUserDELETE() {
                 var req = {
                     method: 'DELETE',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId,
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId,
                     headers: {
                       'Content-Type': undefined
                     },
@@ -359,7 +359,7 @@
             function onCurrentUserGET() {
                 var req = {
                     method: 'GET',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/current',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/current',
                     headers: {
                       'Content-Type': undefined
                     },
@@ -384,7 +384,7 @@
             function onUserSessionsGET() {
                 var req = {
                     method: 'GET',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId + '/sessions',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId + '/sessions',
                     headers: {
                       'Content-Type': undefined
                     },
@@ -406,7 +406,7 @@
             function onUserSessionDELETE() {
                 var req = {
                     method: 'DELETE',
-                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId + '/sessions/' + sessionId,
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId + '/sessions/' + sessionId,
                     headers: {
                       'Content-Type': undefined
                     },

@@ -8,7 +8,7 @@
 
     var thisModule = angular.module('pipTestCollection', []);
 
-// todo: current user
+    // Collection of test data stored in test dataset
     thisModule.factory('pipTestCollection', function ($log) {
 
         var testCollection = function(generator) { // generator: pipDataGenerator
@@ -16,6 +16,14 @@
 
         }
 
+    // Initializes collection with init object list
+    // public init(): void;
+    // public getAll(): any[];
+    // public get(index: number): any[];
+    // public findById(id: string): any;
+    // public create(obj: any): any;
+    // public update(id: string, obj: any): any;
+    // public delete(id: string): any;
 
         return testCollection;
 

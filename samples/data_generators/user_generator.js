@@ -13,7 +13,7 @@
     });
 
     thisModule.controller('GenerateUsersController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers) {
+        function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, pipFakeDataModelUsers) {
 
             $scope.userCollection = pipFakeDataModelUsers.getData();
 
@@ -54,7 +54,7 @@
             function onUpdateUser($event, $index) {
                  var user = $scope.userCollection[$index];
                  
-                 user.name = pipDataGeneratorGeneral.getName();
+                 user.name = pipBasicGeneratorServices.getName();
                  user.collapse = true;   
                  pipFakeDataModelUsers.updateOne(user.id, user);
                  $scope.userCollection = pipFakeDataModelUsers.getData();

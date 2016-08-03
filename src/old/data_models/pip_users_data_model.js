@@ -10,7 +10,7 @@
 
     var thisModule = angular.module('pipFakeDataModel.Users', []);
 
-    thisModule.service('pipFakeDataModelUsers', function (pipDataGeneratorGeneral, pipDataGeneratorUserParty) {
+    thisModule.service('pipFakeDataModelUsers', function (pipBasicGeneratorServices, pipDataGeneratorUserParty) {
 
         var usersCollection = [];
 

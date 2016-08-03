@@ -6,9 +6,9 @@
 (function (_, chance) {
     'use strict';
 
-    var thisModule = angular.module('pipDataGenerator.General', []);
+    var thisModule = angular.module('pipBasicGeneratorServices', []);
 
-    thisModule.service('pipDataGeneratorGeneral', function () {
+    thisModule.service('pipBasicGeneratorServices', function () {
         
         var ABCD = 'abcdefghijklmnopqrstuvwxyz',
             ABCD_CAPITALIZE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
