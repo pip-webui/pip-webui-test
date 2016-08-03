@@ -85,44 +85,56 @@
             // List of references collection names
             this.refs = refs; // string?    
 
-            this.initObject = initObject;
-            this.newObject = newObject;
-            this.newObjectList = newObjectList;
-            this.initObjectList = initObjectList;
-            this.updateObject = updateObject;
-        }
-
              // Initializes object with default fields
-            function initObject(obj) {
-                var result;
+            this.initObject = function (obj) {
+                var result = this.newObject(this.refs);
+
+                if (obj) {
+                    result = _.assign(result, obj);
+                }
 
                 return result;
             }
 
             // Create a new random object
-            function newObject(refs) {
-                var result;
+            this.newObject = function (refs) {
+                var result = this.generateObj();
 
                 return result;                
             }
 
-            function newObjectList(count, refs) {
+            this.newObjectList = function (count, refs) {
+                var i, obj, result = [];
+
+                if (count > 0) {
+                    for (i = 0; i < count; i++) {
+                        obj = this.newObject(refs);
+                        result.push(obj);
+                    }
+                }
+
+                return result;                
+            }
+
+            // todo ??
+            this.initObjectList = function (refs) {
                 var result = [];
 
                 return result;                
             }
 
-            function initObjectList(obj) {
-                var result = [];
-
-                return result;                
-            }
-
-            function updateObject(index, obj, refs) {
+            // todo ??
+            this.updateObject = function (obj, refs) {
                 var result;
 
                 return result;                 
             }
+
+            this.generateObj = function generateObj() {
+                return {};
+            }
+
+        }
 
         return dataGenerator;
 
@@ -130,6 +142,7 @@
 
 })();
  
+
 /**
  * @file Service provide utils
  * @copyright Digital Living Software Corp. 2014-2015
@@ -161,7 +174,8 @@
             getEmail: getEmail,
             serverUrl:serverUrl,
             getName: getName,
-            getOne: getOne
+            getOne: getOne,
+            getMany: getMany
         };
 
         // Returns random ID
@@ -184,6 +198,13 @@
         // Returns random one from the passed asset
         function getOne(arr) {
             return _.sample(arr);
+        }
+
+        // Returns random one from the passed asset
+        function getMany(arr, count) {
+            var number = count ? count : Math.floor(Math.random() * arr.length); 
+
+            return _.sampleSize(arr, number);
         }
 
         function serverUrl(serverUrl) {
@@ -211,6 +232,7 @@
     });
 
 })(window._, window.chance);
+
 
 /**
  * @file pipTestCollection
@@ -304,11 +326,35 @@
 
     var thisModule = angular.module('pipGenerators.User', []);
 
-    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', '$log', function (pipDataGenerator, $log) {
+    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
             // var child = Object.create(pipDataGenerator);
-            var child = new pipDataGenerator('User', 'User refs');
+            var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
 
-            child.someproperty = true;
+            child.generateObj = function generateObj() {
+                var date1 = chance.timestamp(),
+                    date2 = chance.timestamp(),
+
+                    user = {
+                        pwd_last_fail: null,
+                        pwd_fail_count: 0,
+                        name: pipBasicGeneratorServices.getName(),
+                        email: chance.email(),
+                        language: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']), 
+                        paid: chance.bool({likelihood: 30}),
+                        admin: false,
+                        //party_access: getPartyAccess(),  - refs  | pipBasicGeneratorServices.getMany(PartyAccess)
+                        //sessions: getSession(), - refs  | pipBasicGeneratorServices.getMany(Session)
+                        signin: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
+                        signup: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
+                        active: true,
+                        lock: false,
+                        email_ver: false,
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        last_session_id: pipBasicGeneratorServices.getObjectId()  //?? сессия должна существовать?
+                    };
+
+                return user;
+            }
 
             return child;
     }]);

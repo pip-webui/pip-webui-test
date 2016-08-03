@@ -7,9 +7,8 @@
     'use strict';
 
     var thisModule = angular.module('pipWebuiTests', [
-        'pipBasicGeneratorServices',
-        'pipFakeDataModel.Users',
-        'pipDataGenerator.UserParty',
+        'pipFakeDataModel.Users', // old
+        'pipDataGenerator.UserParty', // old
 
         'pipMocked',
         'pipMocked.Users',
@@ -23,7 +22,11 @@
         'pipMocked.Images',
 
         'pipGenerators',
+        'pipBasicGeneratorServices',        
         'pipGenerators.User',
+        'pipGenerators.PartyAccess',   
+        'pipGenerators.Sessions',    
+        'pipGenerators.Party', 
         'pipTestCollection'
     ]);
 

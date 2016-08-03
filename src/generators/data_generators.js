@@ -17,44 +17,56 @@
             // List of references collection names
             this.refs = refs; // string?    
 
-            this.initObject = initObject;
-            this.newObject = newObject;
-            this.newObjectList = newObjectList;
-            this.initObjectList = initObjectList;
-            this.updateObject = updateObject;
-        }
-
              // Initializes object with default fields
-            function initObject(obj) {
-                var result;
+            this.initObject = function (obj) {
+                var result = this.newObject(this.refs);
+
+                if (obj) {
+                    result = _.assign(result, obj);
+                }
 
                 return result;
             }
 
             // Create a new random object
-            function newObject(refs) {
-                var result;
+            this.newObject = function (refs) {
+                var result = this.generateObj();
 
                 return result;                
             }
 
-            function newObjectList(count, refs) {
+            this.newObjectList = function (count, refs) {
+                var i, obj, result = [];
+
+                if (count > 0) {
+                    for (i = 0; i < count; i++) {
+                        obj = this.newObject(refs);
+                        result.push(obj);
+                    }
+                }
+
+                return result;                
+            }
+
+            // todo ??
+            this.initObjectList = function (refs) {
                 var result = [];
 
                 return result;                
             }
 
-            function initObjectList(obj) {
-                var result = [];
-
-                return result;                
-            }
-
-            function updateObject(index, obj, refs) {
+            // todo ??
+            this.updateObject = function (obj, refs) {
                 var result;
 
                 return result;                 
             }
+
+            this.generateObj = function generateObj() {
+                return {};
+            }
+
+        }
 
         return dataGenerator;
 

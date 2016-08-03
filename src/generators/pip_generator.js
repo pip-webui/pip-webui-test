@@ -29,7 +29,8 @@
             getEmail: getEmail,
             serverUrl:serverUrl,
             getName: getName,
-            getOne: getOne
+            getOne: getOne,
+            getMany: getMany
         };
 
         // Returns random ID
@@ -52,6 +53,13 @@
         // Returns random one from the passed asset
         function getOne(arr) {
             return _.sample(arr);
+        }
+
+        // Returns random one from the passed asset
+        function getMany(arr, count) {
+            var number = count ? count : Math.floor(Math.random() * arr.length); 
+
+            return _.sampleSize(arr, number);
         }
 
         function serverUrl(serverUrl) {
