@@ -7,9 +7,8 @@
     'use strict';
 
     var thisModule = angular.module('pipWebuiTests', [
-        'pipBasicGeneratorServices',
-        'pipFakeDataModel.Users',
-        'pipDataGenerator.UserParty',
+        'pipFakeDataModel.Users', // old
+        'pipDataGenerator.UserParty', // old
 
         'pipMocked',
         'pipMocked.Users',
@@ -23,7 +22,11 @@
         'pipMocked.Images',
 
         'pipGenerators',
+        'pipBasicGeneratorServices',        
         'pipGenerators.User',
+        'pipGenerators.PartyAccess',   
+        'pipGenerators.Sessions',    
+        'pipGenerators.Party', 
         'pipTestCollection'
     ]);
 
@@ -142,7 +145,89 @@
 
 })();
  
+/**
+ * @file pipPartyAccessDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
 
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.PartyAccess', []);
+
+    thisModule.factory('pipPartyAccessDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            var child = new pipDataGenerator('PartyAccess', []);
+
+            child.isContributorChance = 30;
+            child.isManagerChance = 30;
+            child.defaultShareLevel = 0;
+            child.defaultType = 'partner';
+
+            child.generateObj = function generateObj() {
+                var obj = {
+                        share_level: child.defaultShareLevel,
+                        type: child.defaultType,
+                        party_name: chance.first() + ' ' + chance.name(),
+                        party_id: pipBasicGeneratorServices.getObjectId(),
+                        contributor: chance.bool({likelihood: child.isContributorChance}),
+                        manager: isContributor ? chance.bool({likelihood: child.isManagerChance}) : false,
+                        id: pipBasicGeneratorServices.getObjectId()
+                    };
+
+                return obj;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
+ * @file pipPartyDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Party', []);
+
+    thisModule.factory('pipPartyDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            // var child = Object.create(pipDataGenerator);
+            var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
+
+            child.defaultType = 'person';
+            child.defaultJoin = 'approve';
+
+            child.generateObj = function generateObj() {
+                var date1 = chance.timestamp(),
+                    date2 = chance.timestamp(),
+                    party = {
+                        name: chance.first() + ' ' + chance.name(),
+                        email: chance.email(),
+                        type: child.defaultType,
+                        gender: chance.gender().toLowerCase(),
+                        loc_name: chance.address(),
+                        loc_pos: {
+                            type: 'Point',
+                            coordinates: [
+                                chance.floating({min: -120, max: 120}),
+                                chance.floating({min: -120, max: 120})
+                            ]
+                        },
+                        join: child.defaultJoin,
+                        updated: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
+                        created: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
+                        id: pipBasicGeneratorServices.getObjectId()
+                    };
+
+                return party;
+            }
+
+            return child;
+    }]);
+
+})();
+ 
 /**
  * @file Service provide utils
  * @copyright Digital Living Software Corp. 2014-2015
@@ -233,7 +318,37 @@
 
 })(window._, window.chance);
 
+/**
+ * @file pipSessionsDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
 
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Sessions', []);
+
+    thisModule.factory('pipSessionsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            var child = new pipDataGenerator('Sessions', []);
+
+            child.generateObj = function generateObj() {
+                var date = new Date(chance.timestamp()),
+                    session = {
+                        address: chance.ip(),
+                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), // todo:  заменить на массивы из dataGenerators?
+                        platform: pipBasicGeneratorServices.getOne(['windows 8', 'windows 7', 'linux']),
+                        last_req: date.toJSON(),
+                        opened: date.toJSON(),
+                        id: pipBasicGeneratorServices.getObjectId()
+                    };
+
+                return session;
+            }
+
+            return child;
+    }]);
+
+})();
 /**
  * @file pipTestCollection
  * @copyright Digital Living Software Corp. 2014-2016
@@ -249,17 +364,47 @@
 
         var testCollection = function(generator) { // generator: pipDataGenerator
             this.constructor(generator);
+        }
+
+        // Initializes collection with init object list
+        this.constructor = function (generator) {
 
         }
 
-    // Initializes collection with init object list
-    // public init(): void;
-    // public getAll(): any[];
-    // public get(index: number): any[];
-    // public findById(id: string): any;
-    // public create(obj: any): any;
-    // public update(id: string, obj: any): any;
-    // public delete(id: string): any;
+        // public init(): void;   //todo:  init(collection: any[]): void; ??
+        this.init = function () {
+
+        }
+    
+        // public getAll(): any[];
+        this.getAll = function () {
+
+        }     
+
+        // public get(index: number): any[];
+        this.get = function (index) {
+
+        }    
+
+        // public findById(id: string): any;
+        this.findById = function (id) {
+
+        }    
+
+        // public create(obj: any): any;
+        this.create = function (obj) {
+
+        }    
+
+        // public update(id: string, obj: any): any;
+        this.update = function (id, obj) {
+
+        }    
+
+        // public delete(id: string): any;
+        this.delete = function (id) {
+
+        }    
 
         return testCollection;
 
@@ -317,7 +462,7 @@
 
 })();
 /**
- * @file pipUserDataGenerators
+ * @file pipUserDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
 

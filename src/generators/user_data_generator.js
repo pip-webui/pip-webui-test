@@ -12,7 +12,7 @@
             // var child = Object.create(pipDataGenerator);
             var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
 
-            child.generateObj = function generateObj() {
+            child.generateObj = function generateObj(refs) {
                 var date1 = chance.timestamp(),
                     date2 = chance.timestamp(),
 

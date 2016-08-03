@@ -19,7 +19,7 @@
 
              // Initializes object with default fields
             this.initObject = function (obj) {
-                var result = this.newObject(this.refs);
+                var result = this.newObject();
 
                 if (obj) {
                     result = _.assign(result, obj);
@@ -30,7 +30,8 @@
 
             // Create a new random object
             this.newObject = function (refs) {
-                var result = this.generateObj();
+                var objRefs = refs ? refs : this.refs;
+                    result = this.generateObj(objRefs);
 
                 return result;                
             }
@@ -48,21 +49,30 @@
                 return result;                
             }
 
-            // todo ??
-            this.initObjectList = function (refs) {
-                var result = [];
+            this.initObjectList = function (obj) {
+                var i, newObj, result = [];
 
-                return result;                
+                if (count > 0) {
+                    for (i = 0; i < count; i++) {
+                        newObj = this.newObject();
+                        result.push(_.assign(newObj, obj));
+                    }
+                }
+
+                return result;              
             }
 
-            // todo ??
             this.updateObject = function (obj, refs) {
-                var result;
+                var result = this.newObject(refs);
 
-                return result;                 
+                if (obj) {
+                    result = _.assign(result, obj);
+                }   
+
+                return result;              
             }
 
-            this.generateObj = function generateObj() {
+            this.generateObj = function generateObj(refs) {
                 return {};
             }
 
