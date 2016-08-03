@@ -30,7 +30,7 @@
 
             // Create a new random object
             this.newObject = function (refs) {
-                var objRefs = refs ? refs : this.refs;
+                var objRefs = refs ? refs : this.refs,
                     result = this.generateObj(objRefs);
 
                 return result;                

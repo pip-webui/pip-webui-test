@@ -17,7 +17,8 @@
             child.defaultType = 'partner';
 
             child.generateObj = function generateObj() {
-                var obj = {
+                var isContributor = chance.bool({likelihood: child.isContributorChance}),
+                    obj = {
                         share_level: child.defaultShareLevel,
                         type: child.defaultType,
                         party_name: chance.first() + ' ' + chance.name(),

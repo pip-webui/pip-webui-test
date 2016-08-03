@@ -8,13 +8,34 @@
 
     var thisModule = angular.module('pipGenerators.User', []);
 
-    thisModule.factory('pipUserDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-            // var child = Object.create(pipDataGenerator);
-            var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
+    thisModule.factory('pipUserDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log, 
+        pipPartyAccessDataGenerator, pipSessionsDataGenerator) {
+
+            var refs = new Array();
+
+            refs['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10, []);
+            refs['Sessions'] = pipSessionsDataGenerator.newObjectList(10, []);
+
+            var child = new pipDataGenerator('User', refs);
 
             child.generateObj = function generateObj(refs) {
                 var date1 = chance.timestamp(),
                     date2 = chance.timestamp(),
+                    nowDate = new Date(),
+                    user,
+                    PartyAccess = [],
+                    Sessions = [],
+                    currentSession = pipSessionsDataGenerator.initObject({
+                        last_req: nowDate.toJSON(),
+                        opened: nowDate.toJSON(),
+                    });
+
+                if (refs && angular.isArray(refs)) {
+                    PartyAccess = refs['PartyAccess'] || [];
+                    Sessions = refs['PartyAccess'] || [];
+                }
+
+                Sessions.push(currentSession);
 
                     user = {
                         pwd_last_fail: null,
@@ -24,15 +45,15 @@
                         language: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']), 
                         paid: chance.bool({likelihood: 30}),
                         admin: false,
-                        //party_access: getPartyAccess(),  - refs  | pipBasicGeneratorServices.getMany(PartyAccess)
-                        //sessions: getSession(), - refs  | pipBasicGeneratorServices.getMany(Session)
+                        party_access: pipBasicGeneratorServices.getMany(PartyAccess),
+                        sessions: pipBasicGeneratorServices.getMany(Sessions),
                         signin: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
                         signup: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
                         active: true,
                         lock: false,
                         email_ver: false,
                         id: pipBasicGeneratorServices.getObjectId(),
-                        last_session_id: pipBasicGeneratorServices.getObjectId()  //?? сессия должна существовать?
+                        last_session_id: currentSession.id  
                     };
 
                 return user;

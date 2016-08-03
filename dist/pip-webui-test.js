@@ -90,7 +90,7 @@
 
              // Initializes object with default fields
             this.initObject = function (obj) {
-                var result = this.newObject(this.refs);
+                var result = this.newObject();
 
                 if (obj) {
                     result = _.assign(result, obj);
@@ -101,7 +101,8 @@
 
             // Create a new random object
             this.newObject = function (refs) {
-                var result = this.generateObj();
+                var objRefs = refs ? refs : this.refs,
+                    result = this.generateObj(objRefs);
 
                 return result;                
             }
@@ -119,21 +120,30 @@
                 return result;                
             }
 
-            // todo ??
-            this.initObjectList = function (refs) {
-                var result = [];
+            this.initObjectList = function (obj) {
+                var i, newObj, result = [];
 
-                return result;                
+                if (count > 0) {
+                    for (i = 0; i < count; i++) {
+                        newObj = this.newObject();
+                        result.push(_.assign(newObj, obj));
+                    }
+                }
+
+                return result;              
             }
 
-            // todo ??
             this.updateObject = function (obj, refs) {
-                var result;
+                var result = this.newObject(refs);
 
-                return result;                 
+                if (obj) {
+                    result = _.assign(result, obj);
+                }   
+
+                return result;              
             }
 
-            this.generateObj = function generateObj() {
+            this.generateObj = function generateObj(refs) {
                 return {};
             }
 
@@ -164,7 +174,8 @@
             child.defaultType = 'partner';
 
             child.generateObj = function generateObj() {
-                var obj = {
+                var isContributor = chance.bool({likelihood: child.isContributorChance}),
+                    obj = {
                         share_level: child.defaultShareLevel,
                         type: child.defaultType,
                         party_name: chance.first() + ' ' + chance.name(),
@@ -360,44 +371,75 @@
     var thisModule = angular.module('pipTestCollection', []);
 
     // Collection of test data stored in test dataset
-    thisModule.factory('pipTestCollection', ['$log', function ($log) {
+    thisModule.factory('TestCollection', ['$log', function ($log) {
 
-        var testCollection = function(generator) { // generator: pipDataGenerator
-            this.constructor(generator);
+        // Define the constructor function.
+        function TestCollection(generator, size) {
+            this.generator = generator;
+            this.size = size ? size : 0;
+            this.collection = [];
         }
 
-        // Initializes collection with init object list
-        this.constructor = function (generator) {
+        TestCollection.prototype = {
+            getGeneratorName: function() {
+                return this.generator.name;
+            },
 
-        }
+            getSize: function() {
+                return this.size;
+            }            
+        };
 
         // public init(): void;   //todo:  init(collection: any[]): void; ??
-        this.init = function () {
+        TestCollection.init = function (collection) {
+            if (this.size === 0) { 
+                this.collection = [];
 
+                return
+            }
+
+            this.collection = generator.newObjectList(this.size);
         }
     
         // public getAll(): any[];
-        this.getAll = function () {
-
+        TestCollection.getAll = function () {
+            return _.cloneDeep(this.collection);
         }     
 
         // public get(index: number): any[];
-        this.get = function (index) {
+        TestCollection.get = function (index) {
+            var result = null;
 
+            if (!index || index < 0 || index > this.collection.length - 1) {
+                return result;
+            }
+
+            result = _.cloneDeep(this.collection[index]);
+
+            return result;
         }    
 
         // public findById(id: string): any;
-        this.findById = function (id) {
+        TestCollection.findById = function (id, field) {
+            var result = null,
+                fieldId = field ? field : 'id';
 
+            if (!id) {
+                return result;
+            }
+
+            result = _.find(this.collection, {'id': id}); // todo: replace to fieldId
+
+            return result || null;
         }    
 
         // public create(obj: any): any;
-        this.create = function (obj) {
-
+        TestCollection.create = function (obj) {
+            //var result = 
         }    
 
         // public update(id: string, obj: any): any;
-        this.update = function (id, obj) {
+        TestCollection.update = function (id, obj) {
 
         }    
 
@@ -406,7 +448,7 @@
 
         }    
 
-        return testCollection;
+        return TestCollection;
 
     }]);
 
@@ -471,13 +513,34 @@
 
     var thisModule = angular.module('pipGenerators.User', []);
 
-    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-            // var child = Object.create(pipDataGenerator);
-            var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
+    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log, 
+        pipPartyAccessDataGenerator, pipSessionsDataGenerator) {
 
-            child.generateObj = function generateObj() {
+            var refs = new Array();
+
+            refs['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10, []);
+            refs['Sessions'] = pipSessionsDataGenerator.newObjectList(10, []);
+
+            var child = new pipDataGenerator('User', refs);
+
+            child.generateObj = function generateObj(refs) {
                 var date1 = chance.timestamp(),
                     date2 = chance.timestamp(),
+                    nowDate = new Date(),
+                    user,
+                    PartyAccess = [],
+                    Sessions = [],
+                    currentSession = pipSessionsDataGenerator.initObject({
+                        last_req: nowDate.toJSON(),
+                        opened: nowDate.toJSON(),
+                    });
+
+                if (refs && angular.isArray(refs)) {
+                    PartyAccess = refs['PartyAccess'] || [];
+                    Sessions = refs['PartyAccess'] || [];
+                }
+
+                Sessions.push(currentSession);
 
                     user = {
                         pwd_last_fail: null,
@@ -487,15 +550,15 @@
                         language: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']), 
                         paid: chance.bool({likelihood: 30}),
                         admin: false,
-                        //party_access: getPartyAccess(),  - refs  | pipBasicGeneratorServices.getMany(PartyAccess)
-                        //sessions: getSession(), - refs  | pipBasicGeneratorServices.getMany(Session)
+                        party_access: pipBasicGeneratorServices.getMany(PartyAccess),
+                        sessions: pipBasicGeneratorServices.getMany(Sessions),
                         signin: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
                         signup: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
                         active: true,
                         lock: false,
                         email_ver: false,
                         id: pipBasicGeneratorServices.getObjectId(),
-                        last_session_id: pipBasicGeneratorServices.getObjectId()  //?? сессия должна существовать?
+                        last_session_id: currentSession.id  
                     };
 
                 return user;
