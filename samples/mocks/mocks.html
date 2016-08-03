@@ -75,3 +75,16 @@
             {{ 'GET /api/users/current' }}
     </md-button>
 <div>
+
+<div>
+    <h3>Sessions</h3>
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUserSessionsGET($event)">
+            {{ 'GET USERS SESSIONS' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onUserSessionDELETE($event)">
+            {{ 'DELETE USER SESSION' }}
+    </md-button>
+<div>    

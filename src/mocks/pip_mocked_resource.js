@@ -46,8 +46,9 @@
                     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
             }
 
-            this.IdRegExp = /[a-zA-Z0-9]{24}$/.toString().slice(1, -1);
+            this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
             this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
+            this.EndStringRegExp = /$/.toString().slice(1, -1);
 
             this.register = function() {}
 

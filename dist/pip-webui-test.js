@@ -21,13 +21,15 @@
 
 
     thisModule.run(
-        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
+        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
-        MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource) {
+        MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource) {
 
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
+
+            pipMockedResource.addMocks(MockedUserSessionsResource);
 
             pipMockedResource.addMocks(MockedSigninResource);
             pipMockedResource.addMocks(MockedSignupResource);
@@ -386,8 +388,9 @@
                     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
             }
 
-            this.IdRegExp = /[a-zA-Z0-9]{24}$/.toString().slice(1, -1);
+            this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
             this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
+            this.EndStringRegExp = /$/.toString().slice(1, -1);
 
             this.register = function() {}
 
@@ -563,21 +566,21 @@
             }); 
 
             // GET /api/users/:id
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp)).respond(function(method, url, data, headers) {
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
                console.log('MockedUsersResource whenGET user', data, headers);
 
                  return [200, {}, {}];
             });
 
             // PUT /api/users/:id
-            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp)).respond(function(method, url, data, headers) {
+            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
                 console.log('MockedUsersResource whenPUT', data, headers);
 
                 return [200, {}, {}];
             });   
 
             // DELETE /api/users/:id
-            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp)).respond(function(method, url, data, headers) {
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
                 console.log('MockedUsersResource whenPUT', data, headers);
 
                 return [200, {}, {}];
@@ -586,6 +589,47 @@
 
         return child;
     }]);
+
+    thisModule.factory('MockedUserSessionsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        // /api/users/:party_id/sessions/:id
+
+        child.api = '/api/users/:party_id/sessions/:id';
+var rrrr = new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions'));
+console.log('rrrr', rrrr);
+
+console.log('rrr test', rrrr.test('http://alpha.pipservices.net/api/users/565f12ef8ff2161b1dfeedbf/sessions'));
+
+        child.register = function() {
+            // GET /api/users/:party_id/sessions
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions')))
+            .respond(function(method, url, data, headers) {
+               console.log('MockedUserSessionsResource whenGET current', data, headers);
+// expected 
+// [{
+// "address": "109.254.67.37"
+// "client": "chrome"
+// "platform": "windows 6.3"
+// "last_req": "2016-05-17T16:12:10.525Z"
+// "opened": "2016-05-16T12:11:33.039Z"
+// "id": "5739b8f5deca605c33c842cc"
+// }]
+                 return [200, {}, {}];
+            });
+
+            // DELETE  /api/users/:party_id/sessions/:id
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions/') + child.IdRegExp + child.EndStringRegExp))
+            .respond(function(method, url, data, headers) {
+                console.log('MockedUserSessionsResource whenDELETE', data, headers);
+// expected 
+// OK
+                return [200, {}, {}];
+            });      
+        }
+
+        return child;
+    }]);    
 
 })();
  

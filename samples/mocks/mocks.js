@@ -16,7 +16,8 @@
         function ($scope, pipAppBar, $timeout, pipSession, $http, pipDataGeneratorGeneral, pipFakeDataModelUsers,
         pipUserDataGenerator, pipDataGenerator) {
 
-            var userId = '565f12ef8ff2161b1dfeedbf';
+            var userId = '565f12ef8ff2161b1dfeedbf', // todo: get current user id
+                sessionId = '565f12ef8ff2161b1dfeedav'; // todo: set session for current user 
 
             $scope.onSignIn = onSignIn;
             $scope.onSignOut = onSignOut;
@@ -33,6 +34,9 @@
             $scope.onUserPUT = onUserPUT;
             $scope.onUserDELETE = onUserDELETE;
             $scope.onCurrentUserGET = onCurrentUserGET;
+            
+            $scope.onUserSessionsGET = onUserSessionsGET;
+            $scope.onUserSessionDELETE = onUserSessionDELETE;
 
             pipAppBar.showMenuNavIcon();
             pipAppBar.showLanguage();
@@ -374,6 +378,53 @@
                 );
             }   
 
+            // Users Sessions
+            // ------------------------------
+
+            function onUserSessionsGET() {
+                var req = {
+                    method: 'GET',
+                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId + '/sessions',
+                    headers: {
+                      'Content-Type': undefined
+                    },
+                    data: { test: 'onUserSessionsGET' }
+                };
+
+                console.log('onUserSessionsGET req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onUserSessionsGET result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onUserSessionsGET error', error); 
+                    }
+                );
+            }   
+
+            function onUserSessionDELETE() {
+                var req = {
+                    method: 'DELETE',
+                    url: pipDataGeneratorGeneral.serverUrl() + '/api/users/' + userId + '/sessions/' + sessionId,
+                    headers: {
+                      'Content-Type': undefined
+                    },
+                    data: { test: 'onUserSessionDELETE' }
+                };
+
+                console.log('onUserSessionDELETE req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onUserSessionDELETE result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onUserSessionDELETE error', error); 
+                    }
+                );
+            }   
+                        
         }
     );
 

@@ -23,11 +23,13 @@
     thisModule.run(
         function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
-        MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource) {
+        MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource) {
 
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
+
+            pipMockedResource.addMocks(MockedUserSessionsResource);
 
             pipMockedResource.addMocks(MockedSigninResource);
             pipMockedResource.addMocks(MockedSignupResource);
