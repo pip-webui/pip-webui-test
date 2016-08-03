@@ -13,6 +13,13 @@
         'pipMocked',
         'pipMocked.Users',
         'pipMocked.Entry',
+        'pipMocked.Party',
+        'pipMocked.Announcements',
+        'pipMocked.Feedbacks',
+        'pipMocked.Tips',
+        'pipMocked.Guides',
+        'pipMocked.ServersActivities',
+        'pipMocked.Images',
 
         'pipGenerators',
         'pipGenerators.User',
@@ -21,10 +28,11 @@
 
 
     thisModule.run(
-        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
+        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImagesResource', 'MockedPartyResource', 'MockedServersActivitiesResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
-        MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource) {
-
+        MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
+        MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImagesResource,
+        MockedPartyResource, MockedServersActivitiesResource) {
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
@@ -40,6 +48,15 @@
             pipMockedResource.addMocks(MockedResetPasswordResource);
             pipMockedResource.addMocks(MockedChangePasswordResource);
 
+            // ----------------
+            pipMockedResource.addMocks(MockedTipsResource);
+            pipMockedResource.addMocks(MockedAnnouncementsResource);
+            pipMockedResource.addMocks(MockedFeedbacksResource);
+            pipMockedResource.addMocks(MockedGuidesResource);
+            pipMockedResource.addMocks(MockedImagesResource);
+            pipMockedResource.addMocks(MockedPartyResource);
+            pipMockedResource.addMocks(MockedServersActivitiesResource);
+            
             pipMockedResource.addMocks(TruePathResource);
             pipMockedResource.registerStandardResources();
 
@@ -165,475 +182,6 @@
 
 })();
  
-/**
- * @file pipMockedEntry
- * @copyright Digital Living Software Corp. 2014-2016
- * 
- *  Mocked:
- * /api/signup_validate
- * /api/verify_email
- * /api/users/:party_id/resend_email_verification
- * /api/change_password
- * /api/reset_password/api/recover_password
- * /api/signup
- * /api/signout
- * /api/signin
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocked.Entry', ['ngMockE2E', 'ngResource']);
-
-    thisModule.factory('MockedSigninResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/signin';
-
-        child.register = function() {
-
-            // POST /api/signin
-            // expected data { email: email, password: password, remember: remember}                 
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]);    
-
-    thisModule.factory('MockedSignupResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/signup';
-
-        child.register = function() {
-
-            // POST /api/signup
-            // expected data { name: name, email: email, password: password, language: language}            
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]); 
-
-    thisModule.factory('MockedSignoutResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/signout';
-
-        child.register = function() {
-
-            // POST /api/signout
-            // expected data {}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]); 
-
-    thisModule.factory('MockedSignupValidateResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/signup_validate';
-
-        child.register = function() {
-
-            // POST /api/signup_validate,
-            // expected data {email: newValue}            
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]); 
-
-    thisModule.factory('MockedVerifyEmailResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/verify_email';
-
-        child.register = function() {
-
-            // POST /api/verify_email,
-            // expected data {email: $scope.data.email, code: $scope.data.code}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]); 
-
-    thisModule.factory('MockedRecoverPasswordResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/recover_password';
-      
-        child.register = function() {
-
-            // POST /api/recover_password,
-            // expected data {email: $scope.data.email}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]); 
-
-    thisModule.factory('MockedResetPasswordResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/reset_password';
-
-        child.register = function() {
-
-            // POST /api/reset_password,
-            // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]);   
-
-    thisModule.factory('MockedChangePasswordResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/change_password';
-
-        child.register = function() {
-
-            // POST /api/change_password, 
-            // todo: expected ??
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
-
-                return [200, {}, {}];
-            });             
-        }
-
-        return child;
-    }]);  
-
-})();
- 
-
-/**
- * @file pipMocked
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocked', ['ngMockE2E', 'ngResource']);
-
-    thisModule.factory('pipMockedResource', function () {
-        var mocks = [];
-
-
-        return {
-            addMocks: addMocks,
-            registerStandardResources: registerStandardResources
-        };
-
-        function registerStandardResources() {
-            for (var i = 0; i < mocks.length; i++) {
-                var obj = mocks[i];
-                obj.register();
-            }
-        }
-
-        function registerSampleResources() {
-
-        }
-
-        function addMocks(extension) {
-            console.log('addMocks', extension);
-            if (extension && angular.isObject(extension)) {
-                mocks.push(extension);
-            }
-        };
-
-    });
-
-    thisModule.factory('MockedResource', ['$httpBackend', '$log', function ($httpBackend, $log) {
-            this.api = '';
-            this.fakeUrl = 'http://alpha.pipservices.net';
-
-            this.regEsc = function (str) {
-                    //Escape string to be able to use it in a regular expression
-                    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-            }
-
-            this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
-            this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
-            this.EndStringRegExp = /$/.toString().slice(1, -1);
-
-            this.register = function() {}
-
-        return this;
-    }]);
-
-    thisModule.factory('TruePathResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-            var child = Object.create(MockedResource);
-
-            child.register = function() {
-                $httpBackend.whenGET(/.*/).passThrough();           
-            }
-            return child;
-    }]);
-
-})();
- 
-
-
-// /api/users/:party_id/resend_email_verification
-// /.*\/friends\/(\w+)/
-
-// $httpBackend.whenGET(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   return [200, contact, {}];
-// });
-
-// $httpBackend.whenPUT(/\/contacts\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id),
-//       parsedData = angular.fromJson(data);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   angular.extend(contact, parsedData);
-
-//   return [200, contact, {}];
-// });
-
-// // Delete; remove existing contact.
-// $httpBackend.whenDELETE(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   // Replace contacts array with filtered results, removing deleted contact.
-//   contacts.splice(contacts.indexOf(contact), 1);
-
-//   return [200, undefined, {}];
-// });
-
-
-
-
-// ----
-
-// //GET tag/
-// $httpBackend.whenGET(collectionUrl).respond(function(method, url, data, headers) {
-//     $log.log('Intercepted GET to tag', data);
-//     return [200, TagRepo.data, {/*headers*/}];
-// });
-
-// //GET tag/<id>
-// $httpBackend.whenGET( new RegExp(regexEscape(collectionUrl + '/') + IdRegExp ) ).respond(function(method, url, data, headers) {
-//     $log.log('Intercepted GET to tag/id');
-//     var id = url.match( new RegExp(IdRegExp) )[0];
-    
-//     if (!TagRepo.index[id]) {
-//         return [404, {} , {/*headers*/}];
-//     }
-
-//     return [200, TagRepo.index[id], {/*headers*/}];
-// });
-
-
-// -------
-
- //get all stores
-        // var storeUrl = "/api/stores";
-        // $httpBackend.whenGET(storeUrl).respond(stores);
-
-        // //get single store
-        // var singleStoreUrl = new RegExp(storeUrl + "/[0-9][0-9]*", '');
-        // $httpBackend.whenGET(singleStoreUrl)
-
-// -------
-
-// var regexGetTicket = new RegExp('/ticket/([0-9]+)');
-// $httpBackend.whenGET({
-//     test: function(url) {
-//         return regexGetTicket.test(url);
-//     }
-// })        
-
-
-// --------
-// To create a pattern from a string url, with optional query-string, you could use this:
-
-// var targetUrl = "/somelink";
-// var pattern = new RegExp(
-//     "^" +
-//     targetUrl.replace(/[-[\]{}()*+?.\\^$|]/g, "\\$&") + /* escape special chars */
-//     "(?:\\?.*)?$");
-// $httpBackend.when('GET', pattern).respond(function(method, url, data) {
-//   var queryMatch = /^[^#]*\?([^#]*)/.exec(url);
-//   var query = queryMatch ? queryMatch[1] : "";
-//   // url = "/somelink?abc=123" -> query = "abc=123"
-// });
-/**
- * @file pipMockedUsers
- * @copyright Digital Living Software Corp. 2014-2016
- * 
- * Mocked:
- * GET /api/users/current
- * GET /api/users
- * POST /api/users
- * GET /api/users/:id
- * PUT /api/users/:id
- * DELETE /api/users/:id
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipMocked.Users', ['ngMockE2E', 'ngResource']);
-
-    thisModule.factory('MockedCurrentUserResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/users/current';
-
-        child.register = function() {
-
-            // GET /api/users/current
-            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers) {
-               console.log('MockedCurrentUserResource whenGET current', data, headers);
-
-                 return [200, {}, {}];
-            });
-                
-        }
-
-        return child;
-    }]);
-
-    thisModule.factory('MockedUsersResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        child.api = '/api/users';
-
-        child.register = function() {
-
-            // GET /api/users
-            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers) {
-               console.log('MockedUsersResource whenGET collection', data, headers);
-
-                 return [200, {}, {}];
-            });
-
-            // POST /api/users
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenPOST', data, headers, params);
-
-                return [200, {}, {}];
-            }); 
-
-            // GET /api/users/:id
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-               console.log('MockedUsersResource whenGET user', data, headers);
-
-                 return [200, {}, {}];
-            });
-
-            // PUT /api/users/:id
-            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-                console.log('MockedUsersResource whenPUT', data, headers);
-
-                return [200, {}, {}];
-            });   
-
-            // DELETE /api/users/:id
-            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-                console.log('MockedUsersResource whenPUT', data, headers);
-
-                return [200, {}, {}];
-            });                       
-        }
-
-        return child;
-    }]);
-
-    thisModule.factory('MockedUserSessionsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
-        var child = Object.create(MockedResource);
-
-        // /api/users/:party_id/sessions/:id
-
-        child.api = '/api/users/:party_id/sessions/:id';
-var rrrr = new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions'));
-console.log('rrrr', rrrr);
-
-console.log('rrr test', rrrr.test('http://alpha.pipservices.net/api/users/565f12ef8ff2161b1dfeedbf/sessions'));
-
-        child.register = function() {
-            // GET /api/users/:party_id/sessions
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions')))
-            .respond(function(method, url, data, headers) {
-               console.log('MockedUserSessionsResource whenGET current', data, headers);
-// expected 
-// [{
-// "address": "109.254.67.37"
-// "client": "chrome"
-// "platform": "windows 6.3"
-// "last_req": "2016-05-17T16:12:10.525Z"
-// "opened": "2016-05-16T12:11:33.039Z"
-// "id": "5739b8f5deca605c33c842cc"
-// }]
-                 return [200, {}, {}];
-            });
-
-            // DELETE  /api/users/:party_id/sessions/:id
-            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions/') + child.IdRegExp + child.EndStringRegExp))
-            .respond(function(method, url, data, headers) {
-                console.log('MockedUserSessionsResource whenDELETE', data, headers);
-// expected 
-// OK
-                return [200, {}, {}];
-            });      
-        }
-
-        return child;
-    }]);    
-
-})();
- 
-
 /**
  * @file Mocks for REST API
  * @copyright Digital Living Software Corp. 2014-2016
@@ -852,6 +400,729 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
     );
 
 })();
+
+/**
+ * @file MockedAnnouncementsResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/announcements/:id
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Announcements', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedAnnouncementsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/announcements';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file pipMockedEntry
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ *  Mocked:
+ * /api/signup_validate
+ * /api/verify_email
+ * /api/users/:party_id/resend_email_verification
+ * /api/change_password
+ * /api/reset_password/api/recover_password
+ * /api/signup
+ * /api/signout
+ * /api/signin
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Entry', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedSigninResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/signin';
+
+        child.register = function() {
+
+            // POST /api/signin
+            // expected data { email: email, password: password, remember: remember}                 
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]);    
+
+    thisModule.factory('MockedSignupResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/signup';
+
+        child.register = function() {
+
+            // POST /api/signup
+            // expected data { name: name, email: email, password: password, language: language}            
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]); 
+
+    thisModule.factory('MockedSignoutResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/signout';
+
+        child.register = function() {
+
+            // POST /api/signout
+            // expected data {}
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]); 
+
+    thisModule.factory('MockedSignupValidateResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/signup_validate';
+
+        child.register = function() {
+
+            // POST /api/signup_validate,
+            // expected data {email: newValue}            
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]); 
+
+    thisModule.factory('MockedVerifyEmailResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/verify_email';
+
+        child.register = function() {
+
+            // POST /api/verify_email,
+            // expected data {email: $scope.data.email, code: $scope.data.code}
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]); 
+
+    thisModule.factory('MockedRecoverPasswordResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/recover_password';
+      
+        child.register = function() {
+
+            // POST /api/recover_password,
+            // expected data {email: $scope.data.email}
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]); 
+
+    thisModule.factory('MockedResetPasswordResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/reset_password';
+
+        child.register = function() {
+
+            // POST /api/reset_password,
+            // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]);   
+
+    thisModule.factory('MockedChangePasswordResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/change_password';
+
+        child.register = function() {
+
+            // POST /api/change_password, 
+            // todo: expected ??
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('pipMocks.Users22222', data, headers, params);
+
+                return [200, {}, {}];
+            });             
+        }
+
+        return child;
+    }]);  
+
+})();
+ 
+
+/**
+ * @file MockedFeedbacksResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/feedbacks/:id
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Feedbacks', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedFeedbacksResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/feedbacks';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file MockedGuidesResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/guides/:id
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Guides', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedGuidesResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/guides';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file MockedImagesResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/image_sets/:id
+ * /api/images/search
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Images', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedImagesResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/image_sets';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file MockedPartyResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/parties/:id
+ * /api/parties/:party_id/settings
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Party', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedPartyResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/parties/';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file pipMocked
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+
+/* API list
+
++ /api/users/current
++ /api/users/:id
+
++ /api/users/:party_id/sessions/:id
+
+/api/parties/:id
+/api/parties/:party_id/settings
+
+/api/signup_validate
+/api/verify_email
+/api/users/:party_id/resend_email_verification
+/api/change_password
+/api/reset_password
+/api/recover_password
+/api/signup
+/api/signout
+/api/signin
+
+/api/image_sets/:id
+/api/images/search
+
+images:
+get serverurl + /api/parties/ + partyId + "/files/" + imageId
+    serverUrl + '/api/parties/' + partyId + '/files
+
+    
+    // document
+$upload.http({
+url: addItemUrl(item),
+headers: { 'Content-Type': file.type },
+data: e.target.result
+})    
+
+serverUrl + '/api/parties/' + partyId + '/files?name='
+
+$http['delete'](getItemIdUrl(item))
+
+// image_sets
+$http['post'](url)
+
+$upload.http({
+url: FILE_URL + '?name=' + file.name,
+headers: { 'Content-Type': file.type },
+data: e.target.result
+
+
+/api/servers/activities/:id
+/api/guides/:id
+/api/tips/:id
+/api/feedbacks/:id
+/api/announcements/:id
+
+})
+
+
+avatar
+get serverUrl + '/api/parties/' + partyId + '/' + entityTypes[type] + '/' + id + '/avatar
+get serverUrl + '/api/parties/' + partyId + '/avatar
+
+*/
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('pipMockedResource', function () {
+        var mocks = [];
+
+
+        return {
+            addMocks: addMocks,
+            registerStandardResources: registerStandardResources
+        };
+
+        function registerStandardResources() {
+            for (var i = 0; i < mocks.length; i++) {
+                var obj = mocks[i];
+                obj.register();
+            }
+        }
+
+        function registerSampleResources() {
+
+        }
+
+        function addMocks(extension) {
+            console.log('addMocks', extension);
+            if (extension && angular.isObject(extension)) {
+                mocks.push(extension);
+            }
+        };
+
+    });
+
+    thisModule.factory('MockedResource', ['$httpBackend', '$log', function ($httpBackend, $log) {
+            this.api = '';
+            this.fakeUrl = 'http://alpha.pipservices.net';
+
+            this.regEsc = function (str) {
+                    //Escape string to be able to use it in a regular expression
+                    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            }
+
+            this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
+            this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
+            this.EndStringRegExp = /$/.toString().slice(1, -1);
+
+            this.register = function() {}
+
+        return this;
+    }]);
+
+    thisModule.factory('TruePathResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+            var child = Object.create(MockedResource);
+
+            child.register = function() {
+                $httpBackend.whenGET(/.*/).passThrough();           
+            }
+            return child;
+    }]);
+
+})();
+ 
+
+
+// /api/users/:party_id/resend_email_verification
+// /.*\/friends\/(\w+)/
+
+// $httpBackend.whenGET(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
+//   var contact = findContactById(params.id);
+
+//   if (contact == null) {
+//     return [404, undefined, {}];
+//   }
+
+//   return [200, contact, {}];
+// });
+
+// $httpBackend.whenPUT(/\/contacts\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params) {
+//   var contact = findContactById(params.id),
+//       parsedData = angular.fromJson(data);
+
+//   if (contact == null) {
+//     return [404, undefined, {}];
+//   }
+
+//   angular.extend(contact, parsedData);
+
+//   return [200, contact, {}];
+// });
+
+// // Delete; remove existing contact.
+// $httpBackend.whenDELETE(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
+//   var contact = findContactById(params.id);
+
+//   if (contact == null) {
+//     return [404, undefined, {}];
+//   }
+
+//   // Replace contacts array with filtered results, removing deleted contact.
+//   contacts.splice(contacts.indexOf(contact), 1);
+
+//   return [200, undefined, {}];
+// });
+
+
+
+
+// ----
+
+// //GET tag/
+// $httpBackend.whenGET(collectionUrl).respond(function(method, url, data, headers) {
+//     $log.log('Intercepted GET to tag', data);
+//     return [200, TagRepo.data, {/*headers*/}];
+// });
+
+// //GET tag/<id>
+// $httpBackend.whenGET( new RegExp(regexEscape(collectionUrl + '/') + IdRegExp ) ).respond(function(method, url, data, headers) {
+//     $log.log('Intercepted GET to tag/id');
+//     var id = url.match( new RegExp(IdRegExp) )[0];
+    
+//     if (!TagRepo.index[id]) {
+//         return [404, {} , {/*headers*/}];
+//     }
+
+//     return [200, TagRepo.index[id], {/*headers*/}];
+// });
+
+
+// -------
+
+ //get all stores
+        // var storeUrl = "/api/stores";
+        // $httpBackend.whenGET(storeUrl).respond(stores);
+
+        // //get single store
+        // var singleStoreUrl = new RegExp(storeUrl + "/[0-9][0-9]*", '');
+        // $httpBackend.whenGET(singleStoreUrl)
+
+// -------
+
+// var regexGetTicket = new RegExp('/ticket/([0-9]+)');
+// $httpBackend.whenGET({
+//     test: function(url) {
+//         return regexGetTicket.test(url);
+//     }
+// })        
+
+
+// --------
+// To create a pattern from a string url, with optional query-string, you could use this:
+
+// var targetUrl = "/somelink";
+// var pattern = new RegExp(
+//     "^" +
+//     targetUrl.replace(/[-[\]{}()*+?.\\^$|]/g, "\\$&") + /* escape special chars */
+//     "(?:\\?.*)?$");
+// $httpBackend.when('GET', pattern).respond(function(method, url, data) {
+//   var queryMatch = /^[^#]*\?([^#]*)/.exec(url);
+//   var query = queryMatch ? queryMatch[1] : "";
+//   // url = "/somelink?abc=123" -> query = "abc=123"
+// });
+/**
+ * @file MockedServersActivitiesResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/servers/activities/:id
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.ServersActivities', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedServersActivitiesResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/servers/activities';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+ 
+/**
+ * @file MockedTipsResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/tips/:id
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Tips', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedTipsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/tips';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file pipMockedUsers
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * GET /api/users/current
+ * GET /api/users
+ * POST /api/users
+ * GET /api/users/:id
+ * PUT /api/users/:id
+ * DELETE /api/users/:id
+ * 
+ * GET /api/users/:party_id/sessions
+ * DELETE /api/users/:party_id/sessions/:id
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Users', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedCurrentUserResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/users/current';
+
+        child.register = function() {
+
+            // GET /api/users/current
+            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers) {
+               console.log('MockedCurrentUserResource whenGET current', data, headers);
+
+                 return [200, {}, {}];
+            });
+                
+        }
+
+        return child;
+    }]);
+
+    thisModule.factory('MockedUsersResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/users';
+
+        child.register = function() {
+
+            // GET /api/users
+            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers) {
+               console.log('MockedUsersResource whenGET collection', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // POST /api/users
+            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
+                console.log('MockedUsersResource whenPOST', data, headers, params);
+
+                return [200, {}, {}];
+            }); 
+
+            // GET /api/users/:id
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+               console.log('MockedUsersResource whenGET user', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // PUT /api/users/:id
+            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+                console.log('MockedUsersResource whenPUT', data, headers);
+
+                return [200, {}, {}];
+            });   
+
+            // DELETE /api/users/:id
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+                console.log('MockedUsersResource whenPUT', data, headers);
+
+                return [200, {}, {}];
+            });                       
+        }
+
+        return child;
+    }]);
+
+    thisModule.factory('MockedUserSessionsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        // /api/users/:party_id/sessions/:id
+        child.api = '/api/users/:party_id/sessions/:id';
+
+        child.register = function() {
+            // GET /api/users/:party_id/sessions
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions')))
+            .respond(function(method, url, data, headers) {
+               console.log('MockedUserSessionsResource whenGET current', data, headers);
+// expected 
+// [{
+// "address": "109.254.67.37"
+// "client": "chrome"
+// "platform": "windows 6.3"
+// "last_req": "2016-05-17T16:12:10.525Z"
+// "opened": "2016-05-16T12:11:33.039Z"
+// "id": "5739b8f5deca605c33c842cc"
+// }]
+                 return [200, {}, {}];
+            });
+
+            // DELETE  /api/users/:party_id/sessions/:id
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions/') + child.IdRegExp + child.EndStringRegExp))
+            .respond(function(method, url, data, headers) {
+                console.log('MockedUserSessionsResource whenDELETE', data, headers);
+// expected 
+// OK
+                return [200, {}, {}];
+            });      
+        }
+
+        return child;
+    }]);    
+
+})();
+ 
 
 /*
  *
