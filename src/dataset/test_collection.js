@@ -28,12 +28,13 @@
 
             this.init = init;         
             this.getAll = getAll;         
-            this.getByIndes = getByIndes;         
+            this.getByIndex = getByIndex;         
             this.findById = findById;         
             this.create = create;         
             this.update = update;         
             this.deleteById = deleteById;         
-            this.deleteByIndex = deleteByIndex;         
+            this.deleteByIndex = deleteByIndex; 
+                    
         }
             
         function getGeneratorName() {
@@ -41,7 +42,7 @@
             }
 
         function getSize() {
-                return this.size;
+                return this.collection.length;
             }    
 
         // public init(collection: any[]): void;
@@ -69,10 +70,10 @@
         }     
 
         // public get(index: number): any[];
-        function getByIndes(index) {
+        function getByIndex(index) {
             var result = null;
 
-            if (!index || index < 0 || index > this.collection.length - 1) {
+            if (index === undefined || index === null || index < 0 || index > this.collection.length - 1) {
                 return result;
             }
 
@@ -86,7 +87,7 @@
             var result = null,
                 fieldId = field ? field : 'id';
 
-            if (!id) {
+            if (id === undefined || id === null) {
                 return result;
             }
 
@@ -99,7 +100,7 @@
         function create(obj) {
             var result = this.generator.initObject(obj);
 
-            if (result) {
+            if (angular.isObject(result)) {
                 this.collection.push(result);
             }
 
@@ -110,14 +111,14 @@
         function update(id, obj) {
             var result;
 
-            if (!id || !angular.isObject(obj)) {
+            if (id === undefined || id === null || !angular.isObject(obj)) {
                 // todo: trow error?
                 return null;
             }
 
             result = this.findById(id);
 
-            if (result) {
+            if (angular.isObject(result)) {
                 result = _.assign(result, obj);
                 // todo: replace into collection ???
             } else {
@@ -132,7 +133,7 @@
             var i, match = false;
 
             for (i = 0; i < this.collection.length; i++) {
-                if(this.collection[i].id == userId) {
+                if (this.collection[i].id === id) {
                     match = true;
                     this.collection.splice(i, 1);
                     break;
@@ -144,7 +145,7 @@
 
         // public delete(id: string): any;
         function deleteByIndex(index) {
-            if (!index || index < 0 || index > this.collection.length - 1) {
+            if (index === undefined || index === null || index < 0 || index > this.collection.length - 1) {
                 return false;
             }
 

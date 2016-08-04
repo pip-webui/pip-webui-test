@@ -95,6 +95,38 @@
                 console.log('userTestCollection2', userTestCollection2.getAll());
                 console.log('userTestCollection3', userTestCollection3.getAll());
 
+                console.log('userTestCollection3 getByIndes 0', userTestCollection3.getByIndex(0));
+                console.log('userTestCollection3 getByIndes 1', userTestCollection3.getByIndex(1));
+                console.log('userTestCollection3 getByIndes length-1', userTestCollection3.getByIndex(userTestCollection3.getSize() - 1));
+                console.log('userTestCollection3 getByIndes length', userTestCollection3.getByIndex(userTestCollection3.getSize()));
+
+
+                var id, objByIndex, idNotFound = '1';
+
+                objByIndex = userTestCollection3.getByIndex(0);
+                
+                id = objByIndex && objByIndex.id ? objByIndex.id : null;
+
+                console.log('userTestCollection3 getByIndes id', id, userTestCollection3.findById(id));
+                console.log('userTestCollection3 getByIndes idNotFound', idNotFound, userTestCollection3.findById(idNotFound));
+
+
+                console.log('userTestCollection3 length before create', userTestCollection3.getSize());
+                var newObj = userTestCollection3.create();
+                console.log('userTestCollection3 length after create', userTestCollection3.getSize());
+                console.log('newObj create', newObj);
+
+                var updatedObjBefor = userTestCollection3.getByIndex(1), updatedObjAfter;
+                console.log('updatedObjBefor', updatedObjBefor);
+                updatedObjAfter = userTestCollection3.update(updatedObjBefor.id, {name: 'new name'});
+                console.log('updatedObjAfter', updatedObjAfter);
+                console.log('updatedObjBefor1', updatedObjBefor);
+
+                userTestCollection3.deleteById(id);
+                console.log('userTestCollection3 length after deleteById', userTestCollection3.getSize());
+
+                userTestCollection3.deleteByIndex(5);
+                console.log('userTestCollection3 length after deleteByIndex', userTestCollection3.getSize());
 
             }
 
