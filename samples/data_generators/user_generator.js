@@ -16,7 +16,7 @@
         function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, pipFakeDataModelUsers,
         pipUserDataGenerator) {
 
-            $scope.userCollection = pipUserDataGenerator.newObjectList(10, []);
+            $scope.userCollection = pipUserDataGenerator.newObjectList(10);
 
             $scope.onGenerate = onGenerate;
             $scope.onSetUsers = onSetUsers;

@@ -14,8 +14,8 @@
 
             // Collection name
             this.name = name;
-            // List of references collection names
-            this.refs = refs; // string?    
+            // List of references collection 
+            this.refs = refs; 
 
              // Initializes object with default fields
             this.initObject = function (obj) {
@@ -67,9 +67,11 @@
 
                 if (obj) {
                     result = _.assign(result, obj);
-                }   
-
-                return result;              
+                    
+                    return result; 
+                } else {
+                    return null  
+                }
             }
 
             this.generateObj = function generateObj(refs) {

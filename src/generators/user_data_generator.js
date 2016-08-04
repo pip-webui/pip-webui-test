@@ -32,10 +32,8 @@
 
                 if (refs && angular.isArray(refs)) {
                     PartyAccess = refs['PartyAccess'] || [];
-                    Sessions = refs['PartyAccess'] || [];
+                    Sessions = refs['Sessions'] || [];
                 }
-
-                Sessions.push(currentSession);
 
                     user = {
                         pwd_last_fail: null,
@@ -55,6 +53,8 @@
                         id: pipBasicGeneratorServices.getObjectId(),
                         last_session_id: currentSession.id  
                     };
+
+                    user.sessions.push(currentSession);
 
                 return user;
             }

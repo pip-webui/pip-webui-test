@@ -85,8 +85,8 @@
 
             // Collection name
             this.name = name;
-            // List of references collection names
-            this.refs = refs; // string?    
+            // List of references collection 
+            this.refs = refs; 
 
              // Initializes object with default fields
             this.initObject = function (obj) {
@@ -138,9 +138,11 @@
 
                 if (obj) {
                     result = _.assign(result, obj);
-                }   
-
-                return result;              
+                    
+                    return result; 
+                } else {
+                    return null  
+                }
             }
 
             this.generateObj = function generateObj(refs) {
@@ -537,10 +539,8 @@
 
                 if (refs && angular.isArray(refs)) {
                     PartyAccess = refs['PartyAccess'] || [];
-                    Sessions = refs['PartyAccess'] || [];
+                    Sessions = refs['Sessions'] || [];
                 }
-
-                Sessions.push(currentSession);
 
                     user = {
                         pwd_last_fail: null,
@@ -560,6 +560,8 @@
                         id: pipBasicGeneratorServices.getObjectId(),
                         last_session_id: currentSession.id  
                     };
+
+                    user.sessions.push(currentSession);
 
                 return user;
             }
@@ -976,7 +978,6 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
         }
 
         function addMocks(extension) {
-            console.log('addMocks', extension);
             if (extension && angular.isObject(extension)) {
                 mocks.push(extension);
             }
@@ -1292,125 +1293,6 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 })();
  
 
-/*
- *
- * (с) Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function (_) {
-    'use strict';
-
-    var thisModule = angular.module('pipFakeDataModel.Users', []);
-
-    thisModule.service('pipFakeDataModelUsers', ['pipBasicGeneratorServices', 'pipDataGeneratorUserParty', function (pipBasicGeneratorServices, pipDataGeneratorUserParty) {
-
-        var usersCollection = [];
-
-        return {
-            dataGenerate: dataGenerate,
-            getData: getData,
-            setData: setData,
-            findOne: findOne,
-            findAll: findAll,
-            findMany: findMany,
-            addOne: addOne,
-            updateOne: updateOne,
-            deleteOne: deleteOne
-        };
-
-        function dataGenerate (n) {
-            var newUser, i,
-                length = n > 0 ? n : 10;
-
-            usersCollection = [];
-
-            for (i = 0; i < length; i++) {
-                newUser = pipDataGeneratorUserParty.getOneUser();
-                usersCollection.push(newUser);
-            }
-
-            return usersCollection;
-        }
-        
-        function getData () {
-            return usersCollection;
-        }
-        
-        function setData (data) {
-            usersCollection = data;
-        }
-    
-        function findOne (params) {
-            // find the user that matches that params
-            var user = _.find(usersCollection, params) || [];
-
-            return user[0] || null;
-        }
-    
-        function findAll () {
-            return getData();
-        }
-        
-        function findMany(params) {
-            var users = _.find(usersCollection, params) || [];
-
-            return users;
-        }
-        
-        function addOne(data) {
-            // must calculate a unique ID to add the new data
-            var newUser;
-
-            newUser = pipDataGeneratorUserParty.getOneUser(data);
-            usersCollection.push(newUser);
-
-            return newUser;
-        }
-        
-        function updateOne(userId, user) {
-            // find the user that matches that id
-            var users = getData(),
-                match = null,
-                i;
-
-            for (i = 0; i < users.length; i++) {
-                if(users[i].id == userId) {
-                    match = users[i];
-                    break;
-                }
-            }
-
-            if(!angular.isObject(match)) {
-                return {};
-            }
-
-            angular.extend(match, user);
-
-            return match;
-        }
-        
-        function deleteOne (userId) {
-            // find the user that matches that id
-            var users = getData(),
-                match = false, 
-                i;
-
-            for (i = 0; i < users.length; i++) {
-                if(users[i].id == userId) {
-                    match = true;
-                    users.splice(i, 1);
-                    break;
-                }
-            }
-
-            return match;
-        }
-    }]);
-
-})(window._);
-
 /**
  * @file Service provides mocked user's party
  * @copyright Digital Living Software Corp. 2014-2015
@@ -1572,5 +1454,124 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
     }]);
 
 })(window._, window.chance);
+
+/*
+ *
+ * (с) Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function (_) {
+    'use strict';
+
+    var thisModule = angular.module('pipFakeDataModel.Users', []);
+
+    thisModule.service('pipFakeDataModelUsers', ['pipBasicGeneratorServices', 'pipDataGeneratorUserParty', function (pipBasicGeneratorServices, pipDataGeneratorUserParty) {
+
+        var usersCollection = [];
+
+        return {
+            dataGenerate: dataGenerate,
+            getData: getData,
+            setData: setData,
+            findOne: findOne,
+            findAll: findAll,
+            findMany: findMany,
+            addOne: addOne,
+            updateOne: updateOne,
+            deleteOne: deleteOne
+        };
+
+        function dataGenerate (n) {
+            var newUser, i,
+                length = n > 0 ? n : 10;
+
+            usersCollection = [];
+
+            for (i = 0; i < length; i++) {
+                newUser = pipDataGeneratorUserParty.getOneUser();
+                usersCollection.push(newUser);
+            }
+
+            return usersCollection;
+        }
+        
+        function getData () {
+            return usersCollection;
+        }
+        
+        function setData (data) {
+            usersCollection = data;
+        }
+    
+        function findOne (params) {
+            // find the user that matches that params
+            var user = _.find(usersCollection, params) || [];
+
+            return user[0] || null;
+        }
+    
+        function findAll () {
+            return getData();
+        }
+        
+        function findMany(params) {
+            var users = _.find(usersCollection, params) || [];
+
+            return users;
+        }
+        
+        function addOne(data) {
+            // must calculate a unique ID to add the new data
+            var newUser;
+
+            newUser = pipDataGeneratorUserParty.getOneUser(data);
+            usersCollection.push(newUser);
+
+            return newUser;
+        }
+        
+        function updateOne(userId, user) {
+            // find the user that matches that id
+            var users = getData(),
+                match = null,
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = users[i];
+                    break;
+                }
+            }
+
+            if(!angular.isObject(match)) {
+                return {};
+            }
+
+            angular.extend(match, user);
+
+            return match;
+        }
+        
+        function deleteOne (userId) {
+            // find the user that matches that id
+            var users = getData(),
+                match = false, 
+                i;
+
+            for (i = 0; i < users.length; i++) {
+                if(users[i].id == userId) {
+                    match = true;
+                    users.splice(i, 1);
+                    break;
+                }
+            }
+
+            return match;
+        }
+    }]);
+
+})(window._);
 
 //# sourceMappingURL=pip-webui-test.js.map

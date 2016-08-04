@@ -93,7 +93,6 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
         }
 
         function addMocks(extension) {
-            console.log('addMocks', extension);
             if (extension && angular.isObject(extension)) {
                 mocks.push(extension);
             }
