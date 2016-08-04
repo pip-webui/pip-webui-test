@@ -9,7 +9,7 @@
     var thisModule = angular.module('pipGenerators.Party', []);
 
     thisModule.factory('pipPartyDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-            // var child = Object.create(pipDataGenerator);
+
             var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
 
             child.defaultType = 'person';

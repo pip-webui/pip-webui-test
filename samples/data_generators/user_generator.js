@@ -33,6 +33,11 @@
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('Genetate Users');
 
+            runTestForDataGenerators();
+            runTestForTestCollection();
+            runTestForDataSet();
+            runTestForImageSet();
+            
             return;
 
             function getCode(user) {

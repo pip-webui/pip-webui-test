@@ -9,6 +9,7 @@
     var thisModule = angular.module('pipGenerators.Sessions', []);
 
     thisModule.factory('pipSessionsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            
             var child = new pipDataGenerator('Sessions', []);
 
             child.generateObj = function generateObj() {

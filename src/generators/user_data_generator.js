@@ -13,8 +13,8 @@
 
             var refs = new Array();
 
-            refs['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10, []);
-            refs['Sessions'] = pipSessionsDataGenerator.newObjectList(10, []);
+            refs['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
+            refs['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
 
             var child = new pipDataGenerator('User', refs);
 

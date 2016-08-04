@@ -9,6 +9,7 @@
     var thisModule = angular.module('pipGenerators.PartyAccess', []);
 
     thisModule.factory('pipPartyAccessDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            
             var child = new pipDataGenerator('PartyAccess', []);
 
             child.isContributorChance = 30;
