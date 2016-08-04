@@ -14,9 +14,9 @@
         // Define the constructor function.
         return function () {
 
-            var currentUser = null;
-            var currentParty = null;
-            var dataSet = new Array();
+            this.currentUser = null;
+            this.currentParty = null;
+            this.dataSet = new Array();
 
             this.init = init;         
             this.add = add;         
@@ -33,9 +33,9 @@
         function init() {
             var i;
 
-            for (i = 0; i < dataSet.length; i++) {
-                if (dataSet[i] && dataSet[i].isInit === false) {
-                    dataSet[i].init();
+            for (i in this.dataSet) {
+                if (this.dataSet[i] && this.dataSet[i].isInit === false) {
+                    this.dataSet[i].init();
                 }
             }    
         }
@@ -46,7 +46,7 @@
             
             if (collection && angular.isObject(collection) && collection.name) {
                 name = collection.name;
-                dataSet[name] = _.cloneDeep(collection);
+                this.dataSet[name] = _.cloneDeep(collection);
             } else {
                 throw new Error('pipTestDataSet: collection is required');
             }
@@ -55,7 +55,7 @@
         // Gets registered collection by its name
         function get(name) {
             if (name && angular.isString(name)) {
-                return dataSet[name];
+                return this.dataSet[name];
             } else {
                 throw new Error('pipTestDataSet: name must be a string');
             }
@@ -65,26 +65,26 @@
 
         function setCurrentUser(user) {
             if (user && angular.isObject(user) && user.id) {
-                currentUser = _.cloneDeep(user);
+                this.currentUser = _.cloneDeep(user);
             } else {
                 throw new Error('pipTestDataSet: currentUser must be a object');
             }
         }        
 
         function getCurrentUser() {
-            return currentUser;
+            return this.currentUser;
         }
    
         function setCurrentParty(party) {
             if (party && angular.isObject(party) && party.id) {
-                currentParty = _.cloneDeep(party);
+                this.currentParty = _.cloneDeep(party);
             } else {
                 throw new Error('pipTestDataSet: currentParty must be a object');
             }
         }
 
         function getCurrentParty() {
-            return currentParty;
+            return this.currentParty;
         }      
 
     });

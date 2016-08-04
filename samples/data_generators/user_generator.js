@@ -16,8 +16,8 @@
         function ($scope, pipAppBar, $timeout, pipSession, $http, 
             pipBasicGeneratorServices, 
             // pipFakeDataModelUsers,
-            pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator
-            , TestCollection
+            pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
+            TestCollection, pipTestDataService 
             ) {
 
             $scope.userCollection = pipUserDataGenerator.newObjectList(10);
@@ -37,106 +37,54 @@
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('Genetate Users');
 
-            // runTestForDataGenerators();
-            runTestForTestCollection();
-            runTestForDataSet();
-            runTestForImageSet();
+            var dataset = prepareData();
+
 
             return;
 // test 
 // ---------------------------------
 
-            function runTestForDataGenerators() {
-                var userCollection, userRefsCollection, partyAccessCollection, sessionsCollection, refs = new Array();
+            function prepareData() {
+                var tcPartyAccess, tcSessions, tcUsers,
+                    usersRefs = new Array(),
+                    dataSet;
+                    
+                // create dataset    
+                dataSet = pipTestDataService.getDataset();
 
-                partyAccessCollection = pipPartyAccessDataGenerator.newObjectList(10);
-                sessionsCollection = pipSessionsDataGenerator.newObjectList(10);
-                userCollection = pipUserDataGenerator.newObjectList(10);
+                // create collection without references
+                tcPartyAccess = new TestCollection(pipPartyAccessDataGenerator, 'PartyAccessTestCollection', 20);
+                tcSessions = new TestCollection(pipSessionsDataGenerator, 'SessionsTestCollection', 20);
+                // init collection
+                tcPartyAccess.init();
+                tcSessions.init();
+                // add collection to dataset
+                dataSet.add(tcPartyAccess);
+                dataSet.add(tcSessions);
+                // form references for users collection
+                usersRefs['PartyAccess'] = tcPartyAccess.getAll();
+           	    usersRefs['Sessions'] = tcSessions.getAll();
 
-                refs['PartyAccess'] = partyAccessCollection;
-           	    refs['Sessions'] = sessionsCollection;
+                // create users collection   
+                tcUsers = new TestCollection(pipSessionsDataGenerator, 'UsersTestCollection', 20, usersRefs);   
+                dataSet.add(tcUsers);
 
-                userRefsCollection = pipUserDataGenerator.newObjectList(10, refs);    
+                // init collection
+                dataSet.init();
 
-                console.log('------------partyAccessCollection', partyAccessCollection);
-                console.log('------------sessionsCollection', sessionsCollection);
-                console.log('------------userCollection', userCollection);
-                console.log('------------userRefsCollection', userRefsCollection);
+                var Sessions, PartyAccess, Users;
+
+                Sessions = dataSet.get('SessionsTestCollection').getAll();
+                PartyAccess = dataSet.get('PartyAccessTestCollection').getAll();
+                Users = dataSet.get('UsersTestCollection').getAll();
+
+                console.log('SessionsTestCollection', Sessions);
+                console.log('PartyAccessTestCollection', PartyAccess);
+                console.log('UsersTestCollection', Users);
+
+                return dataSet;
             }
 
-            function runTestForTestCollection() {
-                var userTestCollection, userTestCollection1, userTestCollection2, userTestCollection3;
-
-                var userRefsCollection, partyAccessCollection, sessionsCollection, refs = new Array();
-                partyAccessCollection = pipPartyAccessDataGenerator.newObjectList(10);
-                sessionsCollection = pipSessionsDataGenerator.newObjectList(10);
-
-                refs['PartyAccess'] = partyAccessCollection;
-           	    refs['Sessions'] = sessionsCollection;
-                userRefsCollection = pipUserDataGenerator.newObjectList(10, refs);    
-
-                console.log('------------partyAccessCollection', partyAccessCollection);
-                console.log('------------sessionsCollection', sessionsCollection);
-                console.log('------------userRefsCollection', userRefsCollection);
-
-                userTestCollection = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 20);
-                userTestCollection1 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 5);
-                userTestCollection2 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 7, refs);
-                userTestCollection3 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 0);
-
-
-                userTestCollection.init();
-                userTestCollection1.init();
-                userTestCollection2.init();
-                userTestCollection3.init(userRefsCollection);
-
-                console.log('userTestCollection', userTestCollection.getAll());
-                console.log('userTestCollection1', userTestCollection1.getAll());
-                console.log('userTestCollection2', userTestCollection2.getAll());
-                console.log('userTestCollection3', userTestCollection3.getAll());
-
-                console.log('userTestCollection3 getByIndes 0', userTestCollection3.getByIndex(0));
-                console.log('userTestCollection3 getByIndes 1', userTestCollection3.getByIndex(1));
-                console.log('userTestCollection3 getByIndes length-1', userTestCollection3.getByIndex(userTestCollection3.getSize() - 1));
-                console.log('userTestCollection3 getByIndes length', userTestCollection3.getByIndex(userTestCollection3.getSize()));
-
-
-                var id, objByIndex, idNotFound = '1';
-
-                objByIndex = userTestCollection3.getByIndex(0);
-                
-                id = objByIndex && objByIndex.id ? objByIndex.id : null;
-
-                console.log('userTestCollection3 getByIndes id', id, userTestCollection3.findById(id));
-                console.log('userTestCollection3 getByIndes idNotFound', idNotFound, userTestCollection3.findById(idNotFound));
-
-
-                console.log('userTestCollection3 length before create', userTestCollection3.getSize());
-                var newObj = userTestCollection3.create();
-                console.log('userTestCollection3 length after create', userTestCollection3.getSize());
-                console.log('newObj create', newObj);
-
-                var updatedObjBefor = userTestCollection3.getByIndex(1), updatedObjAfter;
-                console.log('updatedObjBefor', updatedObjBefor);
-                updatedObjAfter = userTestCollection3.update(updatedObjBefor.id, {name: 'new name'});
-                console.log('updatedObjAfter', updatedObjAfter);
-                console.log('updatedObjBefor1', updatedObjBefor);
-
-                userTestCollection3.deleteById(id);
-                console.log('userTestCollection3 length after deleteById', userTestCollection3.getSize());
-
-                userTestCollection3.deleteByIndex(5);
-                console.log('userTestCollection3 length after deleteByIndex', userTestCollection3.getSize());
-
-            }
-
-            function runTestForDataSet() {
-                
-            }
-
-            function runTestForImageSet() {
-
-            }
 // --------------------------------
 
             function getCode(user) {
@@ -197,3 +145,87 @@
     );
 
 })(window.angular);
+
+            // function runTestForDataGenerators() {
+            //     var userCollection, userRefsCollection, partyAccessCollection, sessionsCollection, refs = new Array();
+
+            //     partyAccessCollection = pipPartyAccessDataGenerator.newObjectList(10);
+            //     sessionsCollection = pipSessionsDataGenerator.newObjectList(10);
+            //     userCollection = pipUserDataGenerator.newObjectList(10);
+
+            //     refs['PartyAccess'] = partyAccessCollection;
+           	//     refs['Sessions'] = sessionsCollection;
+
+            //     userRefsCollection = pipUserDataGenerator.newObjectList(10, refs);    
+
+            //     console.log('------------partyAccessCollection', partyAccessCollection);
+            //     console.log('------------sessionsCollection', sessionsCollection);
+            //     console.log('------------userCollection', userCollection);
+            //     console.log('------------userRefsCollection', userRefsCollection);
+            // }
+
+            // function runTestForTestCollection() {
+            //     var userTestCollection, userTestCollection1, userTestCollection2, userTestCollection3;
+
+            //     var userRefsCollection, partyAccessCollection, sessionsCollection, refs = new Array();
+            //     partyAccessCollection = pipPartyAccessDataGenerator.newObjectList(10);
+            //     sessionsCollection = pipSessionsDataGenerator.newObjectList(10);
+
+            //     refs['PartyAccess'] = partyAccessCollection;
+           	//     refs['Sessions'] = sessionsCollection;
+            //     userRefsCollection = pipUserDataGenerator.newObjectList(10, refs);    
+
+            //     console.log('------------partyAccessCollection', partyAccessCollection);
+            //     console.log('------------sessionsCollection', sessionsCollection);
+            //     console.log('------------userRefsCollection', userRefsCollection);
+
+            //     userTestCollection = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 20);
+            //     userTestCollection1 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 5);
+            //     userTestCollection2 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 7, refs);
+            //     userTestCollection3 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 0);
+
+
+            //     userTestCollection.init();
+            //     userTestCollection1.init();
+            //     userTestCollection2.init();
+            //     userTestCollection3.init(userRefsCollection);
+
+            //     console.log('userTestCollection', userTestCollection.getAll());
+            //     console.log('userTestCollection1', userTestCollection1.getAll());
+            //     console.log('userTestCollection2', userTestCollection2.getAll());
+            //     console.log('userTestCollection3', userTestCollection3.getAll());
+
+            //     console.log('userTestCollection3 getByIndes 0', userTestCollection3.getByIndex(0));
+            //     console.log('userTestCollection3 getByIndes 1', userTestCollection3.getByIndex(1));
+            //     console.log('userTestCollection3 getByIndes length-1', userTestCollection3.getByIndex(userTestCollection3.getSize() - 1));
+            //     console.log('userTestCollection3 getByIndes length', userTestCollection3.getByIndex(userTestCollection3.getSize()));
+
+
+            //     var id, objByIndex, idNotFound = '1';
+
+            //     objByIndex = userTestCollection3.getByIndex(0);
+                
+            //     id = objByIndex && objByIndex.id ? objByIndex.id : null;
+
+            //     console.log('userTestCollection3 getByIndes id', id, userTestCollection3.findById(id));
+            //     console.log('userTestCollection3 getByIndes idNotFound', idNotFound, userTestCollection3.findById(idNotFound));
+
+
+            //     console.log('userTestCollection3 length before create', userTestCollection3.getSize());
+            //     var newObj = userTestCollection3.create();
+            //     console.log('userTestCollection3 length after create', userTestCollection3.getSize());
+            //     console.log('newObj create', newObj);
+
+            //     var updatedObjBefor = userTestCollection3.getByIndex(1), updatedObjAfter;
+            //     console.log('updatedObjBefor', updatedObjBefor);
+            //     updatedObjAfter = userTestCollection3.update(updatedObjBefor.id, {name: 'new name'});
+            //     console.log('updatedObjAfter', updatedObjAfter);
+            //     console.log('updatedObjBefor1', updatedObjBefor);
+
+            //     userTestCollection3.deleteById(id);
+            //     console.log('userTestCollection3 length after deleteById', userTestCollection3.getSize());
+
+            //     userTestCollection3.deleteByIndex(5);
+            //     console.log('userTestCollection3 length after deleteByIndex', userTestCollection3.getSize());
+
+            // }
