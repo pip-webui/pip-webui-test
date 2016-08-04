@@ -10,14 +10,57 @@
 
     // Test dataset, that can be used to hold state of rest api
     thisModule.factory('pipTestDataSet', function ($log) {
+        
+        // Define the constructor function.
+        return function () {
 
-    // // Initializes all registered collectons
-    // public init(): void;
-    // // Registers a new collection
-    // public add(col: TestCollection);
-    // // Gets registered collection by its name
-    // public get(name: string): TestCollection;
-    
+            var currentUser;
+            var currentParty;
+            var dataSet = new Array();
+
+            this.init = init;         
+            this.add = add;         
+            this.get = get;         
+
+            this.getCurrentUser = getCurrentUser;
+            this.setCurrentUser = setCurrentUser;
+            this.setCurrentParty = setCurrentParty;
+            this.getCurrentParty = getCurrentParty;
+                    
+        }
+
+        // Initializes all registered collectons
+        function init() {
+
+        }
+   
+        // Registers a new collection
+        function add(collection) {
+
+        }
+
+        // Gets registered collection by its name
+        function get(name) {
+
+        }
+
+        // ---------------------------
+
+        function setCurrentUser(user) {
+
+        }        
+
+        function getCurrentUser() {
+
+        }
+   
+        function setCurrentParty(party) {
+
+        }
+
+        function getCurrentParty() {
+
+        }              
     });
 
 })();
