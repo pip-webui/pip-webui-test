@@ -22,6 +22,7 @@
             this.refs = getRefs(generator, refs);
             this.name = getName(generator, name);
             this.collection = [];
+            this.isInit = false;
 
             this.getGeneratorName = getGeneratorName;
             this.getSize = getSize;         
@@ -62,6 +63,7 @@
             } 
 
             this.collection = this.generator.newObjectList(this.size, this.refs);
+            this.isInit = true;
         }
     
         // public getAll(): any[];
