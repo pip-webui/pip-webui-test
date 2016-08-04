@@ -12,7 +12,7 @@
     thisModule.factory('TestCollection', function ($log) {
 
         // Define the constructor function.
-        function TestCollection(generator, name, size, refs) {
+        return function (generator, name, size, refs) {
             if (!generator) {
                 throw new Error('TestCollection: generator is required');
             }
@@ -22,20 +22,30 @@
             this.refs = getRefs(generator, refs);
             this.name = getName(generator, name);
             this.collection = [];
+
+            this.getGeneratorName = getGeneratorName;
+            this.getSize = getSize;         
+
+            this.init = init;         
+            this.getAll = getAll;         
+            this.getByIndes = getByIndes;         
+            this.findById = findById;         
+            this.create = create;         
+            this.update = update;         
+            this.deleteById = deleteById;         
+            this.deleteByIndex = deleteByIndex;         
         }
-
-        TestCollection.prototype = {
-            getGeneratorName: function() {
+            
+        function getGeneratorName() {
                 return this.generator.name;
-            },
+            }
 
-            getSize: function() {
+        function getSize() {
                 return this.size;
-            }            
-        };
+            }    
 
         // public init(collection: any[]): void;
-        TestCollection.init = function (collection) {
+        function init(collection) {
             if (collection && angular.isArray(collection)) {
                 this.collection = _.cloneDeep(collection);
                 this.size = collection.length;
@@ -50,16 +60,16 @@
                 return
             } 
 
-            this.collection = generator.newObjectList(this.size, this.refs);
+            this.collection = this.generator.newObjectList(this.size, this.refs);
         }
     
         // public getAll(): any[];
-        TestCollection.getAll = function () {
+        function getAll() {
             return _.cloneDeep(this.collection);
         }     
 
         // public get(index: number): any[];
-        TestCollection.get = function (index) {
+        function getByIndes(index) {
             var result = null;
 
             if (!index || index < 0 || index > this.collection.length - 1) {
@@ -72,7 +82,7 @@
         }    
 
         // public findById(id: string): any;
-        TestCollection.findById = function (id, field) {
+        function findById(id, field) {
             var result = null,
                 fieldId = field ? field : 'id';
 
@@ -86,7 +96,7 @@
         }    
 
         // public create(obj: any): any;
-        TestCollection.create = function (obj) {
+        function create(obj) {
             var result = this.generator.initObject(obj);
 
             if (result) {
@@ -97,7 +107,7 @@
         }    
 
         // public update(id: string, obj: any): any;
-        TestCollection.update = function (id, obj) {
+        function update(id, obj) {
             var result;
 
             if (!id || !angular.isObject(obj)) {
@@ -118,7 +128,7 @@
         }    
 
         // public delete(id: string): any;
-        this.deleteById = function (id) {
+        function deleteById(id) {
             var i, match = false;
 
             for (i = 0; i < this.collection.length; i++) {
@@ -133,7 +143,7 @@
         }    
 
         // public delete(id: string): any;
-        this.deleteByIndex = function (index) {
+        function deleteByIndex(index) {
             if (!index || index < 0 || index > this.collection.length - 1) {
                 return false;
             }
@@ -142,8 +152,6 @@
 
             return true;            
         }
-
-        return TestCollection;
 
         // ----------------------------------
 

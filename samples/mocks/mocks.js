@@ -13,7 +13,8 @@
     });
 
     thisModule.controller('MocksController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, pipFakeDataModelUsers,
+        function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, 
+        // pipFakeDataModelUsers,
         pipUserDataGenerator, pipDataGenerator) {
 
             var userId = '565f12ef8ff2161b1dfeedbf', // todo: get current user id
@@ -240,7 +241,7 @@
             // ------------------------
 
             function onUserPOST() {
-                var user = pipFakeDataModelUsers.addOne(),
+                var user = {};// todo: pipFakeDataModelUsers.addOne(),
                     req;
                 
                 console.log('onUser', user);

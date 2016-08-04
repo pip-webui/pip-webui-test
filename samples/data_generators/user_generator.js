@@ -13,8 +13,12 @@
     });
 
     thisModule.controller('GenerateUsersController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, pipFakeDataModelUsers,
-        pipUserDataGenerator) {
+        function ($scope, pipAppBar, $timeout, pipSession, $http, 
+            pipBasicGeneratorServices, 
+            // pipFakeDataModelUsers,
+            pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator
+            , TestCollection
+            ) {
 
             $scope.userCollection = pipUserDataGenerator.newObjectList(10);
 
@@ -33,12 +37,75 @@
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('Genetate Users');
 
-            runTestForDataGenerators();
+            // runTestForDataGenerators();
             runTestForTestCollection();
             runTestForDataSet();
             runTestForImageSet();
-            
+
             return;
+// test 
+// ---------------------------------
+
+            function runTestForDataGenerators() {
+                var userCollection, userRefsCollection, partyAccessCollection, sessionsCollection, refs = new Array();
+
+                partyAccessCollection = pipPartyAccessDataGenerator.newObjectList(10);
+                sessionsCollection = pipSessionsDataGenerator.newObjectList(10);
+                userCollection = pipUserDataGenerator.newObjectList(10);
+
+                refs['PartyAccess'] = partyAccessCollection;
+           	    refs['Sessions'] = sessionsCollection;
+
+                userRefsCollection = pipUserDataGenerator.newObjectList(10, refs);    
+
+                console.log('------------partyAccessCollection', partyAccessCollection);
+                console.log('------------sessionsCollection', sessionsCollection);
+                console.log('------------userCollection', userCollection);
+                console.log('------------userRefsCollection', userRefsCollection);
+            }
+
+            function runTestForTestCollection() {
+                var userTestCollection, userTestCollection1, userTestCollection2, userTestCollection3;
+
+                var userRefsCollection, partyAccessCollection, sessionsCollection, refs = new Array();
+                partyAccessCollection = pipPartyAccessDataGenerator.newObjectList(10);
+                sessionsCollection = pipSessionsDataGenerator.newObjectList(10);
+
+                refs['PartyAccess'] = partyAccessCollection;
+           	    refs['Sessions'] = sessionsCollection;
+                userRefsCollection = pipUserDataGenerator.newObjectList(10, refs);    
+
+                console.log('------------partyAccessCollection', partyAccessCollection);
+                console.log('------------sessionsCollection', sessionsCollection);
+                console.log('------------userRefsCollection', userRefsCollection);
+
+                userTestCollection = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 20);
+                userTestCollection1 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 5);
+                userTestCollection2 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 7, refs);
+                userTestCollection3 = new TestCollection(pipUserDataGenerator, 'UserTestCollection', 0);
+
+
+                userTestCollection.init();
+                userTestCollection1.init();
+                userTestCollection2.init();
+                userTestCollection3.init(userRefsCollection);
+
+                console.log('userTestCollection', userTestCollection.getAll());
+                console.log('userTestCollection1', userTestCollection1.getAll());
+                console.log('userTestCollection2', userTestCollection2.getAll());
+                console.log('userTestCollection3', userTestCollection3.getAll());
+
+
+            }
+
+            function runTestForDataSet() {
+                
+            }
+
+            function runTestForImageSet() {
+
+            }
+// --------------------------------
 
             function getCode(user) {
                 var str = JSON.stringify(user, "", 4);
