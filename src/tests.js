@@ -27,7 +27,11 @@
         
         'pipTestCollection',
         'pipTestDataSet',
-        'pipTestDataService'
+        'pipTestDataService',
+
+        // resources
+        'pipMocked.ImageResources',
+        'pipImageResources'
     ]);
 
 
