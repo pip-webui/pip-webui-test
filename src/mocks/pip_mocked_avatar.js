@@ -51,22 +51,43 @@
 
             var recordType = ['areas', 'goals'];
            
-            // GET for record /api/parties/:party_id/record_type/:record_id/avatar? ...
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regExpSet(recordType, true, true) + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
+            // GET for goals /api/parties/:party_id/record_type/:record_id/avatar? ...
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/goals/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
                console.log('MockedAvatarResource whenGET record', data, headers);
 
                  return [200, {}, {}];
             });
 
-            // PUT for record /api/parties/:party_id/record_type/:record_id/avatar?name= ...
-            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regExpSet(recordType, true, true) + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
+            // PUT for goals /api/parties/:party_id/record_type/:record_id/avatar?name= ...
+            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/goals/') + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
                 console.log('MockedAvatarResource whenPUT record', data, headers);
 
                 return [200, {}, {}];
             });   
 
-            // DELETE for record /api/parties/:party_id/record_type/:record_id/avatar
-            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regExpSet(recordType, true, true) + child.IdRegExp + child.regEsc('/avatar') + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+            // DELETE for goals /api/parties/:party_id/record_type/:record_id/avatar
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/goals/') + child.IdRegExp + child.regEsc('/avatar') + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+                console.log('MockedAvatarResource whenPUT record', data, headers);
+
+                return [200, {}, {}];
+            });  
+
+            // GET for areas /api/parties/:party_id/record_type/:record_id/avatar? ...
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/areas/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
+               console.log('MockedAvatarResource whenGET record', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // PUT for areas /api/parties/:party_id/record_type/:record_id/avatar?name= ...
+            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/areas/') + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
+                console.log('MockedAvatarResource whenPUT record', data, headers);
+
+                return [200, {}, {}];
+            });   
+
+            // DELETE for areas /api/parties/:party_id/record_type/:record_id/avatar
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/areas/') + child.IdRegExp + child.regEsc('/avatar') + child.EndStringRegExp)).respond(function(method, url, data, headers) {
                 console.log('MockedAvatarResource whenPUT record', data, headers);
 
                 return [200, {}, {}];

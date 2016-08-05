@@ -112,9 +112,9 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
             this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
             this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
             this.EndStringRegExp = /$/.toString().slice(1, -1);
-            this.regExpSet = function(set, leftSlash, rightSlash) { // set - array of string
-                return this.regEsc('/goals/'); // todo: generate from set
-            }
+            // this.regExpSet = function(set, leftSlash, rightSlash) { // set - array of string
+            //     return this.regEsc('/goals/'); // todo: generate from set
+            // }
 
             this.register = function() {}
 
