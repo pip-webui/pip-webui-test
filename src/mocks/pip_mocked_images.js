@@ -40,18 +40,22 @@
         child.register = function() {
 
             // GET object /api/parties/:party_id/files/:image_id
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-               console.log('MockedImagesResource whenGET object', data, headers);
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers) {
+                    console.log('MockedImagesResource whenGET object', data, headers);
 
-                 return [200, {}, {}];
-            });
+                    var file = child.dataset.get('FilesTestCollection').getByIndex(0);
+                    return [200, file, {}];
+                });
 
             // GET image /api/parties/:party_id/files/:image_id/content
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.regEsc('/content') + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-               console.log('MockedImagesResource whenGET image', data, headers);
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.regEsc('/content') + child.EndStringRegExp))
+                .respond(function(method, url, data, headers) {
+                console.log('MockedImagesResource whenGET image', data, headers);
 
-                 return [200, {}, {}];
-            });
+                    var file = child.dataset.get('FilesTestCollection').getByIndex(0) || {};
+                    return [200, file.url, {}];
+                });
 
             // PUT /api/parties/:party_id/files?name=
             $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files?name='))).respond(function(method, url, data, headers) {

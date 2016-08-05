@@ -100,9 +100,11 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
     });
 
-    thisModule.factory('MockedResource', function ($httpBackend, $log) {
+    thisModule.factory('MockedResource', function ($httpBackend, $log, pipTestDataService ) {
+
             this.api = '';
             this.fakeUrl = 'http://alpha.pipservices.net';
+            this.dataset = pipTestDataService.getDataset();
 
             this.regEsc = function (str) {
                     //Escape string to be able to use it in a regular expression
