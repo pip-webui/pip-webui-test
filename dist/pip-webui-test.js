@@ -26,6 +26,8 @@
         'pipGenerators.PartyAccess',   
         'pipGenerators.Sessions',    
         'pipGenerators.Party',
+        'pipGenerators.Files',
+        'pipGenerators.Avatars',
         
         'pipTestCollection',
         'pipTestDataSet',
@@ -392,6 +394,61 @@
 
 })();
 /**
+ * @file pipAvatarsDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+// {
+//   "id": "56cde0d1b0c1dcf82cf50cb6",
+//   "name": "cat4.jpg",
+//   "content_type": "image/jpeg",
+//   "length": 36916,
+//   "creator_id": "565f12ef8ff2161b1dfeedbf",
+//   "created": "2016-08-05T09:22:59.141Z",
+//   "refs": [
+//     {
+//       "ref_type": "goal",
+//       "ref_id": "56cde0d1b0c1dcf82cf50cb6"
+//     }
+//   ],
+//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/56cde0d1b0c1dcf82cf50cb6/cat4.jpg"
+// }
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Avatars', []);
+
+    thisModule.factory('pipAvatarsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
+            
+            var child = new pipDataGenerator('Avatars', []);
+
+            child.defaultContentType = 'image/jpeg';
+
+            child.generateObj = function generateObj() {
+                var image = pipImageResources.getImage(),
+                    obj = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        name: pipBasicGeneratorServices.getName(), // getName(image)?
+                        content_type: child.defaultContentType, // getContentType(image)?
+                        length: chance.штеупук({min: 10000, max: 1000000}),
+                        creator_id: pipBasicGeneratorServices.getObjectId(),
+                        created: chance.timestamp(),
+                        refs: [
+                            
+                        ],
+                        url: image.link
+                    };
+
+
+                return obj;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
  * @file pipDataGenerators
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -480,6 +537,57 @@
 })();
  
 /**
+ * @file pipFilesDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+// {
+//   "id": "57a459fbf6dd4d642c1daf23",
+//   "name": "Screenshot_2.png",
+//   "content_type": "image/png",
+//   "length": 78848,
+//   "party_id": "565f12ef8ff2161b1dfeedbf",
+//   "creator_id": "565f12ef8ff2161b1dfeedbf",
+//   "created": "2016-08-05T09:18:52.304Z",
+//   "refs": [],
+//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/57a459fbf6dd4d642c1daf23/Screenshot_2.png"
+// }
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Files', []);
+
+    thisModule.factory('pipFilesDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
+            
+            var child = new pipDataGenerator('Files', []);
+
+            child.generateObj = function generateObj() {
+                var image = pipImageResources.getImage(),
+                    imageName = pipBasicGeneratorServices.getFileName(image.link),
+                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
+                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),
+                    creatorId = pipBasicGeneratorServices.getObjectId(), 
+                    obj = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        name: imageName, 
+                        content_type: imageContentType, 
+                        length: chance.штеупук({min: 10000, max: 1000000}),
+                        party_id: creatorId,
+                        creator_id: creatorId,
+                        created: chance.timestamp(),
+                        refs: [],
+                        url: image.link
+                    };
+
+                return obj;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
  * @file Service provide utils
  * @copyright Digital Living Software Corp. 2014-2015
  */
@@ -495,6 +603,12 @@
             ABCD_CAPITALIZE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             DIGIT = '0123456789',
             SIGN = ' .,;:-!?',
+            CONTENT_TYPES = {
+                'jpg': 'image/jpg',
+                'jpeg': 'image/jpeg',
+                'gif': 'image/gif',
+                'png': 'image/png'
+            }
 
             SERVER_URL = 'http://alpha.pipservices.net';
 
@@ -511,7 +625,9 @@
             serverUrl:serverUrl,
             getName: getName,
             getOne: getOne,
-            getMany: getMany
+            getMany: getMany,
+            getFileName: getFileName,
+            getFileExt: getFileExt
         };
 
         // Returns random ID
@@ -563,6 +679,31 @@
             var name = chance.first() + ' ' + chance.name();
 
             return name;
+        }
+
+        function getFileName(url) {
+             var name = url.slice(url.lastIndexOf('/') + 1, url.length).split('?')[0];
+
+             return name;
+        }
+
+        function getFileExt(name) {
+             var ext = url.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
+
+             return ext;
+        }
+
+        function getContentType(fileExt) {
+            var default_CT = 'image/jpg'
+                result;
+
+            result = CONTENT_TYPES[fileExt];
+
+            if (!result) {
+                result = default_CT;
+            }
+
+            return result;
         }
 
     });
@@ -753,6 +894,87 @@
 })();
  
 /**
+ * @file Translatation service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ * - Move directives to more appropriate places
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
+/**
  * @file String resources for Areas pages
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -771,11 +993,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Cat Rejected By 5 Previous Owners Finally Finds A Human That Loves ...",
                 "link": "http://static.boredpanda.com/blog/wp-content/uploads/2016/04/beautiful-fluffy-cat-british-longhair-thumb.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRnJBZq_2tq5ZQY5q_ffHasWSjp84ULC0DqoTVd0F4sWDJgrEoLcDqXqw"
-            },
-            {
-                "title": "Cat Food and Kitten Food for Purebred Cats | Royal Canin",
-                "link": "https://www.royalcanin.com/~/media/Royal-Canin/Product-Categories/cat-breed-landing-hero.ashx",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRbp9g3Nq5buObnoA8-YIp7XRGE_CIPR0nns1RsMo8iSLRSriPWOF3XwMM"
             },
             {
                 "title": "Your Cat | Cat Advice",
@@ -804,7 +1021,7 @@ console.log('pipImageResourcesProvider');
             },
             {
                 "title": "This Cat Takes Better Selfies Than You (16 Photos) «TwistedSifter",
-                "link": "https://twistedsifter.files.wordpress.com/2016/02/manny-the-cat-takes-better-selfies-than-you-9.jpg?w=640&h=640",
+                "link": "https://twistedsifter.files.wordpress.com/2016/02/manny-the-cat-takes-better-selfies-than-you-9.jpg",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRIk7_KJk0eR0lw2PB79xaPihecrtlOiw-SSodEmz1RIT_ZHu43RGnjLcYQJQ"
             },
             {
@@ -821,16 +1038,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Cat Behavior: 17 Things Your Cat Wants to Tell You | Reader's Digest",
                 "link": "http://www.rd.com/wp-content/uploads/sites/2/2016/04/15-cat-wants-to-tell-you-attention.jpg",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQwBmXlaFtzb3TeeRavzIByOHw4y3t3zaYrGZJ7ZmKUakrs-QfmozrwNXbx"
-            },
-            {
-                "title": "Cat Health Products - Pet Drugs Online",
-                "link": "http://www.petdrugsonline.co.uk/images/page-headers/cats-master-header",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR-7fBp5ARUsFD3cIscpXY4umVtVliNhxYf6P59Diit1ocnHIdMW9hoaiA"
-            },
-            {
-                "title": "The Adult Cat Life Stage | Royal Canin Canada",
-                "link": "http://www.royalcanin.ca/~/media/Royal-Canin-Canada/Product-Categories/cat-adult-landing-hero.ashx",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLjpD7FYx53hytWpWEgoiW-H8TRjMGAiOH-fsGhrLNgNpM-tX877tgyOnZ"
             },
             {
                 "title": "Cats",
@@ -898,29 +1105,14 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS5V5DttClRlzqrGKrr2Ml3lVjwUVXrIT1eViWuJkia1ENZzsEWYYqIuT0"
             },
             {
-                "title": "Adult Cat Care | Royal Canin",
-                "link": "https://www.royalcanin.com/~/media/Royal-Canin/Product-Categories/cat-adult-landing-hero.ashx",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRJyNVc64ILUEDKNducIjY-eKeDF4eqATvV3FlrsRp5Sf43JidOBxgvvzk"
-            },
-            {
                 "title": "Cats: Adoption, Bringing A Cat Home and Care",
                 "link": "https://www.petfinder.com/wp-content/uploads/2012/11/153558006-tips-healthy-cat-632x475.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRfYAWLnDlb-s9qfWyb7glMuzEVGQDEjN7l3mRJ8qa7hzErX3q-v6hV9J0"
             },
             {
-                "title": "Cat Food for All Sizes and Breeds | Royal Canin",
-                "link": "https://www.royalcanin.com/~/media/Royal-Canin/Subpage-Hero-Images/150327_Hero_kit.ashx",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSX7-3IZ08U7H4j9GkFt13GuDS-Egf7dGMtU9eA7I5Fztki5h6AMreUewo"
-            },
-            {
                 "title": "Cat Grooming, Cat Daycare, Cat Hotel | Exmoor Pet Services, Austin TX",
                 "link": "http://exmoorpet.com/wp-content/uploads/2012/08/cat.png",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWm7jG337aUb1hPzMZiGy6CpMOvHWExlk08QiWdSxAjbylF0eDye2D-g"
-            },
-            {
-                "title": "Senior Cat Care | Royal Canin",
-                "link": "https://www.royalcanin.com/~/media/Royal-Canin/Product-Categories/cat-senior-landing-hero.ashx",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSBQrr1OsXAhrFPkmYDkwtz08WaSLtz8F8CB-8oCtv94zU6_ldO2D1rblDZ"
             },
             {
                 "title": "Cats on About.com - All About Cats and Kittens",
@@ -931,11 +1123,6 @@ console.log('pipImageResourcesProvider');
                 "title": "The Cat Lounge",
                 "link": "http://thecatlounge.co.nz/content/cat3.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRO1iBhIf4La3n-_f6cR-g9s_RiL4TkCA-67a9DasTjFnoz7qdjdtqRhZo"
-            },
-            {
-                "title": "Complete Guide to Caring for Cats | Cat Breed Information, Cat ...",
-                "link": "http://d21vu35cjx7sd4.cloudfront.net/dims3/MMAH/thumbnail/180x180/quality/90/?url=http%3A%2F%2Fs3.amazonaws.com%2Fassets.prod.vetstreet.com%2F0d%2Ff2e4c0b3a611e092fe0050568d634f%2Ffile%2Fhub-cats-senior.jpg",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRZHRhVPAyc6rHaOAElU-1sT9RcDUOl6tv0v4J3aWwe64-XZYtrD1AwwlU"
             },
             {
                 "title": "Free stock photo: Cat, Kitten, Mieze, Mackerel - Free Image on ...",
@@ -968,11 +1155,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcROnBf9X6E1yPVrFgWJWnRxXHMLeSGSLm0LLuSFHLrJng1BYsLT4Zer-Q"
             },
             {
-                "title": "Amazon.com: Cats: Pet Supplies: Collars, Harnesses & Leashes, Beds ...",
-                "link": "https://images-na.ssl-images-amazon.com/images/G/01/img15/pet-products/small-tiles/30423_pets-products_january-site-flip_3-cathealth_short-tile_592x304._CB286975940_.jpg",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSQz34b3fBAR2t5ZrsvuxxNopYscyWwcYYwmufx6prOxVqpCtXoAlAA66Jw"
-            },
-            {
                 "title": "Cat experts reveal the meaning behind different meows | Science ...",
                 "link": "http://static.independent.co.uk/s3fs-public/styles/article_large/public/thumbnails/image/2016/02/25/13/cat-getty_0.jpg",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkBYur6FxrE6U8bB0uX_ui70NjQ5D5V5sYVDkj_LTLLfsckdNBrsTtG9A"
@@ -991,11 +1173,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Cat - Wikipedia, the free encyclopedia",
                 "link": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Cat_poster_1.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR2Xh92H8c0XAv7WlcV1N2K-7N1ofNne9IMQzTx6GAEXvkg8R115gHzUJg"
-            },
-            {
-                "title": "How to Raise a Healthy Cat - Health.com",
-                "link": "http://cdn-img.health.com/sites/default/files/styles/400x400/public/styles/400x400/public/styles/main/public/how-take-care-cat-400x400.jpg?itok=ta2kPB58",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2BVEGhXAakHfnVd5Nepr4Oy3p8_7aK5Z30rgokOkuuJSnf1JMnis7HQ"
             },
             {
                 "title": "Cats: Adoption, Bringing A Cat Home and Care",
@@ -1058,11 +1235,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQz9vAjzgNdNJmCzN99DuhXCEp365eu4H0W-443dyImb7qtvYw5NRMyAw"
             },
             {
-                "title": "Rental Cars at Low, Affordable Rates - Enterprise Rent-A-Car",
-                "link": "https://www.enterprise.com/content/dam/ecom/utilitarian/common/carshare/mtf-carshare-ford-hatchback.png.wrend.1280.720.png",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSha76G1P6TYbsRlFUw9iyzBFp7pAE815XKfYAgT6cOTBKngFY_E8y5PDoo"
-            },
-            {
                 "title": "Bumper Cars For Sale - Beston Amusement Rides",
                 "link": "http://www.bestonkidsrides.com/wp-content/uploads/2016/05/BNBC-06-Beston-amusement-park-bumper-cars-for-sale.jpg",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2LrNxMrxMZ-IpEVedY5X0oN-I8BVz4gRtLX3Np9IZCS4KeGn-ZYJhBtI"
@@ -1116,11 +1288,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Used Cars for Sale, Pre-Owned Car Dealerships - Enterprise Car Sales",
                 "link": "http://www.enterprisecarsales.com/Media/Default/home/Under13KLineup.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTJ2baM3du1qhBmCANc1W3zs_eNsGtbg99Qdxedvm3qyWvwV7QVmXNP3Uw"
-            },
-            {
-                "title": "Rental Cars in United States - Enterprise Rent-A-Car",
-                "link": "https://www.enterprise.com/content/enterprise_cros/data/vehicle/bookingCountries/US/CARS/ECAR.doi.352.high.imageSmallThreeQuarterNodePath.png/1435160857936.png",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGJ3kufqGe8jqnHrjiPZ9JCQgaOQk-srckdLQnIV0IeiMk3WohMco9a9o"
             },
             {
                 "title": "Choose your electric car - Go Ultra Low",
@@ -1244,11 +1411,6 @@ console.log('pipImageResourcesProvider');
             },
             {
                 "title": "Rental Cars in United States - Enterprise Rent-A-Car",
-                "link": "https://www.enterprise.com/content/enterprise_cros/data/vehicle/bookingCountries/US/CARS/CCAR.doi.352.high.imageSmallThreeQuarterNodePath.png/1444354947600.png",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS6kOlFLc-CpcasJTvcYcW0-bCQpqDlOoWH-LBn5BLc2SkMy2AcwRcn1Q"
-            },
-            {
-                "title": "Rental Cars in United States - Enterprise Rent-A-Car",
                 "link": "https://www.enterprise.com/content/dam/global-vehicle-images/cars/TOYO_RAV4_2014.png",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSCQsQ_U34w51z5ofW-PJqIYpSh8bQLjsBa1ENDaUVnEX1outwXYddMGvs"
             },
@@ -1256,11 +1418,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Interpretation of a dream in which you saw «Car»",
                 "link": "http://weknowyourdreams.com/images/car/car-06.png",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQP4BeXm3n77yQUctc4qPEzBvVOoI8Ls40nGCj3UFE5R0CqnMzXkXWiHwGV"
-            },
-            {
-                "title": "New & Used Car Reviews | Cars.com Cars.com",
-                "link": "http://car-pictures.cars.com/images/?IMG=usc60vwc041b022001.png&WIDTH=624&AUTOTRIM=1&SPECIAL=&ACT=F",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQR3XdiHgmW7qERPISg6m6QVW9UokDdSQKehq3MwEj7NR_umQxibZdQic-n"
             },
             {
                 "title": "Car - Free images on Pixabay",
@@ -1313,19 +1470,9 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQd8UBOIKVjScde8cCF37xNMFir-bFdOVr2-bxUVkiHrrcKYxHx6DEKmF_Z"
             },
             {
-                "title": "Things to see and do in Mount Maunganui, New Zealand",
-                "link": "http://farm1.nzstatic.com/_proxy/imageproxy_1y/serve/view-of-mount-maunganui.jpg?height=420&outputformat=jpg&quality=75&source=2815359&transformationsystem=crop&width=960&securitytoken=682E4DCC5CB82F33E8FE9C2ED4CA4BB8",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTnUhQU11ZpgeTeIOwhqkjSvLfy5G91LfQozqcKEqAY1b-Vy8yWzL_bwszq"
-            },
-            {
                 "title": "Mount Meru - Kilimanjaro",
                 "link": "http://www.ultimatekilimanjaro.com/photos/mount_meru.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ_8jHEHi0eTQY-vUkkAQkkLNZw20WWjBqB8cIzxJvrReVGKV5KtPwKf5Y"
-            },
-            {
-                "title": "Mount Anthor - Elder Scrolls - Wikia",
-                "link": "http://vignette4.wikia.nocookie.net/elderscrolls/images/b/b1/Mount_Anthor.jpg/revision/latest?cb=20111127174403",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvhjQGVcgnppKYgN9EMEYo6v1WXKg-eDFJoEYGsd070MmQ678ElqFv455b"
             },
             {
                 "title": "Bali Mount Batur Travel Pictures: Indonesia, Kedisan, Toya Bungkah ...",
@@ -1371,11 +1518,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Mount Whitney wallpaper | 2560x1600 | #84138",
                 "link": "http://eskipaper.com/images/mount-whitney-2.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRcR9BMeNYIOe5IQ2SJagSZcSY79x9hL52cHan7Ebv3HVS9ltUfHlmyKe2n"
-            },
-            {
-                "title": "New Hampshire Destination Wedding Location | Omni Mount Washington ...",
-                "link": "https://www.omnihotels.com/-/media/images/hotels/mtwash/weddings/mtwash-omni-mount-washington-resort-wedding-exterior-day.jpg?h=660&la=en&w=1170",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLedzR8sQm_T3w0njFcjw3k8ZXC6lwwLbVi2zqHm04tR2f31cGcwGnZnqv"
             },
             {
                 "title": "Skywatch Friday: Mount Washington — Birding in Maine",
@@ -1518,11 +1660,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS1iTGhJdHaWEyP8iFYF18KK7_R8toyT3y3jwl2JanpOvEsfGIFOtP53OY"
             },
             {
-                "title": "History of the Internet - Wikipedia, the free encyclopedia",
-                "link": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/InternetPenetrationWorldMap.svg/2000px-InternetPenetrationWorldMap.svg.png",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT8XH_bIuQcdzE6OqoyacuObDP15Bt8YKdfdTXBH4ofYcIs7eD6or5a5WLZ"
-            },
-            {
                 "title": "Business Internet Solutions - Call-OneCall-One Communications ...",
                 "link": "http://www.call-one.ca/wp-content/uploads/2015/03/residential-home-cable-wireless-high-speed-internet.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ0dj2mY1euXf7kCAaLPcHVyoT6Eb1z8U8VbzG7MAGEELa8E8-jv_AoPg"
@@ -1553,11 +1690,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPKkrI-y2xL-CAkt0bl5cWEsUTMIDKqVSjo4UV3LY3kwj0lI7GV6LE2xAQ"
             },
             {
-                "title": "Internet - Wikipedia, the free encyclopedia",
-                "link": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/InternetUsersByLanguagePieChart.svg/360px-InternetUsersByLanguagePieChart.svg.png",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHvXw-4_WG6nVL9g6FvKKYS70-1ExsfbkPJlLcCq_kOZ3KGc5wJVMSLQ"
-            },
-            {
                 "title": "Internet - Simple English Wikipedia, the free encyclopedia",
                 "link": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Internet_map_1024.jpg/319px-Internet_map_1024.jpg",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMQvMubXP7XIOEyniP4olrLPS8N4Ma9zuK3yCqJMlioeW1JeG-i0L0qw"
@@ -1566,11 +1698,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Contra-Internet GIFs | Rhizome",
                 "link": "http://media.rhizome.org/blog/9583/Contra-Internet-Bottom.gif",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQi51-6IqU1jTeDHFgX-4TULg9s7dpV8nrqMgaG8_inzamA7XWX6pTTcLMR"
-            },
-            {
-                "title": "Funny Photos, Videos, Jokes & News. Update A Film For The Internet ...",
-                "link": "http://previews.123rf.com/images/amasterpics123/amasterpics1231208/amasterpics123120800162/14821565-Internet-world-wide-web-concept-Earth-globe-with-www-text-and-computer-hand-cursor-isolated-on-white-Stock-Photo.jpg",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQuAY4hniNwV_M06xUvu1K5yq2Ta-6q8f-tIuIdR4P5Ll3r4grNEr_aoNKUNA"
             },
             {
                 "title": "Dish Network, DIRECTV, Internet & Phone | Greensboro & Burlington, NC",
@@ -1643,11 +1770,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSlG_aHLOdVRSjkhoW29nYU6TDeTSVTYZfp-YSZSM9-eEsWzvkaJIYgRWU"
             },
             {
-                "title": "File:Applications-internet.svg - Wikimedia Commons",
-                "link": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Applications-internet.svg/2000px-Applications-internet.svg.png",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTihXc0OFdI1LiTXvN_3-94dn_NExk5XTXmUHy0a1n7jC7HZwLbB8W3iduiug"
-            },
-            {
                 "title": "Internet - Free images on Pixabay",
                 "link": "https://pixabay.com/static/uploads/photo/2012/04/26/14/14/internet-42583_960_720.png",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_StAbFmR8GJkSwr8f2op3VW-2nZ81NBmwZCZRHVOk7T05N8hcMlWhTmw4"
@@ -1656,11 +1778,6 @@ console.log('pipImageResourcesProvider');
                 "title": "The future is the Internet of Things—deal with it | Ars Technica",
                 "link": "http://cdn.arstechnica.net/wp-content/uploads/2015/10/network-782707_1280-980x637.png",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRhmf0Cz8AMshpciMHxNW0aIWEGV_gy8sFKqeWvl-BrMCo-WJlZN7DDcHgg"
-            },
-            {
-                "title": "Top Remedies For Internet Growth In Nigeria - Webmasters - Nigeria",
-                "link": "http://www.nairaland.com/attachments/2833327_internet3_jpeg9cec76723a59485ff8cc19f80be8ccf3",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBu247ckvfzPEN2nHm8cqiTRCm1SjyWxH1BqlDzm1FrF3isso0L9aa2g4"
             },
             {
                 "title": "Internet Services | High Speed Internet | CTI Networks",
@@ -1676,16 +1793,6 @@ console.log('pipImageResourcesProvider');
                 "title": "A Simple Explanation Of 'The Internet Of Things' - Forbes",
                 "link": "http://blogs-images.forbes.com/jacobmorgan/files/2014/05/internet-of-things-2.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQgGx9J5kqwOf_BradwpeJQhjtwmSDjQPjhB5BTehfB-LSPWhpgJO6B0W4"
-            },
-            {
-                "title": "The Internet That Was (and Still Could Be) - The Atlantic",
-                "link": "https://cdn.theatlantic.com/assets/media/img/mt/2015/06/fibop/lead_960.jpg?1434748080",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSgtiVF9K2P-BXvIR0JtJK5lBhoO9QuzYB9MHPVTPPR7FZCbUt1GDicIt5D"
-            },
-            {
-                "title": "Internet Access - Broadband, DSL, Cable Modem, Satellite and Dial ...",
-                "link": "http://www.myrateplan.com/sites/myrateplan.com/files/styles/phone_photo_medium/public/shutterstock_62462044-%5BConverted%5D.png?itok=PfHaIEEh",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRPbkU6HNa4WiwXiVq2zgLoG11VHngbEykt5GUQ2zKu7ctJnpIyZCvFKog"
             },
             {
                 "title": "Internet",
@@ -1713,11 +1820,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQSOsgkAh__33Cma0HrEKHn-yGfkC_CHgW4ff514VRMzwAfvARwF5_m2_U"
             },
             {
-                "title": "Rocket Internet's Africa Internet Group raises $326M from Goldman ...",
-                "link": "https://tctechcrunch2011.files.wordpress.com/2016/03/africa-globe.jpg?w=738",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRk_W-hyQbN6JFMX4IqdLlEO2dVI8w7FRSN6oWttSsfeE2MC_nahhQC8ZIw"
-            },
-            {
                 "title": "Is It 'Internet' Or 'internet?' The Internet Can't Agree",
                 "link": "http://i.ndtvimg.com/i/2016-04/internet-network-generic-istock_650x400_71459822128.jpg",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQbIdRzrBTGk6O8M9GihnET29pc5bGwlZOKhYuOkMkPv_xR0AKqgYCoJ4"
@@ -1728,19 +1830,9 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQEfr__MRc9jQ5Q17j4-IoyuwHoBQBZN-HXuerAHG51vNfR8YvtWWumpogY"
             },
             {
-                "title": "Internet Speed Master - Android Apps on Google Play",
-                "link": "https://lh5.ggpht.com/LDEfgONyYQzx-fQQbhCF_UR6JTjp217He7_Vza899n_AHFv3nf2vwmyTd8xZ3gNidA=w300",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFOHThMeD_D9EHArQSMlXfOmmWxSrk-8NsWzp1tNk920-7ib3HUE769A"
-            },
-            {
                 "title": "Top 8 Problems Of Internet Growth In Nigeria - Webmasters - Nigeria",
                 "link": "http://www.nairaland.com/attachments/2743433_internet1_jpeg_jpegbdffc73c4f837b45246a99d2d04fba18",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVo50DJt_OJGqZUMzF0xvU3DR7asmdWEXxggYSqNIuY1Z6IAaC5G-vkVM"
-            },
-            {
-                "title": "Top 10 Internet of Things stories of 2015 | CIO",
-                "link": "http://images.techhive.com/images/article/2015/12/internet_of_things_2015-100634979-primary.idge.jpg",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGWZxXuzOd7zL3FtjfWutezK_egqZFzyiqaytcWo2cH9Wn7C6xEHETkZ27"
             },
             {
                 "title": "Internet Archives - Ted Buzz",
@@ -1778,11 +1870,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpSmC8XT9sA1Cbwv99ioCgMcobrjF6n-xb2YzixPabA1j9DMps2dZPzxhA"
             },
             {
-                "title": "Hero_ProjectOnline_1600x620. ...",
-                "link": "https://c.s-microsoft.com/en-us/CMSImages/Hero_ProjectOnline_1600x620.jpg?version=91ff72f8-3c95-53ac-34e6-fba83dbc950e",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSV2VsJi6NWocWiv4JLPtNTXkMCZjf8-_5XtYbGrgXQeG-OG_pPeN5_yTI"
-            },
-            {
                 "title": "Welcome to Learning Adventures| Electronic Field Trips from APT ...",
                 "link": "http://www.aptv.org/Project-C/images/PROJECT-C.png",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ8jQXBd8DraSPkr4vpBjcLg4UHDUgdwW3icXDJtYD1nKvCid6A3I5vZO0"
@@ -1791,11 +1878,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Costs Management with Twproject - Twproject: project management ...",
                 "link": "https://cdn.twproject.com/site/wp-content/uploads/project-costs-management.jpg",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSwtykI7bDTuGyYHSdGyp0EGqYVdI6C1KtwXiznpYamNhMmDWUk1UxQOOE"
-            },
-            {
-                "title": "Project Management Basics | Interaction Design Foundation",
-                "link": "http://derekpalizay.com/wp-content/uploads/2015/01/Project-Management-for-Small-Businesses.jpg?__hstc=246535899.1289f84a362c41b80e5e8776d3502129.1435233910711.1436779825313.1436783333835.39&__hssc=246535899.106.1436783333835&__hsfp=4289683868",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy88JgxryVHrZLOP4SUK4S9VsG1rzm7J4ptUq3kTvQfZtVj2MF4tNK22on"
             },
             {
                 "title": "Project printing – JMDPrint",
@@ -1828,21 +1910,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQGNPNSc-mDcq17nBshE-Lk3AZF_PZWer-TOt0V3ufQP-oCdNoUxl1yTk"
             },
             {
-                "title": "Stanford Advanced Project Management Certificate | Stanford Center ...",
-                "link": "https://mvideos.stanford.edu/Images/DestinyImages/Professional%20Certificate%20Images/Advanced%20Project%20Management/460X259/ProjectManagementCertificate_MAIN.jpg",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Z-Gckx_MkXY8dcWt-5IShiHbbf_kkUdx3xDcJZs2_9MbANYc7KEf1a0"
-            },
-            {
-                "title": "Project for Office 365 | Portfolio Management Software",
-                "link": "https://c.s-microsoft.com/en-gb/CMSImages/hero-project-pro-foro365-1600x487.jpg?version=2cfb322c-52b1-e9bf-5842-7f12cf572829",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQcEuWqTGkTjTNsaH1ekKIOUzydfn5Llt58VOkl-gW9xv8PcLC1AYyO9szP"
-            },
-            {
-                "title": "Project Professional | Project Management Desktop Software | Buy",
-                "link": "https://c.s-microsoft.com/en-gb/CMSImages/Hero_Project_Pro2013_1600x530.jpg?version=17d82239-537e-eca6-9eb8-932d08b66e11",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRx-I5IA4OYyRrMJQnQdTMxKX7MRp_JP4wUV2m1E66QVpT38vH_3Yf4rVkK"
-            },
-            {
                 "title": "5 essential steps for good project management | Symetris Web ...",
                 "link": "http://symetris.ca/sites/default/files/Project_Kick-off.jpg",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvnkcVsoh-_syBaVR-QSeKAa-ZRyIn3eOg-s8LWa_rYaDt6mzxDm_ZF-M"
@@ -1853,11 +1920,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc35IQ3DksyZYOnqerhmAAVj5cMwStKCFi5A5oLaNRDaymYYFmJV3_CzU"
             },
             {
-                "title": "The Best Project Management Software of 2016 | PCMag.com",
-                "link": "http://www5.pcmag.com/media/images/481950-project-management.jpg?thumb=y&width=740&height=426",
-                "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRUBOJDi2VAtMthqunkNZ4osLNf0RxMNIJL7rbWZjzxOeL7vMx2NlKP6vA"
-            },
-            {
                 "title": "Frontline » Project ServicesFrontline",
                 "link": "http://frontline-inc.ca/wp-content/uploads/2015/09/Project-Management.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT2WKsa7mGUDg2wJUzUv0RR_IoGFQ7TpOdqol436fRg45cTcTQP033-vYRS"
@@ -1866,11 +1928,6 @@ console.log('pipImageResourcesProvider');
                 "title": "About the Project – Boys Don't Cry – Association of Renaissance ...",
                 "link": "http://renaissanceinstitute.eu/v1/wp-content/uploads/2015/07/yyy.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRJVDRpl4xuadQYGPTcm1y3mor9ilNWSdnM3EHlW24_6PjRL6AB8fK1vg"
-            },
-            {
-                "title": "RPS Group Plc - Project development",
-                "link": "http://cdn.rpsgroup.com/getattachment/f55a1027-8dbf-4891-ae2f-b8a097656ec6/Project-Development.aspx",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMTuujA-kCSOdNR0mBp_QVsOWOS8mrXANQ2U_dEoXNpYXOsbqqTaPtdS4"
             },
             {
                 "title": "The Project - Channel TEN - Network Ten",
@@ -1918,11 +1975,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ_pAVTBXlQ0zlEtJnsPDUu5eabEqXHOtuHYXHK-xavA-wRbQuuNLDYvM"
             },
             {
-                "title": "Poster Project",
-                "link": "http://e36261ef1f37a9aa564c-183246622d51cc66cab6f7d435863a72.r86.cf5.rackcdn.com/wp-content/uploads/2015/03/Project-Image-660x330.jpg?a1f070",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSc0EjjQoYKmb9YQvlV04vOCpN5Sc0HbsXdXjDAoB71gJBS872vicYiHkY"
-            },
-            {
                 "title": "WordPress Project Management Plugin : Task Management, Project ...",
                 "link": "https://wp-client.com/wpcbridge/wp-content/uploads/2014/04/2014-Website-WPC-PM-Graphic-1.png",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRP6O0D2VPDnok5ll_2UWEvkn_9t4vvVjGS-KO5vK0ETGv-d7VLR3PIHtI"
@@ -1961,11 +2013,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Project Management - iTechtions",
                 "link": "http://itechtions.com/wp-content/uploads/2015/05/Project-Management.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTMM4WHb1NlF9MZmsoqxE-hMRvsOFmGKH3dC069HM6ALIsLX3FFrMvKAPsf"
-            },
-            {
-                "title": "Project Management Software | Microsoft Project",
-                "link": "https://c.s-microsoft.com/en-us/CMSImages/Image_ProjectBlog_509x190.jpg?version=b0451b99-9dc1-ce92-be6e-b6806c5a034a",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS4OD3qu6CItvTVzmPp9G12xy28k-8t_iCoGY0qk33mN_lYaJJOpVwrKk_7"
             },
             {
                 "title": "Project printing – JMDPrint",
@@ -2008,11 +2055,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAYVC932rXXTSRVERHvx2HbZ6Z_dtHf6okVO7j2smY3oF4z5NnbRt5ZpM"
             },
             {
-                "title": "Integrated Health Project | Management Sciences for Health",
-                "link": "https://www.msh.org/sites/msh.org/files/styles/quality-fixer/public/field_images_cropped/field_collection_item/field_banners_split_screen/20160107_featured_project-02.png",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQwCc1s2vsf-Jj13JvDKSnlRB_7Trl1ZKn_bNgf_KL-huB2wmJcgViZ-P9H"
-            },
-            {
                 "title": "Project - Office Blogs",
                 "link": "https://blogs.office.com/wp-content/uploads/2015/10/Project-Manager-FI.png",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShadUJea1y67sErQAV81be0uA0nWOx4Gspz-0CRVXhXhVk2oH1bLDUAW5o"
@@ -2031,11 +2073,6 @@ console.log('pipImageResourcesProvider');
                 "title": "Country Wallpaper HD Image Download Free | Wallpapers, Backgrounds ...",
                 "link": "http://www.pixelstalk.net/wp-content/uploads/2015/07/country-wallpaper-7.jpg",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTXWbSumEhOqIT3xZWUzaNo5TPVme3ieIeWkugbncYw1aI3YU2HNBgWdyL7"
-            },
-            {
-                "title": "Discover Gold Country | Visit California",
-                "link": "http://d14dsi4x2zx6ql.cloudfront.net/files/styles/welcome_image/public/VCW_D_GC_T8_HelwigWinery_Flippen-1280x642.jpg?itok=F_3T9WFG",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRE6jDytSnNBbgEEg18KSsVNnpepri7sv36OQxekgkAfOlhP3sDv-t4xwc"
             },
             {
                 "title": "BBC Radio 4 - Open Country",
@@ -2068,19 +2105,9 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQbQl-kPKr4-9Jw6pMAKhhhWaWI-2Z0yVF5JJMLVd1pvf14unoz1WxwZAdU"
             },
             {
-                "title": "ClubCorp, Country Clubs, City Clubs, Private Clubs",
-                "link": "http://www.clubcorp.com/var/ezflow_site/storage/images/media/corporate/homepage-slideshow/clubcorp-anthem-country-club-1000x530/749737-1-eng-US/ClubCorp-Anthem-Country-Club-1000x530_corpSlideImage.jpg",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSLBeA_2yhKGnyvI0Zb1AF7UYpEYtBDIMWUpS2ntDFZzuiMNkyHMsIoogQ"
-            },
-            {
                 "title": "Country HD Wallpapers | Backgrounds",
                 "link": "http://6iee.com/data/uploads/12/589241.jpg",
                 "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZyz0rDS4LPZGAe-svenbmxaT441UYnIa51FI8MMtqRzZcz60BGiPkJ0E"
-            },
-            {
-                "title": "ClubCorp, Country Clubs, City Clubs, Private Clubs",
-                "link": "http://www.clubcorp.com/var/ezflow_site/storage/images/media/corporate/homepage-slideshow/clubcorp-home-images/clubcorp-gleneagles-country-club-plano-tx-hole8-1000x530/2316880-1-eng-US/ClubCorp-Gleneagles-Country-Club-Plano-TX-Hole8-1000x530_corpSlideImage.jpg",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmH1RsXYfSCbIDA2rLxuHZ0fva204WOLlygWer0ulmj_TZm0S1BvADj0"
             },
             {
                 "title": "HITS Playlist: Country Summer | HITS In The Sticks",
@@ -2146,11 +2173,6 @@ console.log('pipImageResourcesProvider');
                 "title": "This Is Country' Provides Backstage Pass to ACM Awards « Radio.com",
                 "link": "https://cbsradionews.files.wordpress.com/2014/12/thisiscountry_cover.jpg",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS83nfFEWOGU6gMi9P0X0-SAPjxAYM9969RVesB3ddGb0TWRV_i4FBKnoL-"
-            },
-            {
-                "title": "High Country, Victoria, Australia",
-                "link": "http://www.visitmelbourne.com/-/media/images/high-country/food-and-wine/wineries/ciccone-estate-wines_hc_r_1340201_1150x863.jpg?ts=20151026231028&w=480&h=360&crop=1%7C/-/media/images/high-country/food-and-wine/wineries/ciccone-estate-wines_hc_r_1340201_1150x863.jpg?ts=20151026231028&w=720&h=540&crop=1",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQcxKU7s_ljZk0sHmqycAjBS5fquERVKZGW6onxshF9UnQ93X3E7aVkBtR2"
             },
             {
                 "title": "Download Free Country Music Backgrounds | Wallpapers, Backgrounds ...",
@@ -2248,11 +2270,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRiPJVnuiVYF88Lw8NO0tIWvD1h7yXfGE1CenKMmP_NSFt0q-dN13Ohq4Y"
             },
             {
-                "title": "ClubCorp, Country Clubs, City Clubs, Private Clubs",
-                "link": "http://www.clubcorp.com/var/ezflow_site/storage/images/media/corporate/homepage-slideshow/clubcorp-home-images/clubcorp-country-club-of-the-south-johns-creek-ga-patio-1000x530/2316848-1-eng-US/ClubCorp-Country-Club-of-the-South-Johns-Creek-GA-patio-1000x530_corpSlideImage.jpg",
-                "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSufiz_x67Hic_F4VNxqcRuMoUJnQjrwdHBIek8KaG8fmn6koONP9ZsyrQL"
-            },
-            {
                 "title": "Thank god I'm a country girl: Love | Life | Country | Countryside ...",
                 "link": "https://s-media-cache-ak0.pinimg.com/564x/a4/53/16/a45316a6688a40268bff832043251385.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQV8AUw7S-_pX3kW75ml_ZClztJMpi59R1ZkT6d1E2_4gal32EW7Hn9iTU"
@@ -2298,16 +2315,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQA_DPyUuJoKz2JDu7GdsowTZF-qARozChSWeLlOtGKP7XeTeI53OtMGzQ"
             },
             {
-                "title": "The truth about smart cities: 'In the end, they will destroy ...",
-                "link": "https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2014/12/16/1418751877882/432b4eaa-0b34-4f0b-b445-cb3fd13fc3e8-2060x1236.jpeg?w=1125&q=55&auto=format&usm=12&fit=max&s=08ebeabddcd3e1344b66d195c2e936eb",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSdS0zPbLB5zTUsKHcStjJotoSzFXDKCiGU42I8DuwQnvps2E5W5aS0CsA"
-            },
-            {
-                "title": "City pictures · Pexels · Free Stock Photos",
-                "link": "https://pexels.imgix.net/photos/2324/skyline-buildings-new-york-skyscrapers.jpg?h=1000&w=1500&fit=crop&mark=https%3A%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txt%3DFree%20City%20Photos%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcThSPT5IuH5LCnzxvxxGp3U1A9HKTOkcUW0oBrdhiBpDsvfhJaq8-j_4MFS"
-            },
-            {
                 "title": "Jersey City: Growing, With Many Personalities - The New York Times",
                 "link": "https://static01.nyt.com/images/2016/06/12/realestate/12LIVING-JERSEY-CITY-slide-2TVY/12LIVING-JERSEY-CITY-slide-2TVY-videoSixteenByNineJumbo1600.jpg",
                 "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRCiOj4VQ8KTBoP0Gj5gs0OjN0X8487VxjTYUh0S39RZXrZmtWkht9iOVEe"
@@ -2323,11 +2330,6 @@ console.log('pipImageResourcesProvider');
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQQfyhy4LuI9Hhgmb5P0CiwASFD8PSwVYBVjo87mCIJMRWCRS4yOv4ibgs"
             },
             {
-                "title": "National City - Supergirl Wiki - Wikia",
-                "link": "http://vignette2.wikia.nocookie.net/supergirl1545/images/4/40/National_City.png/revision/latest?cb=20150603160611",
-                "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTa-RO7ZNEjiTLK_xsS48NmsEL1cdUHlge46BBru-UWUIXJT_EuS00q4Fs"
-            },
-            {
                 "title": "City, Panorama - Free images on Pixabay",
                 "link": "https://pixabay.com/static/uploads/photo/2015/05/15/14/22/city-768437_960_720.jpg",
                 "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSO2rtnUcGjctlI3bJYosJ2iCSgnZRWJko2mkT3d4kWZmQR2mRZzYfUcaWR"
@@ -2341,11 +2343,6 @@ console.log('pipImageResourcesProvider');
                 "title": "GIANT CITY | . mette ingvartsen .",
                 "link": "http://metteingvartsen.net/wp-content/uploads/Picture-Giant-City_credit-Jan-Egil-Kirkeb%C3%B8.jpg",
                 "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRoDKvTaWAWlI6p6vmJe9XEH_TDUzSlg6uMjR5eriB7QOf3vLzVykCXeBY"
-            },
-            {
-                "title": "City Walk | KCET",
-                "link": "https://www.kcet.org/sites/kl/files/styles/kl_image_hero/public/thumbnails/image/city-walk_202_san-francisco_hero.jpg?itok=7_QwaxqI",
-                "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTO1xTCWj-MTGblXKaSBU5YJW9RLbjgmK2D6CX3lclzNghde-iZ70dEwv71"
             },
             {
                 "title": "50 Free HD City Wallpapers",
@@ -2532,6 +2529,7 @@ console.log('pipImageResourcesProvider');
 // exemple
 // get: 
 //      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/57891f214997deb8138fe233/avatar?default_template=goal&bg=rgba(0,188,212,1)&fg=white&timestamp=1470388249000&obj_id=57891f214997deb8138fe233
+//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/areas/578501864997deb8138fd78d/avatar?default_template=area&bg=rgba(236,64,122,1)&fg=white&timestamp=1470391804000&obj_id=578501864997deb8138fd78d
 //      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/5788cf214997deb8138fe020/avatar?default_template=goal&bg=rgba(236,64,122,1)&fg=white&timestamp=1470388248000&obj_id=5788cf214997deb8138fe020
 // post 
 //      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/56cde0d1b0c1dcf82cf50cb6/avatar?name=cat4.jpg
@@ -3317,75 +3315,4 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 })();
  
 
-/**
- * @file Translatation service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- * - Move directives to more appropriate places
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [];
-
-        this.setImages = setImages;
-
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
-            }
-
-            imagesMap = _.union(imagesMap, newImagesRes);
-                        console.log('setImages imagesMap', imagesMap);
-        }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
-            }
-
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
-
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
-            }
-
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }     
-
-    });
-
-})();
 //# sourceMappingURL=pip-webui-test.js.map

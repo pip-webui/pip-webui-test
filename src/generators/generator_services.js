@@ -14,6 +14,12 @@
             ABCD_CAPITALIZE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             DIGIT = '0123456789',
             SIGN = ' .,;:-!?',
+            CONTENT_TYPES = {
+                'jpg': 'image/jpg',
+                'jpeg': 'image/jpeg',
+                'gif': 'image/gif',
+                'png': 'image/png'
+            }
 
             SERVER_URL = 'http://alpha.pipservices.net';
 
@@ -30,7 +36,9 @@
             serverUrl:serverUrl,
             getName: getName,
             getOne: getOne,
-            getMany: getMany
+            getMany: getMany,
+            getFileName: getFileName,
+            getFileExt: getFileExt
         };
 
         // Returns random ID
@@ -82,6 +90,31 @@
             var name = chance.first() + ' ' + chance.name();
 
             return name;
+        }
+
+        function getFileName(url) {
+             var name = url.slice(url.lastIndexOf('/') + 1, url.length).split('?')[0];
+
+             return name;
+        }
+
+        function getFileExt(name) {
+             var ext = url.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
+
+             return ext;
+        }
+
+        function getContentType(fileExt) {
+            var default_CT = 'image/jpg'
+                result;
+
+            result = CONTENT_TYPES[fileExt];
+
+            if (!result) {
+                result = default_CT;
+            }
+
+            return result;
         }
 
     });

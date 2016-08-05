@@ -26,6 +26,8 @@
         'pipGenerators.PartyAccess',   
         'pipGenerators.Sessions',    
         'pipGenerators.Party',
+        'pipGenerators.Files',
+        'pipGenerators.Avatars',
         
         'pipTestCollection',
         'pipTestDataSet',

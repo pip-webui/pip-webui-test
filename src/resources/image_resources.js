@@ -13,10 +13,10 @@
     var thisModule = angular.module('pipImageResources', []);
 
     thisModule.provider('pipImageResources', function() {
-        var imagesMap = [];
+        var imagesMap = [],
+            size = 0;
 
         this.setImages = setImages;
-
 
         this.$get = function ($rootScope, $timeout, localStorageService, pipAssert) {
 
@@ -35,7 +35,7 @@
             }
 
             imagesMap = _.union(imagesMap, newImagesRes);
-                        console.log('setImages imagesMap', imagesMap);
+            size = imagesMap.length;
         }
 
         // Get images collection
@@ -64,7 +64,17 @@
             } else {
                 return _.take(result, resultSize);
             }                        
-        }     
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
 
     });
 
