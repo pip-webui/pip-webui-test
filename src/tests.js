@@ -16,7 +16,9 @@
         'pipMocked.Tips',
         'pipMocked.Guides',
         'pipMocked.ServersActivities',
+        'pipMocked.ImageSet',
         'pipMocked.Images',
+        'pipMocked.Avatar',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        
@@ -39,14 +41,14 @@
         function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
         MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
-        MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImagesResource,
-        MockedPartyResource, MockedServersActivitiesResource) {
+        MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
+        MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource) {
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
-
             pipMockedResource.addMocks(MockedUserSessionsResource);
 
+            // entry
             pipMockedResource.addMocks(MockedSigninResource);
             pipMockedResource.addMocks(MockedSignupResource);
             pipMockedResource.addMocks(MockedSignoutResource);
@@ -61,10 +63,13 @@
             pipMockedResource.addMocks(MockedAnnouncementsResource);
             pipMockedResource.addMocks(MockedFeedbacksResource);
             pipMockedResource.addMocks(MockedGuidesResource);
-            pipMockedResource.addMocks(MockedImagesResource);
             pipMockedResource.addMocks(MockedPartyResource);
             pipMockedResource.addMocks(MockedServersActivitiesResource);
-            
+            // files and images
+            pipMockedResource.addMocks(MockedImageSetResource);
+            pipMockedResource.addMocks(MockedAvatarResource);
+            pipMockedResource.addMocks(MockedImagesResource);
+
             pipMockedResource.addMocks(TruePathResource);
             pipMockedResource.registerStandardResources();
 

@@ -16,7 +16,9 @@
         'pipMocked.Tips',
         'pipMocked.Guides',
         'pipMocked.ServersActivities',
+        'pipMocked.ImageSet',
         'pipMocked.Images',
+        'pipMocked.Avatar',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        
@@ -36,17 +38,17 @@
 
 
     thisModule.run(
-        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImagesResource', 'MockedPartyResource', 'MockedServersActivitiesResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
+        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImageSetResource', 'MockedPartyResource', 'MockedServersActivitiesResource', 'MockedAvatarResource', 'MockedImagesResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
         MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
-        MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImagesResource,
-        MockedPartyResource, MockedServersActivitiesResource) {
+        MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
+        MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource) {
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
-
             pipMockedResource.addMocks(MockedUserSessionsResource);
 
+            // entry
             pipMockedResource.addMocks(MockedSigninResource);
             pipMockedResource.addMocks(MockedSignupResource);
             pipMockedResource.addMocks(MockedSignoutResource);
@@ -61,10 +63,13 @@
             pipMockedResource.addMocks(MockedAnnouncementsResource);
             pipMockedResource.addMocks(MockedFeedbacksResource);
             pipMockedResource.addMocks(MockedGuidesResource);
-            pipMockedResource.addMocks(MockedImagesResource);
             pipMockedResource.addMocks(MockedPartyResource);
             pipMockedResource.addMocks(MockedServersActivitiesResource);
-            
+            // files and images
+            pipMockedResource.addMocks(MockedImageSetResource);
+            pipMockedResource.addMocks(MockedAvatarResource);
+            pipMockedResource.addMocks(MockedImagesResource);
+
             pipMockedResource.addMocks(TruePathResource);
             pipMockedResource.registerStandardResources();
 
@@ -2516,6 +2521,60 @@ console.log('pipImageResourcesProvider');
 
 })();
 /**
+ * @file MockedAvatarResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * get/delete: serverurl + /api/parties/ + partyId + '/files/' + imageId 
+ * upload: serverUrl + '/api/parties/' + partyId + '/files?name='
+ */
+
+// exemple
+// get: 
+//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/57891f214997deb8138fe233/avatar?default_template=goal&bg=rgba(0,188,212,1)&fg=white&timestamp=1470388249000&obj_id=57891f214997deb8138fe233
+//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/5788cf214997deb8138fe020/avatar?default_template=goal&bg=rgba(236,64,122,1)&fg=white&timestamp=1470388248000&obj_id=5788cf214997deb8138fe020
+// post 
+//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/56cde0d1b0c1dcf82cf50cb6/avatar?name=cat4.jpg
+// delete 
+//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/56cde0d1b0c1dcf82cf50cb6/avatar
+
+// respond to post
+// {
+//   "id": "56cde0d1b0c1dcf82cf50cb6",
+//   "name": "cat4.jpg",
+//   "content_type": "image/jpeg",
+//   "length": 36916,
+//   "creator_id": "565f12ef8ff2161b1dfeedbf",
+//   "created": "2016-08-05T09:22:59.141Z",
+//   "refs": [
+//     {
+//       "ref_type": "goal",
+//       "ref_id": "56cde0d1b0c1dcf82cf50cb6"
+//     }
+//   ],
+//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/56cde0d1b0c1dcf82cf50cb6/cat4.jpg"
+// }
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Avatar', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedAvatarResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/parties/';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
  * @file pipMockedEntry
  * @copyright Digital Living Software Corp. 2014-2016
  * 
@@ -2749,9 +2808,29 @@ console.log('pipImageResourcesProvider');
  * @copyright Digital Living Software Corp. 2014-2016
  * 
  * Mocked:
- * /api/image_sets/:id
- * /api/images/search
+ * get/delete: serverurl + /api/parties/ + partyId + '/files/' + imageId + '/content'
+ * upload: serverUrl + '/api/parties/' + partyId + '/files?name='
  */
+
+// example  
+// get image src     http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files/578ddc6b4997deb8138fe5ac/content
+// get image object  http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files/578ddc6b4997deb8138fe5ac
+// post image        http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files?name=Screenshot_2.png
+// delete image      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files/578ddd944997deb8138fe5d3
+
+// response to post or get (serverurl + /api/parties/ + partyId + '/files/' + imageId)
+// {
+//   "id": "57a459fbf6dd4d642c1daf23",
+//   "name": "Screenshot_2.png",
+//   "content_type": "image/png",
+//   "length": 78848,
+//   "party_id": "565f12ef8ff2161b1dfeedbf",
+//   "creator_id": "565f12ef8ff2161b1dfeedbf",
+//   "created": "2016-08-05T09:18:52.304Z",
+//   "refs": [],
+//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/57a459fbf6dd4d642c1daf23/Screenshot_2.png"
+// }
+
 
 (function () {
     'use strict';
@@ -2759,6 +2838,34 @@ console.log('pipImageResourcesProvider');
     var thisModule = angular.module('pipMocked.Images', ['ngMockE2E', 'ngResource']);
 
     thisModule.factory('MockedImagesResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/parties/';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+})();
+/**
+ * @file MockedImageSetResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/image_sets/:id
+ * /api/images/search
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.ImageSet', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedImageSetResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
 
         child.api = '/api/image_sets';
