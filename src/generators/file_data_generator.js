@@ -34,10 +34,10 @@
                         id: pipBasicGeneratorServices.getObjectId(),
                         name: imageName, 
                         content_type: imageContentType, 
-                        length: chance.штеупук({min: 10000, max: 1000000}),
+                        length: chance.integer({min: 10000, max: 1000000}),
                         party_id: creatorId,
                         creator_id: creatorId,
-                        created: chance.timestamp(),
+                        created: chance.date({year: 2015}).toJSON(), 
                         refs: [],
                         url: image.link
                     };

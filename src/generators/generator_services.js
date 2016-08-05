@@ -38,7 +38,8 @@
             getOne: getOne,
             getMany: getMany,
             getFileName: getFileName,
-            getFileExt: getFileExt
+            getFileExt: getFileExt,
+            getContentType: getContentType
         };
 
         // Returns random ID
@@ -99,13 +100,13 @@
         }
 
         function getFileExt(name) {
-             var ext = url.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
+             var ext = name.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
 
              return ext;
         }
 
         function getContentType(fileExt) {
-            var default_CT = 'image/jpg'
+            var default_CT = 'image/jpg',
                 result;
 
             result = CONTENT_TYPES[fileExt];

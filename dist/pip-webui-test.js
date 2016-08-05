@@ -432,19 +432,21 @@
 
             child.generateObj = function generateObj() {
                 var image = pipImageResources.getImage(),
+                    imageName = pipBasicGeneratorServices.getFileName(image.link),
+                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
+                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),                
                     obj = {
                         id: pipBasicGeneratorServices.getObjectId(),
-                        name: pipBasicGeneratorServices.getName(), // getName(image)?
-                        content_type: child.defaultContentType, // getContentType(image)?
-                        length: chance.штеупук({min: 10000, max: 1000000}),
+                        name: imageName, 
+                        content_type: imageContentType, 
+                        length: chance.integer({min: 10000, max: 1000000}),
                         creator_id: pipBasicGeneratorServices.getObjectId(),
-                        created: chance.timestamp(),
+                        created: chance.date({year: 2015}).toJSON(), 
                         refs: [
 
                         ],
                         url: image.link
                     };
-
 
                 return obj;
             }
@@ -577,10 +579,10 @@
                         id: pipBasicGeneratorServices.getObjectId(),
                         name: imageName, 
                         content_type: imageContentType, 
-                        length: chance.штеупук({min: 10000, max: 1000000}),
+                        length: chance.integer({min: 10000, max: 1000000}),
                         party_id: creatorId,
                         creator_id: creatorId,
-                        created: chance.timestamp(),
+                        created: chance.date({year: 2015}).toJSON(), 
                         refs: [],
                         url: image.link
                     };
@@ -632,7 +634,8 @@
             getOne: getOne,
             getMany: getMany,
             getFileName: getFileName,
-            getFileExt: getFileExt
+            getFileExt: getFileExt,
+            getContentType: getContentType
         };
 
         // Returns random ID
@@ -693,13 +696,13 @@
         }
 
         function getFileExt(name) {
-             var ext = url.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
+             var ext = name.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
 
              return ext;
         }
 
         function getContentType(fileExt) {
-            var default_CT = 'image/jpg'
+            var default_CT = 'image/jpg',
                 result;
 
             result = CONTENT_TYPES[fileExt];
@@ -3264,7 +3267,8 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
             return {
                 setImages: setImages,
-                getImagesCollection: getImagesCollection
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
             }
         }];
 

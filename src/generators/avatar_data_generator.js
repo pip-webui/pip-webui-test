@@ -37,19 +37,21 @@
 
             child.generateObj = function generateObj() {
                 var image = pipImageResources.getImage(),
+                    imageName = pipBasicGeneratorServices.getFileName(image.link),
+                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
+                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),                
                     obj = {
                         id: pipBasicGeneratorServices.getObjectId(),
-                        name: pipBasicGeneratorServices.getName(), // getName(image)?
-                        content_type: child.defaultContentType, // getContentType(image)?
-                        length: chance.штеупук({min: 10000, max: 1000000}),
+                        name: imageName, 
+                        content_type: imageContentType, 
+                        length: chance.integer({min: 10000, max: 1000000}),
                         creator_id: pipBasicGeneratorServices.getObjectId(),
-                        created: chance.timestamp(),
+                        created: chance.date({year: 2015}).toJSON(), 
                         refs: [
 
                         ],
                         url: image.link
                     };
-
 
                 return obj;
             }

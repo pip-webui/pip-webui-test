@@ -18,7 +18,7 @@
             // pipFakeDataModelUsers,
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
             TestCollection, pipTestDataService,
-            pipImageResources
+            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator
             ) {
 
             $scope.userCollection = pipUserDataGenerator.newObjectList(10);
@@ -61,7 +61,7 @@
             }
 
             function prepareData() {
-                var tcPartyAccess, tcSessions, tcUsers,
+                var tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars,
                     usersRefs = new Array(),
                     dataSet;
                     
@@ -86,20 +86,28 @@
                 dataSet.add(tcUsers);
 
                 // create images collection
-
+                tcImages = new TestCollection(pipFilesDataGenerator, 'FilesTestCollection', 20);
+                dataSet.add(tcImages);
                 // create avatar collection
+                tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 20);
+                dataSet.add(tcAvatars);
                 // init collection
                 dataSet.init();
 
-                var Sessions, PartyAccess, Users;
+                var Sessions, PartyAccess, Users, Files, Avatars;
 
                 Sessions = dataSet.get('SessionsTestCollection').getAll();
                 PartyAccess = dataSet.get('PartyAccessTestCollection').getAll();
                 Users = dataSet.get('UsersTestCollection').getAll();
+                Files = dataSet.get('FilesTestCollection').getAll();
+                Avatars = dataSet.get('AvatarsTestCollection').getAll();
+
 
                 console.log('SessionsTestCollection', Sessions);
                 console.log('PartyAccessTestCollection', PartyAccess);
                 console.log('UsersTestCollection', Users);
+                console.log('FilesTestCollection', Files);
+                console.log('AvatarsTestCollection', Avatars);
 
                 return dataSet;
             }

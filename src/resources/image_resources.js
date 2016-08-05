@@ -23,7 +23,8 @@
 
             return {
                 setImages: setImages,
-                getImagesCollection: getImagesCollection
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
             }
         };
 
