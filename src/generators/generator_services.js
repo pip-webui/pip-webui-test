@@ -19,7 +19,7 @@
                 'jpeg': 'image/jpeg',
                 'gif': 'image/gif',
                 'png': 'image/png'
-            }
+            },
 
             SERVER_URL = 'http://alpha.pipservices.net';
 

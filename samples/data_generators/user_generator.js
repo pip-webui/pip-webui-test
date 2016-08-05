@@ -56,6 +56,8 @@
                     console.log('imagesAll', imagesSize);
                     console.log('imagesAll', imagesSearch);
                     console.log('imagesAll', imagesSizeSearch);
+
+
             }
 
             function prepareData() {
@@ -83,6 +85,9 @@
                 tcUsers = new TestCollection(pipSessionsDataGenerator, 'UsersTestCollection', 20, usersRefs);   
                 dataSet.add(tcUsers);
 
+                // create images collection
+
+                // create avatar collection
                 // init collection
                 dataSet.init();
 

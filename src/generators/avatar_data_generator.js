@@ -26,6 +26,11 @@
 
     thisModule.factory('pipAvatarsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
             
+            // var refs = new Array();
+
+            // refs['Goals'] = pipGoalsDataGenerator.newObjectList(10);
+            // refs['Areas'] = pipAreasDataGenerator.newObjectList(10);
+
             var child = new pipDataGenerator('Avatars', []);
 
             child.defaultContentType = 'image/jpeg';
@@ -40,7 +45,7 @@
                         creator_id: pipBasicGeneratorServices.getObjectId(),
                         created: chance.timestamp(),
                         refs: [
-                            
+
                         ],
                         url: image.link
                     };
