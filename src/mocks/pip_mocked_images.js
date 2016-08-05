@@ -35,10 +35,37 @@
     thisModule.factory('MockedImagesResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
 
-        child.api = '/api/parties/';
+        child.api = '/api/parties';
 
         child.register = function() {
 
+            // GET object /api/parties/:party_id/files/:image_id
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+               console.log('MockedImagesResource whenGET object', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // GET image /api/parties/:party_id/files/:image_id/content
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.regEsc('/content') + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+               console.log('MockedImagesResource whenGET image', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // PUT /api/parties/:party_id/files?name=
+            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files?name='))).respond(function(method, url, data, headers) {
+                console.log('MockedImagesResource whenPUT', data, headers);
+
+                return [200, {}, {}];
+            });   
+
+            // DELETE  /api/parties/:party_id/files/:image_id
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
+                console.log('MockedImagesResource whenPUT', data, headers);
+
+                return [200, {}, {}];
+            });     
                    
         }
 
