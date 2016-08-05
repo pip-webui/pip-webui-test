@@ -59,7 +59,7 @@
             });
 
             // PUT for record /api/parties/:party_id/record_type/:record_id/avatar?name= ...
-            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regExpSet(recordType, true, true) + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
+            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regExpSet(recordType, true, true) + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
                 console.log('MockedAvatarResource whenPUT record', data, headers);
 
                 return [200, {}, {}];
@@ -80,7 +80,7 @@
             });
 
             // PUT for party /api/parties/:party_id/avatar?name= ...
-            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
+            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
                 console.log('MockedAvatarResource whenPUT party', data, headers);
 
                 return [200, {}, {}];

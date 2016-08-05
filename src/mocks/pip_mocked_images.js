@@ -54,7 +54,7 @@
             });
 
             // PUT /api/parties/:party_id/files?name=
-            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files?name='))).respond(function(method, url, data, headers) {
+            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files?name='))).respond(function(method, url, data, headers) {
                 console.log('MockedImagesResource whenPUT', data, headers);
 
                 return [200, {}, {}];
