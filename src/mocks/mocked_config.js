@@ -10,7 +10,7 @@
     var thisModule = angular.module('pipMocked.ImageResources', ['pipImageResources']);
 
     thisModule.config(['pipImageResourcesProvider', function (pipImageResourcesProvider) {
-
+console.log('pipImageResourcesProvider');
         // Set translation strings for the module
         pipImageResourcesProvider.setImages([
             {

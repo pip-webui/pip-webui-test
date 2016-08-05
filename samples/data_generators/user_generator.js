@@ -17,7 +17,8 @@
             pipBasicGeneratorServices, 
             // pipFakeDataModelUsers,
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
-            TestCollection, pipTestDataService 
+            TestCollection, pipTestDataService,
+            pipImageResources
             ) {
 
             $scope.userCollection = pipUserDataGenerator.newObjectList(10);
@@ -39,10 +40,23 @@
 
             var dataset = prepareData();
 
+            testImageRes();
 
             return;
 // test 
 // ---------------------------------
+
+            function testImageRes() {
+                var imagesAll = pipImageResources.getImagesCollection(),
+                    imagesSize = pipImageResources.getImagesCollection(10),
+                    imagesSearch = pipImageResources.getImagesCollection(null, 'cat'),
+                    imagesSizeSearch = pipImageResources.getImagesCollection(10, 'cat');
+
+                    console.log('imagesAll', imagesAll);
+                    console.log('imagesAll', imagesSize);
+                    console.log('imagesAll', imagesSearch);
+                    console.log('imagesAll', imagesSizeSearch);
+            }
 
             function prepareData() {
                 var tcPartyAccess, tcSessions, tcUsers,

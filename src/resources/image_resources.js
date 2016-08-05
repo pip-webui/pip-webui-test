@@ -29,29 +29,32 @@
 
         // Add images collection
         function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
             if (!angular.isArray(newImagesRes)) {
                 new Error('pipImageResources setImages: first argument should be an object');
             }
 
             imagesMap = _.union(imagesMap, newImagesRes);
+                        console.log('setImages imagesMap', imagesMap);
         }
 
         // Get images collection
-        function getImages(size, search) {
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
             if (!!search && !angular.isString(search)) {
                 new Error('pipImageResources getImages: second argument should be a string');
             }
 
-            var result, searchQuery,
+            var result, queryLowercase,
                 resultSize = size && size < imagesMap.length ? size : -1;
 
             if (!search) {
-                result = setImages;
+                result = imagesMap;
             } else {
-                searchQuery = search.toLowerCase();
-                result = _.filter(setImages, function (item) {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
                         if (item.title) {
-                            return (title.toLowerCase().indexOf(queryLowercase) >= 0);
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
                         } else return false;
                     }) || [];
             }
