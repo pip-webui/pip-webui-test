@@ -56,8 +56,6 @@
                     console.log('imagesAll', imagesSize);
                     console.log('imagesAll', imagesSearch);
                     console.log('imagesAll', imagesSizeSearch);
-
-
             }
 
             function prepareData() {

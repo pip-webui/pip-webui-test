@@ -117,6 +117,11 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
             // this.regExpSet = function(set, leftSlash, rightSlash) { // set - array of string
             //     return this.regEsc('/goals/'); // todo: generate from set
             // }
+            this.getUrlIdParams = function(url) {
+                var result = url.match( new RegExp(this.IdRegExp) );
+
+                return result;
+            }
 
             this.register = function() {}
 

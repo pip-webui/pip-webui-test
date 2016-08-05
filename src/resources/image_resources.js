@@ -1,8 +1,7 @@
 /**
- * @file Translatation service
+ * @file pipImageResources service
  * @copyright Digital Living Software Corp. 2014-2016
  * @todo:
- * - Move directives to more appropriate places
  */
  
  /* global _, angular */

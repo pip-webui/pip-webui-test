@@ -73,6 +73,7 @@
             pipMockedResource.addMocks(MockedImagesResource);
 
             pipMockedResource.addMocks(TruePathResource);
+            
             pipMockedResource.registerStandardResources();
 
         }
