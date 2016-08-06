@@ -20,14 +20,8 @@
         "test"
     ],
     "noAnalyze": true,
-    "license": "Commercial",
-    "private": true,
-    "scripts": {
-        "build": "gulp build",
-        "clean": "gulp clean",
-        "lint": "gulp lint",
-        "samples": "gulp launch"
-    },
+    "license": "MIT",
+    "private": false,
     "dependencies": {},
     "devDependencies": {
         "pip-webui-tasks": "git+https://github.com/pip-webui/pip-webui-tasks.git"
