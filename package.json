@@ -1,37 +1,35 @@
 {
-  "name": "pip-webui-test",
-  "version": "1.0.1",
-  "author": "Digital Living Software Corp. <www.digitallivingsoftware.com>",
-  "description": "Test framework for Pip.WebUI",
-  "contributors": [
-    {
-      "name": "Sergey Seroukhov",
-      "email": "seroukhov@gmail.com"
+    "name": "pip-webui-test",
+    "version": "1.0.0",
+    "author": "Digital Living Software Corp. <www.digitallivingsoftware.com>",
+    "description": "Test framework for Pip.WebUI",
+    "contributors": [
+        {
+            "name": "Sergey Seroukhov",
+            "email": "seroukhov@gmail.com"
+        },
+        {
+            "name": "Anastas Fonotov",
+            "email": "anastasf@gmail.com"
+        }
+    ],
+    "keywords": [
+        "pip",
+        "webui",
+        "framework",
+        "test"
+    ],
+    "noAnalyze": true,
+    "license": "Commercial",
+    "private": true,
+    "scripts": {
+        "build": "gulp build",
+        "clean": "gulp clean",
+        "lint": "gulp lint",
+        "samples": "gulp launch"
     },
-    {
-      "name": "Anastas Fonotov",
-      "email": "anastasf@gmail.com"
+    "dependencies": {},
+    "devDependencies": {
+        "pip-webui-tasks": "git+https://github.com/pip-webui/pip-webui-tasks.git"
     }
-  ],
-  "keywords": [
-    "pip",
-    "webui",
-    "framework",
-    "test"
-  ],
-  "noAnalyze": true,
-  "license": "Commercial",
-  "private": true,
-  "scripts": {
-    "build": "gulp build",
-    "clean": "gulp clean",
-    "lint": "gulp lint",
-    "samples": "gulp launch"
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-    "pip-webui-tasks": "git+https://github.com/pip-webui/pip-webui-tasks.git"
-  }
 }
-
