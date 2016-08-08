@@ -54,6 +54,16 @@
             },
             headers: {}
         };
+        Errors['1700'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1700,
+                name: 'Bad Request',
+                message: 'Avatar doesn\'t exist'
+            },
+            headers: {}
+        };        
 
         return Errors;
     });

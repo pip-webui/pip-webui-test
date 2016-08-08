@@ -207,28 +207,77 @@
         child.register = function() {
             // GET /api/users/:party_id/sessions
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions')))
-            .respond(function(method, url, data, headers) {
-               console.log('MockedUserSessionsResource whenGET current', data, headers);
-// expected 
-// [{
-// "address": "109.254.67.37"
-// "client": "chrome"
-// "platform": "windows 6.3"
-// "last_req": "2016-05-17T16:12:10.525Z"
-// "opened": "2016-05-16T12:11:33.039Z"
-// "id": "5739b8f5deca605c33c842cc"
-// }]
-                 return [200, {}, {}];
-            });
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedUserSessionsResource whenGET', method, url, data, headers, params);
+                    var user, 
+                        idParams,
+                        userId,
+                        users = child.dataset.get('UsersTestCollection');
+
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedUserSessionsResource: user_id is not specified into url')
+                    }
+
+                    userId = idParams[0];
+                    if (!users) {
+                        throw new Error('MockedUserSessionsResource: Users collection is not found')
+                    }
+
+                    user = users.findById(userId);
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    console.log('MockedUserSessionsResource whenGET', user.sessions);
+
+                    return [200, user.sessions, {}];
+                });
 
             // DELETE  /api/users/:party_id/sessions/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions/') + child.IdRegExp + child.EndStringRegExp))
-            .respond(function(method, url, data, headers) {
-                console.log('MockedUserSessionsResource whenDELETE', data, headers);
-// expected 
-// OK
-                return [200, {}, {}];
-            });      
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedUserSessionsResource whenDELETE', method, url, data, headers, params);
+                    var user, i, match = false,
+                        idParams,
+                        userId, sessionId,
+                        users = child.dataset.get('UsersTestCollection');
+
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedUserSessionsResource: user_id is not specified into url')
+                    }
+
+                    userId = idParams[0];
+                    sessionId = idParams[1];
+                    if (!users) {
+                        throw new Error('MockedUserSessionsResource: Users collection is not found')
+                    }
+
+                    user = users.findById(userId);
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    for (i = 0; i < user.sessions.length; i++) {
+                        if (user.sessions[i].id === sessionId) {
+                            match = true;
+                            user.sessions.splice(i, 1);
+                            break;
+                        }
+                    }
+                    user = users.update(userId, users);
+
+                    console.log('MockedUserSessionsResource whenDELETE', user.sessions);
+
+                    return [200, match ? "OK" : null, {}];
+                });      
         }
 
         return child;

@@ -523,13 +523,18 @@
             // ------------------------------
 
             function onUserSessionsGET() {
-                var req = {
+                var user, req;
+
+                user = dataset.getCurrentUser();
+
+                if (!user || !user.id) {
+                    throw new Error('MocksController: User not login.');
+                }
+
+                req = {
                     method: 'GET',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId + '/sessions',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUserSessionsGET' }
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id + '/sessions',
+                    headers: { 'Content-Type': undefined }
                 };
 
                 console.log('onUserSessionsGET req', req);
@@ -545,13 +550,23 @@
             }   
 
             function onUserSessionDELETE() {
-                var req = {
+                var user, req, session;
+
+                user = dataset.getCurrentUser();
+
+                if (!user || !user.id) {
+                    throw new Error('MocksController: User not login.');
+                }
+
+                session = user.sessions.pop();
+                if (!session || !session.id) {
+                    throw new Error('MocksController: User not have open session.');
+                }
+
+                req = {
                     method: 'DELETE',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId + '/sessions/' + sessionId,
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUserSessionDELETE' }
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id + '/sessions/' + session.id,
+                    headers: { 'Content-Type': undefined } 
                 };
 
                 console.log('onUserSessionDELETE req', req);
