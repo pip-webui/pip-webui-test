@@ -129,19 +129,11 @@
             }  
 
             function onUpdateUser($event, $index) {
-                //  var user = $scope.userCollection[$index];
-                 
-                //  user.name = pipBasicGeneratorServices.getName();
-                //  user.collapse = true;   
-                //  pipFakeDataModelUsers.updateOne(user.id, user);
-                //  $scope.userCollection = pipFakeDataModelUsers.getData();
+
             } 
 
             function onDeleteUser($event, $index) {
-                //  var user = $scope.userCollection[$index];
 
-                //  pipFakeDataModelUsers.deleteOne(user.id);
-                //  $scope.userCollection = pipFakeDataModelUsers.getData();
             } 
 
             function onFindMany($event, $index) {
@@ -154,16 +146,15 @@
             } 
 
             function onAddOne($event, $index) {
-                // pipFakeDataModelUsers.addOne();
+
             } 
 
             function onClearUsers($event, $index) {
-                // pipFakeDataModelUsers.setData([]);
-                // $scope.userCollection = pipFakeDataModelUsers.getData();
+
             } 
 
             function onSetUsers($event, $index) {
-                // pipFakeDataModelUsers.setData($scope.userCollection);
+
             } 
         }
     );

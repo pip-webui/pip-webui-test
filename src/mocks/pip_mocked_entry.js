@@ -192,13 +192,13 @@
                     if (!userData || !userData.email || !userData.code) {
                         throw new Error('MockedVerifyEmailResource: data is not specified')
                     }
+                  
                     if (!users) {
                         throw new Error('MockedVerifyEmailResource: Users collection is not found')
                     }
 
                     usersCollection = users.getAll();
                     user = _.find(usersCollection, {email: userData.email});
-
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -288,13 +288,12 @@
                     usersCollection = users.getAll();
                     user = _.find(usersCollection, {email: userData.email});
 
-
                     if (!user || !user.id) {
                         var error = child.getError('1106');
 
                         return [error.StatusCode, error.request, error.headers];
                     }
-                    if (user || user.code != userData.code) {
+                    if (!user || user.code != userData.code) {
                         var error = child.getError('1108');
 
                         return [error.StatusCode, error.request, error.headers];

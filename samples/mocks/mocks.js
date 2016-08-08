@@ -116,9 +116,9 @@
                 if (!user || !user.id) {
                     throw new Error('MocksController: Users collection is empty');
                 }
-                console.log('onSignin user', user);
-                req.data = {email: user.email, password: pipBasicGeneratorServices.getPassword()}
 
+                req.data = {email: user.email, password: pipBasicGeneratorServices.getPassword()}
+                console.log('onSignin req', req);
                 $http(req)
                     .success(function (result) {
                         console.log('onSignIn result', result); 
@@ -133,9 +133,7 @@
                 var req = {
                     method: 'POST',
                     url: pipBasicGeneratorServices.serverUrl() + '/api/signout',
-                    headers: {
-                      'Content-Type': undefined
-                    },
+                    headers: { 'Content-Type': undefined },
                     data: {}
                 };
 
@@ -155,9 +153,7 @@
                 var req = {
                     method: 'POST',
                     url: pipBasicGeneratorServices.serverUrl() + '/api/signup',
-                    headers: {
-                      'Content-Type': undefined
-                    },
+                    headers: { 'Content-Type': undefined },
                     data: {
                         email: pipBasicGeneratorServices.getEmail(), 
                         password: pipBasicGeneratorServices.getPassword(),
@@ -179,15 +175,25 @@
             }  
             
             function onSignupValidate() {
-                var req = {
-                    method: 'POST',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/signup_validate',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: {email: pipBasicGeneratorServices.getEmail()}
-                };
+                var user,
+                    users = dataset.get('UsersTestCollection'),
+                    req = {
+                        method: 'POST',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/signup_validate',
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                    };
 
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                user = users.getByIndex(0);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
+                req.data = {email: user.email}
                 console.log('onSignupValidate req', req);
 
                 $http(req)
@@ -201,15 +207,28 @@
             }      
 
             function onVerifyEmail() {
-                var req = {
-                    method: 'POST',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/verify_email',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: {email: pipBasicGeneratorServices.getEmail(), code: pipBasicGeneratorServices.getPassword()}
-                };
+                var user,
+                    users = dataset.get('UsersTestCollection'),
+                    req = {
+                        method: 'POST',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/verify_email',
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                    };
 
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                user = users.getByIndex(0);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
+                // set verify code
+                user.code = pipBasicGeneratorServices.getPassword();
+                users.update(user.id, user);
+                req.data = { email: user.email, code: user.code };
                 console.log('onVerifyEmail req', req);
 
                 $http(req)
@@ -223,15 +242,28 @@
             }    
             
             function onRecoverPassword() {
-                var req = {
-                    method: 'POST',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/recover_password',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: {email: pipBasicGeneratorServices.getEmail()}
-                };
+                var user,
+                    users = dataset.get('UsersTestCollection'),
+                    req = {
+                        method: 'POST',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/recover_password',
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                    };
 
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                user = users.getByIndex(0);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
+                // set verify code
+                user.code = pipBasicGeneratorServices.getPassword();
+                user = users.update(user.id, user);
+                req.data = { email: user.email };
                 console.log('onRecoverPassword req', req);
 
                 $http(req)
@@ -245,19 +277,27 @@
             }   
             
             function onResetPassword() {
-                var req = {
-                    method: 'POST',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/reset_password',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: {
-                        email: pipBasicGeneratorServices.getEmail(), 
-                        password: pipBasicGeneratorServices.getPassword(),
-                        code: pipBasicGeneratorServices.getPassword()
-                    }
-                };
+                var user,
+                    users = dataset.get('UsersTestCollection'),
+                    req = {
+                        method: 'POST',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/reset_password',
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                    };
 
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                user = users.getByIndex(0);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
+                user.code = pipBasicGeneratorServices.getPassword();
+                user = users.update(user.id, user);
+                req.data = { email: user.email, code: user.code, password: pipBasicGeneratorServices.getPassword() };
                 console.log('onResetPassword req', req);
 
                 $http(req)
@@ -296,7 +336,7 @@
             // ------------------------
 
             function onUserPOST() {
-                var user = {};// todo: pipFakeDataModelUsers.addOne(),
+                var user = {};
                     req;
                 
                 console.log('onUser', user);
