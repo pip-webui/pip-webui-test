@@ -463,15 +463,32 @@
             }   
 
             function onUserDELETE() {
+                var user,
+                    index,
+                    count,
+                    users = dataset.get('UsersTestCollection'),
+                    req;
+
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                count = users.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Users collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                user = users.getByIndex(index);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
                 var req = {
                     method: 'DELETE',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId,
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUserDELETE' }
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id,
+                    headers: { 'Content-Type': undefined }
                 };
-
                 console.log('onUserDELETE req', req);
 
                 $http(req)
@@ -486,14 +503,10 @@
 
             function onCurrentUserGET() {
                 var req = {
-                    method: 'GET',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/current',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onCurrentUserGET' }
-                };
-
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/users/current',
+                        headers: { 'Content-Type': undefined }
+                    };
                 console.log('onCurrentUserGET req', req);
 
                 $http(req)

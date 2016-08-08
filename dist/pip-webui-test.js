@@ -3349,8 +3349,8 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
             // GET /api/users/current
             $httpBackend.whenGET(child.fakeUrl + child.api)
-                .respond(function(method, url, data, headers) {
-                console.log('MockedCurrentUserResource whenGET current', data, headers);
+                .respond(function(method, url, data, headers, params) {
+                console.log('MockedCurrentUserResource whenGET current', method, url, data, headers, params);
                     var user;
 
                     user = child.dataset.getCurrentUser();
@@ -3481,11 +3481,39 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 });   
 
             // DELETE /api/users/:id
-            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-                console.log('MockedUsersResource whenPUT', data, headers);
+            $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedUsersResource whenDELETE', method, url, data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        idParams,
+                        userId,
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });                       
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedUsersResource: user_id is not specified into url')
+                    }
+
+                    userId = idParams[0];
+                    if (!users) {
+                        throw new Error('MockedUsersResource: Users collection is not found')
+                    }
+
+                    user = users.findById(userId);
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    console.log('MockedUsersResource whenDELETE user', user);
+                    users.deleteById(user.id);
+                    console.log('users collection', users.getAll());
+
+                    return [200, "OK", {}];
+                });                       
         }
 
         return child;
