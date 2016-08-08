@@ -34,6 +34,26 @@
             },
             headers: {}
         };
+        Errors['1103'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1103,
+                name: 'Bad Request',
+                message: 'Invalid email verification code'
+            },
+            headers: {}
+        };
+        Errors['1108'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1108,
+                name: 'Bad Request',
+                message: 'Invalid password recovery code'
+            },
+            headers: {}
+        };
 
         return Errors;
     });

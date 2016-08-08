@@ -15,7 +15,6 @@
     thisModule.controller('GenerateUsersController',
         function ($scope, pipAppBar, $timeout, pipSession, $http, 
             pipBasicGeneratorServices, 
-            // pipFakeDataModelUsers,
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
             TestCollection, pipTestDataService,
             pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator

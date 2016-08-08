@@ -909,6 +909,149 @@
 })();
  
 /**
+ * @file Rest API enumerations service
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('PipResources.Error', []);
+
+    thisModule.factory('PipResourcesError', function () {
+
+        var Errors = {};
+        
+        Errors['1104'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1104,
+                name: 'Bad Request',
+                message: 'Email is already registered'
+            },
+            headers: {}
+        };
+        Errors['1106'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1106,
+                name: 'Bad Request',
+                message: 'User was not found'
+            },
+            headers: {}
+        };
+        Errors['1103'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1103,
+                name: 'Bad Request',
+                message: 'Invalid email verification code'
+            },
+            headers: {}
+        };
+        Errors['1108'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1108,
+                name: 'Bad Request',
+                message: 'Invalid password recovery code'
+            },
+            headers: {}
+        };
+
+        return Errors;
+    });
+    
+})();
+
+/**
+ * @file pipImageResources service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
+/**
  * @file String resources for Areas pages
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -2650,10 +2793,10 @@
                         users = child.dataset.get('UsersTestCollection');
 
                     if (!userData || !userData.email || !userData.name) {
-                        throw new Error('MockedSigninResource: login is not specified')
+                        throw new Error('MockedSignupResource: login is not specified')
                     }
                     if (!users) {
-                        throw new Error('MockedSigninResource: Users collection is not found')
+                        throw new Error('MockedSignupResource: Users collection is not found')
                     }
                     user = _.find(users, {email: userData.email});
 
@@ -2709,11 +2852,29 @@
 
             // POST /api/signup_validate,
             // expected data {email: newValue}            
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('signup_validate whenPOST', data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!userData || !userData.email) {
+                        throw new Error('MockedSignupValidateResource: email is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedSignupValidateResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: userData.email});
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    return [200, "OK", {}];
+                }); 
         }
 
         return child;
@@ -2728,11 +2889,38 @@
 
             // POST /api/verify_email,
             // expected data {email: $scope.data.email, code: $scope.data.code}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('verify_email whenPOST', data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!userData || !userData.email || !userData.code) {
+                        throw new Error('MockedVerifyEmailResource: data is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedVerifyEmailResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: userData.email});
+
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    if (user && user.code != userData.code) {
+                        var error = child.getError('1103');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    user.email_ver = true;
+
+                    return [200, "OK", {}];   
+                });          
         }
 
         return child;
@@ -2747,11 +2935,29 @@
 
             // POST /api/recover_password,
             // expected data {email: $scope.data.email}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('recover_password whenPOST', data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!userData || !userData.email) {
+                        throw new Error('MockedRecoverPasswordResource: email is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedRecoverPasswordResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: userData.email});
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    return [200, "OK", {}];   
+                });             
         }
 
         return child;
@@ -2766,11 +2972,35 @@
 
             // POST /api/reset_password,
             // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('reset_password whenPOST', data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!userData || !userData.email || !userData.code || !userData.password) {
+                        throw new Error('MockedResetPasswordResource: data is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedResetPasswordResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: userData.email});
+
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+                    if (user || user.code != userData.code) {
+                        var error = child.getError('1108');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    return [200, "OK", {}];   
+                });                 
         }
 
         return child;
@@ -2785,11 +3015,12 @@
 
             // POST /api/change_password, 
             // todo: expected ??
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('change_password whenPOST', data, headers, params);
 
-                return [200, {}, {}];
-            });             
+                    return [200, "OK", {}];
+                });             
         }
 
         return child;
@@ -3337,127 +3568,4 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 })();
  
 
-/**
- * @file Rest API enumerations service
- * @copyright Digital Living Software Corp. 2014-2016
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('PipResources.Error', []);
-
-    thisModule.factory('PipResourcesError', function () {
-
-        var Errors = {};
-        
-        Errors['1104'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1104,
-                name: 'Bad Request',
-                message: 'Email is already registered'
-            },
-            headers: {}
-        };
-        Errors['1106'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1106,
-                name: 'Bad Request',
-                message: 'User was not found'
-            },
-            headers: {}
-        };
-
-        return Errors;
-    });
-    
-})();
-
-/**
- * @file pipImageResources service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [],
-            size = 0;
-
-        this.setImages = setImages;
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection,
-                getImage: getImage
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
-            }
-
-            imagesMap = _.union(imagesMap, newImagesRes);
-            size = imagesMap.length;
-        }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
-            }
-
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
-
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
-            }
-
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }   
-
-        function getImage() {
-            var i = _.random(0, size - 1);
-
-            if (size > 0) {
-                return _.cloneDeep(imagesMap[i]);
-            } else {
-                return null;
-            }
-        }  
-
-    });
-
-})();
 //# sourceMappingURL=pip-webui-test.js.map

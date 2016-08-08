@@ -13,12 +13,13 @@
     });
 
     thisModule.controller('MocksController',
-        function ($scope, pipAppBar, $timeout, pipSession, $http, pipBasicGeneratorServices, 
-        // pipFakeDataModelUsers,
-        pipUserDataGenerator, pipDataGenerator) {
+        function ($scope, pipAppBar, $timeout, pipSession, $http, 
+            pipBasicGeneratorServices, 
+            pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
+            TestCollection, pipTestDataService,
+            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator) {
 
-            var userId = '565f12ef8ff2161b1dfeedbf', // todo: get current user id
-                sessionId = '565f12ef8ff2161b1dfeedav'; // todo: set session for current user 
+            var dataset = prepareData();
 
             $scope.onSignIn = onSignIn;
             $scope.onSignOut = onSignOut;
@@ -56,6 +57,44 @@
 
             return;
 
+
+            function prepareData() {
+                var tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars,
+                    usersRefs = new Array(),
+                    dataSet;
+                    
+                // create dataset    
+                dataSet = pipTestDataService.getDataset();
+
+                // create collection without references
+                tcPartyAccess = new TestCollection(pipPartyAccessDataGenerator, 'PartyAccessTestCollection', 20);
+                tcSessions = new TestCollection(pipSessionsDataGenerator, 'SessionsTestCollection', 20);
+                // init collection
+                tcPartyAccess.init();
+                tcSessions.init();
+                // add collection to dataset
+                dataSet.add(tcPartyAccess);
+                dataSet.add(tcSessions);
+                // form references for users collection
+                usersRefs['PartyAccess'] = tcPartyAccess.getAll();
+           	    usersRefs['Sessions'] = tcSessions.getAll();
+
+                // create users collection   
+                tcUsers = new TestCollection(pipSessionsDataGenerator, 'UsersTestCollection', 20, usersRefs);   
+                dataSet.add(tcUsers);
+
+                // create images collection
+                tcImages = new TestCollection(pipFilesDataGenerator, 'FilesTestCollection', 20);
+                dataSet.add(tcImages);
+                // create avatar collection
+                tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 20);
+                dataSet.add(tcAvatars);
+                // init collection
+                dataSet.init();
+
+                return dataSet;
+            }
+            
             // Entry APi 
             // ----------------------
 
