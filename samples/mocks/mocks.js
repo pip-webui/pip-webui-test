@@ -337,14 +337,9 @@
 
             function onUserPOST() {
                 var user,
-                    users = dataset.get('UsersTestCollection'),
                     req;
-                
-                if (!users) {
-                    throw new Error('MocksController: Users collection is not found');
-                } 
 
-                user = users.create();
+                user = pipUserDataGenerator.newObject();
                 console.log('onUser', user);
 
                 req = {
