@@ -45,7 +45,7 @@
         // Returns random ID
         function getObjectId(n, allowedChars) {
             var poolObjectId = ABCD + DIGIT,
-                length = n || 16,
+                length = n || 24,
                 pool = allowedChars || poolObjectId;
 
             return chance.string({length: length, pool: pool});

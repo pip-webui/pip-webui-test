@@ -648,7 +648,7 @@
         // Returns random ID
         function getObjectId(n, allowedChars) {
             var poolObjectId = ABCD + DIGIT,
-                length = n || 16,
+                length = n || 24,
                 pool = allowedChars || poolObjectId;
 
             return chance.string({length: length, pool: pool});
@@ -3425,11 +3425,37 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 }); 
 
             // GET /api/users/:id
-            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-               console.log('MockedUsersResource whenGET user', data, headers);
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers) {
+                    console.log('MockedUsersResource whenGET user', data, headers);
+                    // var user, 
+                    //     userData = angular.fromJson(data),
+                    //     users = child.dataset.get('UsersTestCollection'),
+                    //     usersCollection;
 
-                 return [200, {}, {}];
-            });
+                    // if (!userData || !userData['email']) {
+                    //     console.log('post user', userData);
+                    //     throw new Error('MockedUsersResource: user email is not specified')
+                    // }
+
+                    // if (!users) {
+                    //     throw new Error('MockedUsersResource: Users collection is not found')
+                    // }
+
+                    // usersCollection = users.getAll();
+                    // user = _.find(usersCollection, {email: userData.email});
+
+                    // if (user && user.id) {
+                    //     var error = child.getError('1104'); //todo error code
+
+                    //     return [error.StatusCode, error.request, error.headers];
+                    // }
+
+                    // // add user to collection
+                    // user = users.create(userData);
+
+                    return [200, user, {}];
+                });
 
             // PUT /api/users/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
