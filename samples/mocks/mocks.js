@@ -396,6 +396,7 @@
                     throw new Error('MocksController: Users collection is empty');
                 } 
 
+                index = _.random(count - 1);
                 user = users.getByIndex(index);
                 if (!user || !user.id) {
                     throw new Error('MocksController: Users collection is empty');
@@ -420,15 +421,35 @@
             }   
 
             function onUserPUT() {
-                var req = {
-                    method: 'PUT',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId,
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUserPUT' }
-                };
+                var user,
+                    index,
+                    count,
+                    users = dataset.get('UsersTestCollection'),
+                    req;
 
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                count = users.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Users collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                user = users.getByIndex(index);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+                     
+                // change user name
+                user.name = pipBasicGeneratorServices.getName();
+                req = {
+                    method: 'PUT',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id,
+                    headers: {'Content-Type': undefined},
+                    data: user
+                };
                 console.log('onUserPUT req', req);
 
                 $http(req)

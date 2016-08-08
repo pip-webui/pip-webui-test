@@ -132,11 +132,32 @@
                 });
 
             // PUT /api/users/:id
-            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
-                console.log('MockedUsersResource whenPUT', data, headers);
+            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedUsersResource whenPUT', method, url, data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        idParams,
+                        userId,
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });   
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedUsersResource: user_id is not specified into url')
+                    }
+
+                    userId = idParams[0];
+                    if (!users) {
+                        throw new Error('MockedUsersResource: Users collection is not found')
+                    }
+
+                    user = users.findById(userId);
+                    user = users.update(userId, userData);
+                    console.log('MockedUsersResource whenPUT user', user);
+                    
+                    return [200, user, {}];
+                });   
 
             // DELETE /api/users/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {
