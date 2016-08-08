@@ -27,11 +27,21 @@
         child.register = function() {
 
             // GET /api/users/current
-            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers) {
-               console.log('MockedCurrentUserResource whenGET current', data, headers);
+            $httpBackend.whenGET(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers) {
+                console.log('MockedCurrentUserResource whenGET current', data, headers);
+                    var user;
 
-                 return [200, {}, {}];
-            });
+                    user = child.dataset.getCurrentUser();
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    return [200, user, {}];   
+                });
                 
         }
 
