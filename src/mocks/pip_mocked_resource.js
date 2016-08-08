@@ -129,7 +129,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
             this.getError = function (errorCode) {
                 var error;
 
-                error = PipResourcesError.Errors[errorCode];
+                error = PipResourcesError[errorCode];
 
                 if (!error) {
                     error = {
@@ -163,102 +163,3 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
 })();
  
-
-
-// /api/users/:party_id/resend_email_verification
-// /.*\/friends\/(\w+)/
-
-// $httpBackend.whenGET(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   return [200, contact, {}];
-// });
-
-// $httpBackend.whenPUT(/\/contacts\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id),
-//       parsedData = angular.fromJson(data);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   angular.extend(contact, parsedData);
-
-//   return [200, contact, {}];
-// });
-
-// // Delete; remove existing contact.
-// $httpBackend.whenDELETE(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   // Replace contacts array with filtered results, removing deleted contact.
-//   contacts.splice(contacts.indexOf(contact), 1);
-
-//   return [200, undefined, {}];
-// });
-
-
-
-
-// ----
-
-// //GET tag/
-// $httpBackend.whenGET(collectionUrl).respond(function(method, url, data, headers) {
-//     $log.log('Intercepted GET to tag', data);
-//     return [200, TagRepo.data, {/*headers*/}];
-// });
-
-// //GET tag/<id>
-// $httpBackend.whenGET( new RegExp(regexEscape(collectionUrl + '/') + IdRegExp ) ).respond(function(method, url, data, headers) {
-//     $log.log('Intercepted GET to tag/id');
-//     var id = url.match( new RegExp(IdRegExp) )[0];
-    
-//     if (!TagRepo.index[id]) {
-//         return [404, {} , {/*headers*/}];
-//     }
-
-//     return [200, TagRepo.index[id], {/*headers*/}];
-// });
-
-
-// -------
-
- //get all stores
-        // var storeUrl = "/api/stores";
-        // $httpBackend.whenGET(storeUrl).respond(stores);
-
-        // //get single store
-        // var singleStoreUrl = new RegExp(storeUrl + "/[0-9][0-9]*", '');
-        // $httpBackend.whenGET(singleStoreUrl)
-
-// -------
-
-// var regexGetTicket = new RegExp('/ticket/([0-9]+)');
-// $httpBackend.whenGET({
-//     test: function(url) {
-//         return regexGetTicket.test(url);
-//     }
-// })        
-
-
-// --------
-// To create a pattern from a string url, with optional query-string, you could use this:
-
-// var targetUrl = "/somelink";
-// var pattern = new RegExp(
-//     "^" +
-//     targetUrl.replace(/[-[\]{}()*+?.\\^$|]/g, "\\$&") + /* escape special chars */
-//     "(?:\\?.*)?$");
-// $httpBackend.when('GET', pattern).respond(function(method, url, data) {
-//   var queryMatch = /^[^#]*\?([^#]*)/.exec(url);
-//   var query = queryMatch ? queryMatch[1] : "";
-//   // url = "/somelink?abc=123" -> query = "abc=123"
-// });

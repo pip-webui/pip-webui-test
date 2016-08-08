@@ -31,21 +31,26 @@
                 .respond(function(method, url, data, headers, params) {
                     console.log('signin whenPOST', method, url, data, headers, params);
                     // todo:  может хранить имена этих коллекций в настройках??
-                    var user, users = child.dataset.get('UsersTestCollection');
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                    if (!data || !data.email) {
+                    if (!userData || !userData['email']) {
+                        console.log('signin data', userData, userData.email, userData["email"]);
                         throw new Error('MockedSigninResource: login is not specified')
                     }
                     if (!users) {
                         throw new Error('MockedSigninResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: data.email});
+                    user = _.find(users, {email: userData.email});
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
 
                         return [error.StatusCode, error.request, error.headers];
                     }
+                    // set current user
+                    child.dataset.setCurrentUser(user);
 
                     return [200, user, {}];
                 });             
@@ -66,15 +71,17 @@
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     console.log('signup whenPOST', data, headers, params);
-                    var user, users = child.dataset.get('UsersTestCollection');
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                    if (!data || !data.email || !data.name) {
+                    if (!userData || !userData.email || !userData.name) {
                         throw new Error('MockedSigninResource: login is not specified')
                     }
                     if (!users) {
                         throw new Error('MockedSigninResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: data.email});
+                    user = _.find(users, {email: userData.email});
 
                     if (user && user.id) {
                         var error = child.getError('1104');
@@ -83,7 +90,14 @@
                     }
 
                     // generate new user and save it into UsersTestCollection
-                    
+                    user = users.create({
+                        email: userData.email,
+                        name: userData.name
+                    });
+                    console.log('signup: add new user', user);
+
+                    // set current user
+                    child.dataset.setCurrentUser(user);
 
                     return [200, user, {}];
                 });             
@@ -102,9 +116,10 @@
             // POST /api/signout
             // expected data {}
             $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+                console.log('signout whenPOST', data, headers, params);
+                child.dataset.clearCurrentUser();
 
-                return [200, {}, {}];
+                return [200, "OK", {}];
             });             
         }
 

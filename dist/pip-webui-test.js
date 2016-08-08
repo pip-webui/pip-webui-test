@@ -35,6 +35,7 @@
 
         // resources
         'pipMocked.ImageResources',
+        'PipResources.Error',
         'pipImageResources'
     ]);
 
@@ -328,6 +329,7 @@
 
             this.getCurrentUser = getCurrentUser;
             this.setCurrentUser = setCurrentUser;
+            this.clearCurrentUser = clearCurrentUser;
             this.setCurrentParty = setCurrentParty;
             this.getCurrentParty = getCurrentParty;
                     
@@ -377,6 +379,10 @@
 
         function getCurrentUser() {
             return this.currentUser;
+        }
+
+        function clearCurrentUser() {
+            this.currentUser = null;
         }
    
         function setCurrentParty(party) {
@@ -903,87 +909,6 @@
 })();
  
 /**
- * @file pipImageResources service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [],
-            size = 0;
-
-        this.setImages = setImages;
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection,
-                getImage: getImage
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
-            }
-
-            imagesMap = _.union(imagesMap, newImagesRes);
-            size = imagesMap.length;
-        }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
-            }
-
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
-
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
-            }
-
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }   
-
-        function getImage() {
-            var i = _.random(0, size - 1);
-
-            if (size > 0) {
-                return _.cloneDeep(imagesMap[i]);
-            } else {
-                return null;
-            }
-        }  
-
-    });
-
-})();
-/**
  * @file String resources for Areas pages
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -995,7 +920,6 @@
     var thisModule = angular.module('pipMocked.ImageResources', ['pipImageResources']);
 
     thisModule.config(['pipImageResourcesProvider', function (pipImageResourcesProvider) {
-console.log('pipImageResourcesProvider');
         // Set translation strings for the module
         pipImageResourcesProvider.setImages([
             {
@@ -2677,11 +2601,33 @@ console.log('pipImageResourcesProvider');
 
             // POST /api/signin
             // expected data { email: email, password: password, remember: remember}                 
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('signin whenPOST', method, url, data, headers, params);
+                    // todo:  может хранить имена этих коллекций в настройках??
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!userData || !userData['email']) {
+                        console.log('signin data', userData, userData.email, userData["email"]);
+                        throw new Error('MockedSigninResource: login is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedSigninResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: userData.email});
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+                    // set current user
+                    child.dataset.setCurrentUser(user);
+
+                    return [200, user, {}];
+                });             
         }
 
         return child;
@@ -2696,11 +2642,39 @@ console.log('pipImageResourcesProvider');
 
             // POST /api/signup
             // expected data { name: name, email: email, password: password, language: language}            
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('signup whenPOST', data, headers, params);
+                    var user, 
+                        userData = angular.fromJson(data),
+                        users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!userData || !userData.email || !userData.name) {
+                        throw new Error('MockedSigninResource: login is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedSigninResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: userData.email});
+
+                    if (user && user.id) {
+                        var error = child.getError('1104');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    // generate new user and save it into UsersTestCollection
+                    user = users.create({
+                        email: userData.email,
+                        name: userData.name
+                    });
+                    console.log('signup: add new user', user);
+
+                    // set current user
+                    child.dataset.setCurrentUser(user);
+
+                    return [200, user, {}];
+                });             
         }
 
         return child;
@@ -2716,9 +2690,10 @@ console.log('pipImageResourcesProvider');
             // POST /api/signout
             // expected data {}
             $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+                console.log('signout whenPOST', data, headers, params);
+                child.dataset.clearCurrentUser();
 
-                return [200, {}, {}];
+                return [200, "OK", {}];
             });             
         }
 
@@ -3119,7 +3094,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
     });
 
-    thisModule.factory('MockedResource', ['$httpBackend', '$log', 'pipTestDataService', function ($httpBackend, $log, pipTestDataService ) {
+    thisModule.factory('MockedResource', ['$httpBackend', '$log', 'pipTestDataService', 'PipResourcesError', function ($httpBackend, $log, pipTestDataService, PipResourcesError) {
 
             this.api = '';
             this.fakeUrl = 'http://alpha.pipservices.net';
@@ -3133,10 +3108,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
             this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
             this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
             this.EndStringRegExp = /$/.toString().slice(1, -1);
-            // this.regExpSet = function(set, leftSlash, rightSlash) { // set - array of string
-            //     return this.regEsc('/goals/'); // todo: generate from set
-            // }
-
+            
             // search all id into url
             this.getUrlIdParams = function(url) {
                 var i, result = url.match(/(\/[a-zA-Z0-9]{24})/g);
@@ -3146,6 +3118,27 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 }
                 
                 return result;
+            }
+
+            this.getError = function (errorCode) {
+                var error;
+
+                error = PipResourcesError[errorCode];
+
+                if (!error) {
+                    error = {
+                        StatusCode: 400,
+                        StatusMessage: 'Not found',
+                        request: {
+                            code: '',
+                            name: 'Not found',
+                            message: ''
+                        },
+                        headers: {}
+                    };
+                }
+
+                return error;
             }
 
             this.register = function() {}
@@ -3164,105 +3157,6 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
 })();
  
-
-
-// /api/users/:party_id/resend_email_verification
-// /.*\/friends\/(\w+)/
-
-// $httpBackend.whenGET(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   return [200, contact, {}];
-// });
-
-// $httpBackend.whenPUT(/\/contacts\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id),
-//       parsedData = angular.fromJson(data);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   angular.extend(contact, parsedData);
-
-//   return [200, contact, {}];
-// });
-
-// // Delete; remove existing contact.
-// $httpBackend.whenDELETE(/\/contacts\/(\d+)/, undefined, ['id']).respond(function(method, url, data, headers, params) {
-//   var contact = findContactById(params.id);
-
-//   if (contact == null) {
-//     return [404, undefined, {}];
-//   }
-
-//   // Replace contacts array with filtered results, removing deleted contact.
-//   contacts.splice(contacts.indexOf(contact), 1);
-
-//   return [200, undefined, {}];
-// });
-
-
-
-
-// ----
-
-// //GET tag/
-// $httpBackend.whenGET(collectionUrl).respond(function(method, url, data, headers) {
-//     $log.log('Intercepted GET to tag', data);
-//     return [200, TagRepo.data, {/*headers*/}];
-// });
-
-// //GET tag/<id>
-// $httpBackend.whenGET( new RegExp(regexEscape(collectionUrl + '/') + IdRegExp ) ).respond(function(method, url, data, headers) {
-//     $log.log('Intercepted GET to tag/id');
-//     var id = url.match( new RegExp(IdRegExp) )[0];
-    
-//     if (!TagRepo.index[id]) {
-//         return [404, {} , {/*headers*/}];
-//     }
-
-//     return [200, TagRepo.index[id], {/*headers*/}];
-// });
-
-
-// -------
-
- //get all stores
-        // var storeUrl = "/api/stores";
-        // $httpBackend.whenGET(storeUrl).respond(stores);
-
-        // //get single store
-        // var singleStoreUrl = new RegExp(storeUrl + "/[0-9][0-9]*", '');
-        // $httpBackend.whenGET(singleStoreUrl)
-
-// -------
-
-// var regexGetTicket = new RegExp('/ticket/([0-9]+)');
-// $httpBackend.whenGET({
-//     test: function(url) {
-//         return regexGetTicket.test(url);
-//     }
-// })        
-
-
-// --------
-// To create a pattern from a string url, with optional query-string, you could use this:
-
-// var targetUrl = "/somelink";
-// var pattern = new RegExp(
-//     "^" +
-//     targetUrl.replace(/[-[\]{}()*+?.\\^$|]/g, "\\$&") + /* escape special chars */
-//     "(?:\\?.*)?$");
-// $httpBackend.when('GET', pattern).respond(function(method, url, data) {
-//   var queryMatch = /^[^#]*\?([^#]*)/.exec(url);
-//   var query = queryMatch ? queryMatch[1] : "";
-//   // url = "/somelink?abc=123" -> query = "abc=123"
-// });
 /**
  * @file MockedServersActivitiesResource
  * @copyright Digital Living Software Corp. 2014-2016
@@ -3443,4 +3337,127 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 })();
  
 
+/**
+ * @file Rest API enumerations service
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('PipResources.Error', []);
+
+    thisModule.factory('PipResourcesError', function () {
+
+        var Errors = {};
+        
+        Errors['1104'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1104,
+                name: 'Bad Request',
+                message: 'Email is already registered'
+            },
+            headers: {}
+        };
+        Errors['1106'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1106,
+                name: 'Bad Request',
+                message: 'User was not found'
+            },
+            headers: {}
+        };
+
+        return Errors;
+    });
+    
+})();
+
+/**
+ * @file pipImageResources service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
 //# sourceMappingURL=pip-webui-test.js.map

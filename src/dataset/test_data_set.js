@@ -24,6 +24,7 @@
 
             this.getCurrentUser = getCurrentUser;
             this.setCurrentUser = setCurrentUser;
+            this.clearCurrentUser = clearCurrentUser;
             this.setCurrentParty = setCurrentParty;
             this.getCurrentParty = getCurrentParty;
                     
@@ -73,6 +74,10 @@
 
         function getCurrentUser() {
             return this.currentUser;
+        }
+
+        function clearCurrentUser() {
+            this.currentUser = null;
         }
    
         function setCurrentParty(party) {
