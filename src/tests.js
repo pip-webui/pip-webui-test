@@ -35,6 +35,7 @@
 
         // resources
         'pipMocked.ImageResources',
+        'PipResources.Error',
         'pipImageResources'
     ]);
 

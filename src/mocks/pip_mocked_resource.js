@@ -100,7 +100,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
     });
 
-    thisModule.factory('MockedResource', function ($httpBackend, $log, pipTestDataService ) {
+    thisModule.factory('MockedResource', function ($httpBackend, $log, pipTestDataService, PipResourcesError) {
 
             this.api = '';
             this.fakeUrl = 'http://alpha.pipservices.net';
@@ -114,10 +114,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
             this.IdRegExp = /[a-zA-Z0-9]{24}/.toString().slice(1, -1);
             this.QueryRegExp = /[\d\w-_\.%\s]*$/.toString().slice(1, -1);
             this.EndStringRegExp = /$/.toString().slice(1, -1);
-            // this.regExpSet = function(set, leftSlash, rightSlash) { // set - array of string
-            //     return this.regEsc('/goals/'); // todo: generate from set
-            // }
-
+            
             // search all id into url
             this.getUrlIdParams = function(url) {
                 var i, result = url.match(/(\/[a-zA-Z0-9]{24})/g);
@@ -127,6 +124,27 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 }
                 
                 return result;
+            }
+
+            this.getError = function (errorCode) {
+                var error;
+
+                error = PipResourcesError.Errors[errorCode];
+
+                if (!error) {
+                    error = {
+                        StatusCode: 400,
+                        StatusMessage: 'Not found',
+                        request: {
+                            code: '',
+                            name: 'Not found',
+                            message: ''
+                        },
+                        headers: {}
+                    };
+                }
+
+                return error;
             }
 
             this.register = function() {}

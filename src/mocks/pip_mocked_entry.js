@@ -27,11 +27,28 @@
 
             // POST /api/signin
             // expected data { email: email, password: password, remember: remember}                 
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('signin whenPOST', method, url, data, headers, params);
+                    // todo:  может хранить имена этих коллекций в настройках??
+                    var user, users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!data || !data.email) {
+                        throw new Error('MockedSigninResource: login is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedSigninResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: data.email});
+
+                    if (!user || !user.id) {
+                        var error = child.getError('1106');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    return [200, user, {}];
+                });             
         }
 
         return child;
@@ -46,11 +63,30 @@
 
             // POST /api/signup
             // expected data { name: name, email: email, password: password, language: language}            
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('pipMocks.Users22222', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('signup whenPOST', data, headers, params);
+                    var user, users = child.dataset.get('UsersTestCollection');
 
-                return [200, {}, {}];
-            });             
+                    if (!data || !data.email || !data.name) {
+                        throw new Error('MockedSigninResource: login is not specified')
+                    }
+                    if (!users) {
+                        throw new Error('MockedSigninResource: Users collection is not found')
+                    }
+                    user = _.find(users, {email: data.email});
+
+                    if (user && user.id) {
+                        var error = child.getError('1104');
+
+                        return [error.StatusCode, error.request, error.headers];
+                    }
+
+                    // generate new user and save it into UsersTestCollection
+                    
+
+                    return [200, user, {}];
+                });             
         }
 
         return child;
