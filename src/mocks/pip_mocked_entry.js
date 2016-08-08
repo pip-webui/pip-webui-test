@@ -33,7 +33,8 @@
                     // todo:  может хранить имена этих коллекций в настройках??
                     var user, 
                         userData = angular.fromJson(data),
-                        users = child.dataset.get('UsersTestCollection');
+                        users = child.dataset.get('UsersTestCollection'),
+                        usersCollection;
 
                     if (!userData || !userData['email']) {
                         console.log('signin data', userData, userData.email, userData["email"]);
@@ -42,7 +43,9 @@
                     if (!users) {
                         throw new Error('MockedSigninResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: userData.email});
+
+                    usersCollection = users.getAll();
+                    user = _.find(usersCollection, {email: userData.email});
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -73,7 +76,8 @@
                     console.log('signup whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
-                        users = child.dataset.get('UsersTestCollection');
+                        users = child.dataset.get('UsersTestCollection'),
+                        usersCollection;
 
                     if (!userData || !userData.email || !userData.name) {
                         throw new Error('MockedSignupResource: login is not specified')
@@ -81,7 +85,9 @@
                     if (!users) {
                         throw new Error('MockedSignupResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: userData.email});
+
+                    usersCollection = users.getAll();
+                    user = _.find(usersCollection, {email: userData.email});
 
                     if (user && user.id) {
                         var error = child.getError('1104');
@@ -140,7 +146,8 @@
                     console.log('signup_validate whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
-                        users = child.dataset.get('UsersTestCollection');
+                        users = child.dataset.get('UsersTestCollection'),
+                        usersCollection;
 
                     if (!userData || !userData.email) {
                         throw new Error('MockedSignupValidateResource: email is not specified')
@@ -148,7 +155,9 @@
                     if (!users) {
                         throw new Error('MockedSignupValidateResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: userData.email});
+
+                    usersCollection = users.getAll();
+                    user = _.find(usersCollection, {email: userData.email});
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -177,7 +186,8 @@
                     console.log('verify_email whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
-                        users = child.dataset.get('UsersTestCollection');
+                        users = child.dataset.get('UsersTestCollection'),
+                        usersCollection;
 
                     if (!userData || !userData.email || !userData.code) {
                         throw new Error('MockedVerifyEmailResource: data is not specified')
@@ -185,7 +195,9 @@
                     if (!users) {
                         throw new Error('MockedVerifyEmailResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: userData.email});
+
+                    usersCollection = users.getAll();
+                    user = _.find(usersCollection, {email: userData.email});
 
 
                     if (!user || !user.id) {
@@ -223,7 +235,8 @@
                     console.log('recover_password whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
-                        users = child.dataset.get('UsersTestCollection');
+                        users = child.dataset.get('UsersTestCollection'),
+                        usersCollection;
 
                     if (!userData || !userData.email) {
                         throw new Error('MockedRecoverPasswordResource: email is not specified')
@@ -231,7 +244,9 @@
                     if (!users) {
                         throw new Error('MockedRecoverPasswordResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: userData.email});
+
+                    usersCollection = users.getAll();
+                    user = _.find(usersCollection, {email: userData.email});
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -260,7 +275,8 @@
                     console.log('reset_password whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
-                        users = child.dataset.get('UsersTestCollection');
+                        users = child.dataset.get('UsersTestCollection'),
+                        usersCollection;
 
                     if (!userData || !userData.email || !userData.code || !userData.password) {
                         throw new Error('MockedResetPasswordResource: data is not specified')
@@ -268,7 +284,9 @@
                     if (!users) {
                         throw new Error('MockedResetPasswordResource: Users collection is not found')
                     }
-                    user = _.find(users, {email: userData.email});
+
+                    usersCollection = users.getAll();
+                    user = _.find(usersCollection, {email: userData.email});
 
 
                     if (!user || !user.id) {

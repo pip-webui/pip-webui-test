@@ -80,7 +80,7 @@
            	    usersRefs['Sessions'] = tcSessions.getAll();
 
                 // create users collection   
-                tcUsers = new TestCollection(pipSessionsDataGenerator, 'UsersTestCollection', 20, usersRefs);   
+                tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);   
                 dataSet.add(tcUsers);
 
                 // create images collection
@@ -99,20 +99,25 @@
             // ----------------------
 
             function onSignIn() {
-                var req = {
-                    method: 'POST',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/signin',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: {
-                        email: pipBasicGeneratorServices.getEmail(), 
-                        password: pipBasicGeneratorServices.getPassword(),
-                        remember: true
-                    }
-                };
+                var user,
+                    users = dataset.get('UsersTestCollection'),
+                    req = {
+                        method: 'POST',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/signin',
+                        headers: {'Content-Type': undefined},
+                        data: {}
+                    };
 
-                console.log('onSignIn req', req);
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                user = users.getByIndex(0);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+                console.log('onSignin user', user);
+                req.data = {email: user.email, password: pipBasicGeneratorServices.getPassword()}
 
                 $http(req)
                     .success(function (result) {

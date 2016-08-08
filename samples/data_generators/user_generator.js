@@ -79,7 +79,7 @@
            	    usersRefs['Sessions'] = tcSessions.getAll();
 
                 // create users collection   
-                tcUsers = new TestCollection(pipSessionsDataGenerator, 'UsersTestCollection', 20, usersRefs);   
+                tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);   
                 dataSet.add(tcUsers);
 
                 // create images collection
