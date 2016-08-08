@@ -177,8 +177,10 @@
                 return result;
             }
 
-            result = _.find(this.collection, {'id': id}); // todo: replace to fieldId
-
+            result = _.find(this.collection, function(item) {
+                return item[fieldId] == id;
+            }); 
+            
             return result || null;
         }    
 
@@ -3219,7 +3221,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 var i, result = url.match(/(\/[a-zA-Z0-9]{24})/g);
 
                 for (i = 0; i < result.length; i++) {
-                    result[i] = result[i].slice(1, -1);
+                    result[i] = result[i].slice(1, 25);
                 }
                 
                 return result;
@@ -3426,34 +3428,27 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
             // GET /api/users/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
-                .respond(function(method, url, data, headers) {
-                    console.log('MockedUsersResource whenGET user', data, headers);
-                    // var user, 
-                    //     userData = angular.fromJson(data),
-                    //     users = child.dataset.get('UsersTestCollection'),
-                    //     usersCollection;
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedUsersResource whenGET user', method, url, data, headers, params);
+                    var user, 
+                        idParams,
+                        userId,
+                        users = child.dataset.get('UsersTestCollection');
 
-                    // if (!userData || !userData['email']) {
-                    //     console.log('post user', userData);
-                    //     throw new Error('MockedUsersResource: user email is not specified')
-                    // }
+                    idParams = child.getUrlIdParams(url);
 
-                    // if (!users) {
-                    //     throw new Error('MockedUsersResource: Users collection is not found')
-                    // }
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedUsersResource: user_id is not specified into url')
+                    }
 
-                    // usersCollection = users.getAll();
-                    // user = _.find(usersCollection, {email: userData.email});
+                    userId = idParams[0];
+                    if (!users) {
+                        throw new Error('MockedUsersResource: Users collection is not found')
+                    }
 
-                    // if (user && user.id) {
-                    //     var error = child.getError('1104'); //todo error code
-
-                    //     return [error.StatusCode, error.request, error.headers];
-                    // }
-
-                    // // add user to collection
-                    // user = users.create(userData);
-
+                    user = users.findById(userId);
+                    console.log('MockedUsersResource whenGET user', user);
+                    
                     return [200, user, {}];
                 });
 

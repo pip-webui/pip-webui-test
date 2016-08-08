@@ -381,15 +381,32 @@
             }   
 
             function onUserGET() {
-                var req = {
-                    method: 'GET',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + userId,
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUsersGET' }
-                };
+                var user,
+                    index,
+                    count,
+                    users = dataset.get('UsersTestCollection'),
+                    req;
 
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                count = users.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Users collection is empty');
+                } 
+
+                user = users.getByIndex(index);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
+                req = {
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id,
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                     };
                 console.log('onUserGET req', req);
 
                 $http(req)

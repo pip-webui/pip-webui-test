@@ -120,7 +120,7 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 var i, result = url.match(/(\/[a-zA-Z0-9]{24})/g);
 
                 for (i = 0; i < result.length; i++) {
-                    result[i] = result[i].slice(1, -1);
+                    result[i] = result[i].slice(1, 25);
                 }
                 
                 return result;

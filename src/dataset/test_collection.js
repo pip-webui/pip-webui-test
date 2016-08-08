@@ -93,8 +93,10 @@
                 return result;
             }
 
-            result = _.find(this.collection, {'id': id}); // todo: replace to fieldId
-
+            result = _.find(this.collection, function(item) {
+                return item[fieldId] == id;
+            }); 
+            
             return result || null;
         }    
 
