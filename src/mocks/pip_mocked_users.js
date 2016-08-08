@@ -56,18 +56,29 @@
         child.register = function() {
 
             // GET /api/users
-            $httpBackend.whenGET(child.fakeUrl + child.api).respond(function(method, url, data, headers) {
-               console.log('MockedUsersResource whenGET collection', data, headers);
+            $httpBackend.whenGET(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                console.log('MockedUsersResource whenGET collection', method, url, data, headers, params);
+                var user, 
+                    users = child.dataset.get('UsersTestCollection'),
+                    usersCollection;
+                  
+                    if (!users) {
+                        throw new Error('MockedUsersResource: Users collection is not found')
+                    }
 
-                 return [200, {}, {}];
-            });
+                    usersCollection = users.getAll();
+
+                    return [200, usersCollection, {}];                    
+                });
 
             // POST /api/users
-            $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenPOST', data, headers, params);
+            $httpBackend.whenPOST(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedUsersResource whenPOST', method, url, data, headers, params);
 
-                return [200, {}, {}];
-            }); 
+                    return [200, {}, {}];
+                }); 
 
             // GET /api/users/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp)).respond(function(method, url, data, headers) {

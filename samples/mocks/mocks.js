@@ -336,22 +336,23 @@
             // ------------------------
 
             function onUserPOST() {
-                var user = {};
+                var user,
+                    users = dataset.get('UsersTestCollection'),
                     req;
                 
-                console.log('onUser', user);
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
 
-                if (!user || !user.id) { return; }
+                user = users.create();
+                console.log('onUser', user);
 
                 req = {
                     method: 'POST',
                     url: pipBasicGeneratorServices.serverUrl() + '/api/users',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUserPOST' }
+                    headers: {'Content-Type': undefined},
+                    data: user
                 };
-
                 console.log('onUserPOST req', req);
 
                 $http(req)
@@ -366,13 +367,11 @@
 
             function onUsersGET() {
                 var req = {
-                    method: 'GET',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users',
-                    headers: {
-                      'Content-Type': undefined
-                    },
-                    data: { test: 'onUsersGET' }
-                };
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/users',
+                        headers: {'Content-Type': undefined},
+                        data: null
+                    };
 
                 console.log('onUsersGET req', req);
 
