@@ -74,9 +74,10 @@
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     console.log('signup whenPOST', data, headers, params);
-                    var user, 
+                    var user, party,
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
+                        parties = child.dataset.get('PartiesTestCollection'),
                         usersCollection;
 
                     if (!userData || !userData.email || !userData.name) {
@@ -100,6 +101,15 @@
                         email: userData.email,
                         name: userData.name
                     });
+
+                    party.create({
+                        name: user.name,
+                        email: user.email,
+                        id: user.id,
+                        updated: user.updated,
+                        created: user.created
+                    });
+
                     console.log('signup: add new user', user);
 
                     // set current user

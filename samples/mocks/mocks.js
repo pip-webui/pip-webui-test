@@ -15,7 +15,7 @@
     thisModule.controller('MocksController',
         function ($scope, pipAppBar, $timeout, pipSession, $http, 
             pipBasicGeneratorServices, 
-            pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
+            pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator, pipPartyDataGenerator,
             TestCollection, pipTestDataService,
             pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator) {
 
@@ -59,7 +59,8 @@
 
 
             function prepareData() {
-                var tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars,
+                var i, users, parties = [],
+                    tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars, tcParties,
                     usersRefs = new Array(),
                     dataSet;
                     
@@ -82,6 +83,22 @@
                 // create users collection   
                 tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);   
                 dataSet.add(tcUsers);
+
+                users = tcUsers.getAll();
+                // generate party for each user
+                for (i = 0; i < users.length; i ++) {
+                    var party = pipPartyDataGenerator.initObject({
+                        name: users[i].name,
+                        email: users[i].email,
+                        id: users[i].id,
+                        updated: users[i].updated,
+                        created: users[i].created
+                    });
+                    parties.push(party);
+                }
+                tcParties = new TestCollection(pipPartyDataGenerator, 'PartiesTestCollection', parties.length);
+                tcParties.init(parties);
+                dataSet.add(tcParties);
 
                 // create images collection
                 tcImages = new TestCollection(pipFilesDataGenerator, 'FilesTestCollection', 20);

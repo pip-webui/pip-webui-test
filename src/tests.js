@@ -67,7 +67,9 @@
             pipMockedResource.addMocks(MockedFeedbacksResource);
             pipMockedResource.addMocks(MockedGuidesResource);
             pipMockedResource.addMocks(MockedPartyResource);
+            pipMockedResource.addMocks(MockedPartySettingsResource);
             pipMockedResource.addMocks(MockedServersActivitiesResource);
+            
             // files and images
             pipMockedResource.addMocks(MockedImageSetResource);
             pipMockedResource.addMocks(MockedAvatarResource);

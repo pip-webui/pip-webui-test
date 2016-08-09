@@ -58,4 +58,17 @@
         return child;
     });
 
+    thisModule.factory('MockedPartySettingsResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/parties/';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    });
+
 })();

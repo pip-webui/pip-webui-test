@@ -67,7 +67,9 @@
             pipMockedResource.addMocks(MockedFeedbacksResource);
             pipMockedResource.addMocks(MockedGuidesResource);
             pipMockedResource.addMocks(MockedPartyResource);
+            pipMockedResource.addMocks(MockedPartySettingsResource);
             pipMockedResource.addMocks(MockedServersActivitiesResource);
+            
             // files and images
             pipMockedResource.addMocks(MockedImageSetResource);
             pipMockedResource.addMocks(MockedAvatarResource);
@@ -136,6 +138,7 @@
                 this.collection = _.cloneDeep(collection);
                 this.size = collection.length;
                 //this.refs = ???
+                this.isInit = true;
 
                 return;
             }
@@ -2650,9 +2653,10 @@
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     console.log('signup whenPOST', data, headers, params);
-                    var user, 
+                    var user, party,
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
+                        parties = child.dataset.get('PartiesTestCollection'),
                         usersCollection;
 
                     if (!userData || !userData.email || !userData.name) {
@@ -2676,6 +2680,15 @@
                         email: userData.email,
                         name: userData.name
                     });
+
+                    party.create({
+                        name: user.name,
+                        email: user.email,
+                        id: user.id,
+                        updated: user.updated,
+                        created: user.created
+                    });
+
                     console.log('signup: add new user', user);
 
                     // set current user
@@ -3119,6 +3132,19 @@
     var thisModule = angular.module('pipMocked.Party', ['ngMockE2E', 'ngResource']);
 
     thisModule.factory('MockedPartyResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/parties/';
+
+        child.register = function() {
+
+                   
+        }
+
+        return child;
+    }]);
+
+    thisModule.factory('MockedPartySettingsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
 
         child.api = '/api/parties/';

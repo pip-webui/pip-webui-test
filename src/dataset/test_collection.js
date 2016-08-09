@@ -52,6 +52,7 @@
                 this.collection = _.cloneDeep(collection);
                 this.size = collection.length;
                 //this.refs = ???
+                this.isInit = true;
 
                 return;
             }
