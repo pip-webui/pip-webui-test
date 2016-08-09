@@ -16,7 +16,7 @@
     thisModule.factory('MockedPartyResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
 
-        child.api = '/api/parties/';
+        child.api = '/api/parties';
 
         child.register = function() {
 
@@ -71,9 +71,9 @@
                         parties = child.dataset.get('PartiesTestCollection'),
                         partiesCollection;
 
-                    if (!partyData || !partyData['party_id']) {
+                    if (!partyData || !partyData['id']) {
                         console.log('post party', partyData);
-                        throw new Error('MockedPartyResource: party party_id is not specified')
+                        throw new Error('MockedPartyResource: party id is not specified')
                     }
 
                     if (!parties) {
@@ -82,7 +82,7 @@
 
                     partiesCollection = parties.getAll();
                     party = _.find(partiesCollection, function (item) {
-                        return  item.party_id == partyData.party_id;
+                        return  item.id == partyData.id;
                     });
 
                     if (party && party.id) {
@@ -133,7 +133,7 @@
                         partyData = angular.fromJson(data),
                         idParams,
                         partyId,
-                        party = child.dataset.get('PartiesTestCollection');
+                        parties = child.dataset.get('PartiesTestCollection');
 
                     idParams = child.getUrlIdParams(url);
 

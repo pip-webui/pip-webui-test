@@ -90,6 +90,47 @@
 <div>    
 
 <div>
+    <h3>Parties</h3>
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartiesGET($event)">
+            {{ 'GET PARTIES ' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartyGET($event)">
+            {{ 'GET PARTY' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartyPOST($event)">
+            {{ 'POST PARTY' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartyPUT($event)">
+            {{ 'PUT PARTY' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartyDELETE($event)">
+            {{ 'DELETE PARTY' }}
+    </md-button>            
+<div>    
+
+<div>
+    <h3>Settings</h3>
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartiesSettingsGET($event)">
+            {{ 'GET PARTIES SETTINGS' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onPartiesSettingsPOST($event)">
+            {{ 'POST PARTIES SETTINGS' }}
+    </md-button>
+<div>    
+
+<div>
     <h3>Files and Avatars</h3>
     <md-button class="lm0 md-raised md-accent flat" 
             ng-click="onAvatarGET($event)">
@@ -141,3 +182,4 @@
             {{ 'POST FILE' }}
     </md-button>      
 <div>          
+

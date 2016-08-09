@@ -51,6 +51,15 @@
             $scope.onFileDELETE = onFileDELETE;
             $scope.onFilePOST = onFilePOST;
 
+
+            $scope.onPartiesGET = onPartiesGET;
+            $scope.onPartyGET = onPartyGET;
+            $scope.onPartyPOST = onPartyPOST;
+            $scope.onPartyPUT = onPartyPUT;
+            $scope.onPartyDELETE = onPartyDELETE;
+            $scope.onPartiesSettingsGET = onPartiesSettingsGET; 
+            $scope.onPartiesSettingsPOST = onPartiesSettingsPOST;
+
             pipAppBar.showMenuNavIcon();
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('MOCKS');
@@ -84,7 +93,16 @@
                 tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);   
                 dataSet.add(tcUsers);
 
-                users = tcUsers.getAll();
+                // create images collection
+                tcImages = new TestCollection(pipFilesDataGenerator, 'FilesTestCollection', 20);
+                dataSet.add(tcImages);
+                // create avatar collection
+                tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 20);
+                dataSet.add(tcAvatars);
+                // init collection
+                dataSet.init();
+
+                users = dataSet.get('UsersTestCollection').getAll();
                 // generate party for each user
                 for (i = 0; i < users.length; i ++) {
                     var party = pipPartyDataGenerator.initObject({
@@ -98,16 +116,7 @@
                 }
                 tcParties = new TestCollection(pipPartyDataGenerator, 'PartiesTestCollection', parties.length);
                 tcParties.init(parties);
-                dataSet.add(tcParties);
-
-                // create images collection
-                tcImages = new TestCollection(pipFilesDataGenerator, 'FilesTestCollection', 20);
-                dataSet.add(tcImages);
-                // create avatar collection
-                tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 20);
-                dataSet.add(tcAvatars);
-                // init collection
-                dataSet.init();
+                dataSet.add(tcParties); 
 
                 return dataSet;
             }
@@ -838,6 +847,246 @@
                 );
             }  
 
+            // parties api
+
+            function onPartyPOST() {
+                var party,
+                    req;
+
+                party = pipPartyDataGenerator.newObject();
+                console.log('onPartyPOST', party);
+
+                req = {
+                    method: 'POST',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/parties',
+                    headers: {'Content-Type': undefined},
+                    data: party
+                };
+                console.log('onPartyPOST req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onPartyPOST result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onPartyPOST error', error); 
+                    }
+                );
+            }          
+
+            function onPartiesGET() {
+                var req = {
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/parties',
+                        headers: {'Content-Type': undefined},
+                        data: null
+                    };
+
+                console.log('onPartiesGET req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onPartiesGET result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onPartiesGET error', error); 
+                    }
+                );
+            }   
+
+            function onPartyGET() {
+                var party,
+                    index,
+                    count,
+                    parties = dataset.get('PartiesTestCollection'),
+                    req;
+
+                if (!parties) {
+                    throw new Error('MocksController: Parties collection is not found');
+                } 
+
+                count = parties.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Parties collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                party = parties.getByIndex(index);
+                if (!party || !party.id) {
+                    throw new Error('MocksController: Parties collection is empty');
+                }
+
+                req = {
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/parties/' + party.id,
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                     };
+                console.log('onPartyGET req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onPartyGET result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onPartyGET error', error); 
+                    }
+                );
+            }   
+
+            function onPartyPUT() {
+                var party,
+                    index,
+                    count,
+                    parties = dataset.get('PartiesTestCollection'),
+                    req;
+
+                if (!parties) {
+                    throw new Error('MocksController: Parties collection is not found');
+                } 
+
+                count = parties.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Parties collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                party = parties.getByIndex(index);
+                if (!party || !party.id) {
+                    throw new Error('MocksController: Parties collection is empty');
+                }
+                     
+                // change party
+                party.gender = chance.gender().toLowerCase();
+                party.loc_name = chance.address(),
+                party.loc_pos = {
+                    type: 'Point',
+                    coordinates: [
+                        chance.floating({min: -120, max: 120}),
+                        chance.floating({min: -120, max: 120})
+                    ]
+                };
+                req = {
+                    method: 'PUT',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/parties/' + party.id,
+                    headers: {'Content-Type': undefined},
+                    data: party
+                };
+                console.log('onPartyPUT req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onPartyPUT result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onPartyPUT error', error); 
+                    }
+                );
+            }   
+
+            function onPartyDELETE() {
+                var party,
+                    index,
+                    count,
+                    parties = dataset.get('PartiesTestCollection'),
+                    req;
+
+                if (!parties) {
+                    throw new Error('MocksController: Parties collection is not found');
+                } 
+
+                count = parties.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Parties collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                party = parties.getByIndex(index);
+                if (!party || !party.id) {
+                    throw new Error('MocksController: Parties collection is empty');
+                }
+
+                var req = {
+                    method: 'DELETE',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/parties/' + party.id,
+                    headers: { 'Content-Type': undefined }
+                };
+                console.log('onPartyDELETE req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onPartyDELETE result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onPartyDELETE error', error); 
+                    }
+                );
+            }   
+
+            function onPartiesSettingsPOST() {
+                var user,
+                    req;
+
+                user = pipUserDataGenerator.newObject();
+                console.log('onUser', user);
+
+                req = {
+                    method: 'POST',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/users',
+                    headers: {'Content-Type': undefined},
+                    data: user
+                };
+                console.log('onUserPOST req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onUserPOST result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onUserPOST error', error); 
+                    }
+                );
+            }          
+
+            function onPartiesSettingsGET() {
+                var user,
+                    index,
+                    count,
+                    users = dataset.get('UsersTestCollection'),
+                    req;
+
+                if (!users) {
+                    throw new Error('MocksController: Users collection is not found');
+                } 
+
+                count = users.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Users collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                user = users.getByIndex(index);
+                if (!user || !user.id) {
+                    throw new Error('MocksController: Users collection is empty');
+                }
+
+                req = {
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id,
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                     };
+                console.log('onUserGET req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onUserGET result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onUserGET error', error); 
+                    }
+                );
+            }  
         }
     );
 
