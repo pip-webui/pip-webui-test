@@ -21,6 +21,8 @@
             var content = [
                     { title: 'Mocks', state: 'mocks', url: '/mocks', auth: false,
                         controller: 'MocksController', templateUrl: '../samples/mocks/mocks.html' },
+                    { title: 'Get And Started Mocks', state: 'gas_mocks', url: '/gas_mocks', auth: false,
+                        controller: 'GASMocksController', templateUrl: '../samples/mocks/get_started_mocks.html' },                        
                     { title: 'User Generator', state: 'user_generator', url: '/user_generator', auth: false,
                         controller: 'GenerateUsersController', templateUrl: '../samples/data_generators/user_generator.html' 
                     }               
@@ -58,7 +60,8 @@
             pipSideNavProvider.sections([
                 {
                     links: [
-                        {title: 'Mocks', url: '/mocks'}
+                        {title: 'Mocks', url: '/mocks'},
+                        {title: 'Get Started Mocks', url: '/gas_mocks'},
                     ]
                 },
                 {
