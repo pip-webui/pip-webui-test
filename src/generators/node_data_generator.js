@@ -23,6 +23,7 @@
                     radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
                     type = getNodeType(temperature, radiation_level),
                     node = {
+                        id: pipBasicGeneratorServices.getObjectId(),
                         name: chance.name(),
                         temperature: temperature, 
                         radiation_level: radiation_level,

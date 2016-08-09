@@ -20,6 +20,7 @@
         'pipMocked.Images',
         'pipMocked.Avatar',
         'pipMocked.Events',
+        'pipMocked.Nodes',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        
@@ -45,11 +46,12 @@
 
 
     thisModule.run(
-        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImageSetResource', 'MockedPartyResource', 'MockedServersActivitiesResource', 'MockedAvatarResource', 'MockedImagesResource', 'MockedPartySettingsResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
+        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImageSetResource', 'MockedPartyResource', 'MockedServersActivitiesResource', 'MockedAvatarResource', 'MockedImagesResource', 'MockedPartySettingsResource', 'MockedNodeResource', 'MockedEventsResource', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
         MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
         MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
-        MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource) {
+        MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource,
+        MockedNodeResource, MockedEventsResource) {
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
@@ -78,6 +80,9 @@
             pipMockedResource.addMocks(MockedImageSetResource);
             pipMockedResource.addMocks(MockedAvatarResource);
             pipMockedResource.addMocks(MockedImagesResource);
+
+            pipMockedResource.addMocks(MockedEventsResource);
+            pipMockedResource.addMocks(MockedNodeResource);
 
             pipMockedResource.addMocks(TruePathResource);
             
@@ -3377,7 +3382,7 @@
 
 })();
 /**
- * @file MockedPartyResource
+ * @file MockedNodeResource
  * @copyright Digital Living Software Corp. 2014-2016
  * 
  * Mocked:
@@ -3389,83 +3394,83 @@
 (function () {
     'use strict';
 
-    var thisModule = angular.module('pipMocked.Party', ['ngMockE2E', 'ngResource']);
+    var thisModule = angular.module('pipMocked.Nodes', ['ngMockE2E', 'ngResource']);
 
-    thisModule.factory('MockedPartyResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+    thisModule.factory('MockedNodeResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
 
-        child.api = '/api/parties';
+        child.api = '/api/nodes';
 
         child.register = function() {
 
             // GET /api/parties
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedPartyResource whenGET collection', method, url, data, headers, params);
-                var parties = child.dataset.get('PartiesTestCollection'),
-                    partiesCollection;
+                console.log('MockedNodeResource whenGET collection', method, url, data, headers, params);
+                var nodes = child.dataset.get('NodesTestCollection'),
+                    nodesCollection;
                   
-                    if (!parties) {
-                        throw new Error('MockedPartyResource: Parties collection is not found')
+                    if (!nodes) {
+                        throw new Error('MockedNodeResource: Nodes collection is not found')
                     }
 
-                    partiesCollection = parties.getAll();
+                    nodesCollection = nodes.getAll();
 
-                    return [200, partiesCollection, {}];                    
+                    return [200, nodesCollection, {}];                    
                 });
 
-            // GET /api/parties/:id
+            // GET /api/nodes/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenGET [party]', method, url, data, headers, params);
-                    var party, 
+                    console.log('MockedNodeResource whenGET node', method, url, data, headers, params);
+                    var node, 
                         idParams,
-                        partyId,
-                        parties = child.dataset.get('PartiesTestCollection');
+                        nodeId,
+                        nodes = child.dataset.get('NodesTestCollection');
 
                     idParams = child.getUrlIdParams(url);
 
                     if (!idParams || idParams.length == 0) {
-                        throw new Error('MockedPartyResource: party_id is not specified into url')
+                        throw new Error('MockedNodeResource: id is not specified into url')
                     }
 
-                    partyId = idParams[0];
-                    if (!parties) {
-                        throw new Error('MockedPartyResource: Parties collection is not found')
+                    nodeId = idParams[0];
+                    if (!nodes) {
+                        throw new Error('MockedNodeResource: Nodes collection is not found')
                     }
 
-                    party = parties.findById(partyId);
-                    console.log('MockedPartyResource whenGET party', party);
+                    node = nodes.findById(nodeId);
+                    console.log('MockedNodeResource whenGET node', node);
                     
-                    return [200, party, {}];
+                    return [200, node, {}];
                 });
 
-            // PUT /api/parties/:id
+            // PUT /api/nodes/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenPUT', method, url, data, headers, params);
-                    var party, 
-                        partyData = angular.fromJson(data),
+                    console.log('MockedNodeResource whenPUT', method, url, data, headers, params);
+                    var node, 
+                        nodeData = angular.fromJson(data),
                         idParams,
-                        partyId,
-                        parties = child.dataset.get('PartiesTestCollection');
+                        nodeId,
+                        nodes = child.dataset.get('NodesTestCollection');
 
                     idParams = child.getUrlIdParams(url);
 
                     if (!idParams || idParams.length == 0) {
-                        throw new Error('MockedPartyResource: party_id is not specified into url')
+                        throw new Error('MockedNodeResource: id is not specified into url')
                     }
 
-                    partyId = idParams[0];
-                    if (!parties) {
-                        throw new Error('MockedPartyResource: Parties collection is not found')
+                    nodeId = idParams[0];
+                    if (!nodes) {
+                        throw new Error('MockedNodeResource: Node collection is not found')
                     }
 
-                    party = parties.findById(partyId);
-                    party = parties.update(partyId, partyData);
-                    console.log('MockedPartyResource whenPUT party', party);
+                    node = nodes.findById(nodeId);
+                    node = nodes.update(partyId, nodeData);
+                    console.log('MockedNodeResource whenPUT node', node);
                     
-                    return [200, party, {}];
+                    return [200, node, {}];
                 });   
                      
         }

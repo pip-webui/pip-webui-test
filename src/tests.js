@@ -20,6 +20,7 @@
         'pipMocked.Images',
         'pipMocked.Avatar',
         'pipMocked.Events',
+        'pipMocked.Nodes',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        
@@ -49,7 +50,8 @@
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
         MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
         MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
-        MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource) {
+        MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource,
+        MockedNodeResource, MockedEventsResource) {
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);
@@ -78,6 +80,9 @@
             pipMockedResource.addMocks(MockedImageSetResource);
             pipMockedResource.addMocks(MockedAvatarResource);
             pipMockedResource.addMocks(MockedImagesResource);
+
+            pipMockedResource.addMocks(MockedEventsResource);
+            pipMockedResource.addMocks(MockedNodeResource);
 
             pipMockedResource.addMocks(TruePathResource);
             
