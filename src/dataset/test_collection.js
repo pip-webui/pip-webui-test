@@ -113,7 +113,7 @@
         }    
 
         // public update(id: string, obj: any): any;
-        function update(id, obj) {
+        function update(id, obj, idField) {
             var result;
 
             if (id === undefined || id === null || !angular.isObject(obj)) {
@@ -121,7 +121,7 @@
                 return null;
             }
 
-            result = this.findById(id);
+            result = this.findById(id, idField);
 
             if (angular.isObject(result)) {
                 result = _.assign(result, obj);
