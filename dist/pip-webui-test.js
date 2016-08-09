@@ -572,7 +572,7 @@
 
                     };
 
-                return node;
+                return event;
             }
 
             return child;
