@@ -19,6 +19,7 @@
         'pipMocked.ImageSet',
         'pipMocked.Images',
         'pipMocked.Avatar',
+        'pipMocked.Events',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        

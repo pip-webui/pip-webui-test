@@ -35,6 +35,7 @@
                     
                     node = pipBasicGeneratorServices.getOne(nodes);
                     event = {
+                        id: pipBasicGeneratorServices.getObjectId(),
                         node_id: getNodeId(node),
                         description: getDesciption(temperature, radiation_level),
                         temperature: temperature,

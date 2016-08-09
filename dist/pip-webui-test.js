@@ -19,6 +19,7 @@
         'pipMocked.ImageSet',
         'pipMocked.Images',
         'pipMocked.Avatar',
+        'pipMocked.Events',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        
@@ -590,6 +591,7 @@
                     
                     node = pipBasicGeneratorServices.getOne(nodes);
                     event = {
+                        id: pipBasicGeneratorServices.getObjectId(),
                         node_id: getNodeId(node),
                         description: getDesciption(temperature, radiation_level),
                         temperature: temperature,
@@ -852,6 +854,7 @@
                     radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
                     type = getNodeType(temperature, radiation_level),
                     node = {
+                        id: pipBasicGeneratorServices.getObjectId(),
                         name: chance.name(),
                         temperature: temperature, 
                         radiation_level: radiation_level,
@@ -3139,6 +3142,75 @@
  
 
 /**
+ * @file MockedEventsResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/events/:id
+ * 
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Events', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedEventsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/events';
+
+        child.register = function() {
+
+            // GET /api/events
+            $httpBackend.whenGET(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                console.log('MockedEventsResource whenGET collection', method, url, data, headers, params);
+                var events = child.dataset.get('EventsTestCollection'),
+                    eventsCollection;
+                  
+                    if (!events) {
+                        throw new Error('MockedEventsResource: Events collection is not found')
+                    }
+
+                    eventsCollection = events.getAll();
+
+                    return [200, eventsCollection, {}];                    
+                });
+
+            // GET /api/events/:id
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedEventsResource whenGET event', method, url, data, headers, params);
+                    var event, 
+                        idParams,
+                        eventId,
+                        events = child.dataset.get('EventsTestCollection');
+
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedEventsResource: id is not specified into url')
+                    }
+
+                    eventId = idParams[0];
+                    if (!events) {
+                        throw new Error('MockedEventsResource: Events collection is not found')
+                    }
+
+                    event = events.findById(eventId);
+                    console.log('MockedEventsResource whenGET event', event);
+                    
+                    return [200, event, {}];
+                });
+                     
+        }
+                   
+        return child;
+    }]);
+
+})();
+/**
  * @file MockedFeedbacksResource
  * @copyright Digital Living Software Corp. 2014-2016
  * 
@@ -3300,6 +3372,104 @@
                    
         }
 
+        return child;
+    }]);
+
+})();
+/**
+ * @file MockedPartyResource
+ * @copyright Digital Living Software Corp. 2014-2016
+ * 
+ * Mocked:
+ * /api/parties/:id
+ * /api/parties/:party_id/settings
+ * 
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipMocked.Party', ['ngMockE2E', 'ngResource']);
+
+    thisModule.factory('MockedPartyResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
+        var child = Object.create(MockedResource);
+
+        child.api = '/api/parties';
+
+        child.register = function() {
+
+            // GET /api/parties
+            $httpBackend.whenGET(child.fakeUrl + child.api)
+                .respond(function(method, url, data, headers, params) {
+                console.log('MockedPartyResource whenGET collection', method, url, data, headers, params);
+                var parties = child.dataset.get('PartiesTestCollection'),
+                    partiesCollection;
+                  
+                    if (!parties) {
+                        throw new Error('MockedPartyResource: Parties collection is not found')
+                    }
+
+                    partiesCollection = parties.getAll();
+
+                    return [200, partiesCollection, {}];                    
+                });
+
+            // GET /api/parties/:id
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedPartyResource whenGET [party]', method, url, data, headers, params);
+                    var party, 
+                        idParams,
+                        partyId,
+                        parties = child.dataset.get('PartiesTestCollection');
+
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedPartyResource: party_id is not specified into url')
+                    }
+
+                    partyId = idParams[0];
+                    if (!parties) {
+                        throw new Error('MockedPartyResource: Parties collection is not found')
+                    }
+
+                    party = parties.findById(partyId);
+                    console.log('MockedPartyResource whenGET party', party);
+                    
+                    return [200, party, {}];
+                });
+
+            // PUT /api/parties/:id
+            $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedPartyResource whenPUT', method, url, data, headers, params);
+                    var party, 
+                        partyData = angular.fromJson(data),
+                        idParams,
+                        partyId,
+                        parties = child.dataset.get('PartiesTestCollection');
+
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedPartyResource: party_id is not specified into url')
+                    }
+
+                    partyId = idParams[0];
+                    if (!parties) {
+                        throw new Error('MockedPartyResource: Parties collection is not found')
+                    }
+
+                    party = parties.findById(partyId);
+                    party = parties.update(partyId, partyData);
+                    console.log('MockedPartyResource whenPUT party', party);
+                    
+                    return [200, party, {}];
+                });   
+                     
+        }
+                   
         return child;
     }]);
 
