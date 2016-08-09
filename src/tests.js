@@ -29,6 +29,8 @@
         'pipGenerators.Files',
         'pipGenerators.Avatars',
         'pipGenerators.Settings',
+        'pipGenerators.Node',     
+        'pipGenerators.Event',  
         
         'pipTestCollection',
         'pipTestDataSet',

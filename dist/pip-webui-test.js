@@ -29,6 +29,8 @@
         'pipGenerators.Files',
         'pipGenerators.Avatars',
         'pipGenerators.Settings',
+        'pipGenerators.Node',     
+        'pipGenerators.Event',  
         
         'pipTestCollection',
         'pipTestDataSet',
@@ -552,6 +554,32 @@
 })();
  
 /**
+ * @file pipEventDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Event', []);
+
+    thisModule.factory('pipEventDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+
+            var child = new pipDataGenerator('Nodes', []);
+
+            child.generateObj = function generateObj() {
+                var event = {
+
+                    };
+
+                return node;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
  * @file pipFilesDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -726,6 +754,32 @@
 
 })(window._, window.chance);
 
+/**
+ * @file pipNodeDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Node', []);
+
+    thisModule.factory('pipNodeDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+
+            var child = new pipDataGenerator('Nodes', []);
+
+            child.generateObj = function generateObj() {
+                var node = {
+
+                    };
+
+                return node;
+            }
+
+            return child;
+    }]);
+
+})();
 /**
  * @file pipPartyAccessDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
