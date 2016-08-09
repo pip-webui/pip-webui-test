@@ -20,8 +20,8 @@
             child.getNodeType = getNodeType;
             child.generateObj = function generateObj() {
                 var temperature = chance.integer({min: -40, max: 50}),
-                    radiation_level = chance.floating({fixed: 2, min: 0, max: 22}),
-                    type = getNodeType(temperature, radiation_level)
+                    radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
+                    type = getNodeType(temperature, radiation_level),
                     node = {
                         name: chance.name(),
                         temperature: temperature, 
@@ -49,8 +49,6 @@
                     temperature_hi = 45, temperature_middle = 36,  
                     temperature_low = -25, temperature_lower = -15,  
                     level = 0;
-                    result;
-                
 
                 if (temperature > temperature_hi || temperature < temperature_low) {
                     level += hi;
@@ -60,16 +58,16 @@
 
                 if (radiation_level > radiation_hi) {
                      level += hi;
-                } else if (adiation_level > radiation_middle) {
+                } else if (radiation_level > radiation_middle) {
                     level += low;
                 }
 
                 if (level >= level_denger) {
-                    return pointCollors['danger'];
+                    return 'danger';
                 } else if (level >= level_warn) {
-                    return pointCollors['warn'];
+                    return 'warn';
                 } else {
-                    return pointCollors['info'];
+                    return 'info';
                 }
             };
 

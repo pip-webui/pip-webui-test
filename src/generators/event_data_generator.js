@@ -23,7 +23,7 @@
 
             child.generateObj = function generateObj(refs) {
                 var temperature = chance.integer({min: -40, max: 50}),
-                    radiation_level = chance.floating({fixed: 2, min: 0, max: 22}),
+                    radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
                     node, nodes,
                     event;
 
@@ -85,7 +85,7 @@
 
                 if (radiation_level > radiation_hi) {
                     resultRad = pipBasicGeneratorServices.getOne(['Radioactive emission.', 'Reactor explosion.', 'Nuclear tests.']);   
-                } else if (adiation_level > radiation_middle) {
+                } else if (radiation_level > radiation_middle) {
                     resultRad = pipBasicGeneratorServices.getOne(['Radiation level increase.', 'Radiation level decrease.', 'Radioactive emission.']); 
                 } else {
                     resultRad = pipBasicGeneratorServices.getOne(['Radiation level decrease.', 'Radiation levels normal.']); 

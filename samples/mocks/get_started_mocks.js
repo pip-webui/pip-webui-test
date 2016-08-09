@@ -58,6 +58,14 @@
                 // init collection
                 dataSet.init();
 
+                var events, nodes;
+
+                events = dataSet.get('EventsTestCollection').getAll();
+                nodes = dataSet.get('NodesTestCollection').getAll();
+
+                console.log('EventsTestCollection', events);
+                console.log('NodesTestCollection', nodes);
+
                 return dataSet;
             }
             
