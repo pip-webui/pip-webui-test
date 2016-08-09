@@ -17,7 +17,7 @@
             pipBasicGeneratorServices, 
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator, pipPartyDataGenerator,
             TestCollection, pipTestDataService,
-            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator) {
+            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator, pipSettingsDataGenerator) {
 
             var dataset = prepareData();
 
@@ -68,8 +68,8 @@
 
 
             function prepareData() {
-                var i, users, parties = [],
-                    tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars, tcParties,
+                var i, users, parties = [], settings =[],
+                    tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars, tcParties, tcSettings,
                     usersRefs = new Array(),
                     dataSet;
                     
@@ -103,7 +103,7 @@
                 dataSet.init();
 
                 users = dataSet.get('UsersTestCollection').getAll();
-                // generate party for each user
+                // generate party and settings for each user
                 for (i = 0; i < users.length; i ++) {
                     var party = pipPartyDataGenerator.initObject({
                         name: users[i].name,
@@ -113,10 +113,19 @@
                         created: users[i].created
                     });
                     parties.push(party);
+                    var setting = {
+                        party_id: party.id,
+                        creator_id: party.id
+                    }
+                    settings.push(setting);
                 }
                 tcParties = new TestCollection(pipPartyDataGenerator, 'PartiesTestCollection', parties.length);
                 tcParties.init(parties);
                 dataSet.add(tcParties); 
+
+                tcSettings = new TestCollection(pipSettingsDataGenerator, 'SettingsTestCollection', settings.length);
+                tcSettings.init(settings);
+                dataSet.add(tcSettings); 
 
                 return dataSet;
             }
@@ -1024,66 +1033,87 @@
             }   
 
             function onPartiesSettingsPOST() {
-                var user,
+                var setting, 
+                    party,
+                    index,
+                    count,
+                    parties = dataset.get('PartiesTestCollection'),
                     req;
 
-                user = pipUserDataGenerator.newObject();
-                console.log('onUser', user);
+                if (!parties) {
+                    throw new Error('MocksController: Parties collection is not found');
+                } 
 
+                count = parties.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Parties collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                party = parties.getByIndex(index);
+                if (!party || !party.id) {
+                    throw new Error('MocksController: Parties collection is empty');
+                }
+
+                setting = pipSettingsDataGenerator.initObject({
+                    party_id: party.id,
+                    creator_id: party.id
+                });
+                console.log('onPartiesSettingsPOST', setting);
+                
                 req = {
                     method: 'POST',
-                    url: pipBasicGeneratorServices.serverUrl() + '/api/users',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/parties/' + party.id + '/settings',
                     headers: {'Content-Type': undefined},
-                    data: user
+                    data: setting
                 };
-                console.log('onUserPOST req', req);
+                console.log('onPartiesSettingsPOST req', req);
 
                 $http(req)
                     .success(function (result) {
-                        console.log('onUserPOST result', result); 
+                        console.log('onPartiesSettingsPOST result', result); 
                     })
                     .error(function (error) {
-                        console.log('onUserPOST error', error); 
+                        console.log('onPartiesSettingsPOST error', error); 
                     }
                 );
             }          
 
             function onPartiesSettingsGET() {
-                var user,
+                var party,
                     index,
                     count,
-                    users = dataset.get('UsersTestCollection'),
+                    parties = dataset.get('PartiesTestCollection'),
                     req;
 
-                if (!users) {
-                    throw new Error('MocksController: Users collection is not found');
+                if (!parties) {
+                    throw new Error('MocksController: Parties collection is not found');
                 } 
 
-                count = users.getAll().length;
+                count = parties.getAll().length;
                 if (count === 0) {
-                    throw new Error('MocksController: Users collection is empty');
+                    throw new Error('MocksController: Parties collection is empty');
                 } 
 
                 index = _.random(count - 1);
-                user = users.getByIndex(index);
-                if (!user || !user.id) {
-                    throw new Error('MocksController: Users collection is empty');
+                party = parties.getByIndex(index);
+                if (!party || !party.id) {
+                    throw new Error('MocksController: Parties collection is empty');
                 }
 
                 req = {
                         method: 'GET',
-                        url: pipBasicGeneratorServices.serverUrl() + '/api/users/' + user.id,
-                        headers: { 'Content-Type': undefined },
-                        data: {}
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/parties/' + party.id + '/settings',
+                        headers: { 'Content-Type': undefined }
                      };
-                console.log('onUserGET req', req);
+                console.log('onPartiesSettingsGET req', req);
 
                 $http(req)
                     .success(function (result) {
-                        console.log('onUserGET result', result); 
+                        console.log('onPartiesSettingsGET result', result); 
                     })
                     .error(function (error) {
-                        console.log('onUserGET error', error); 
+                        console.log('onPartiesSettingsGET error', error); 
                     }
                 );
             }  

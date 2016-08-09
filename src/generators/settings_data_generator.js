@@ -28,13 +28,13 @@
             var child = new pipDataGenerator('Settings', []);
 
             child.generateObj = function generateObj() {
-                var id = pipBasicGeneratorServices.getObjectId();
+                var id = pipBasicGeneratorServices.getObjectId(),
                     setting = {
                         party_id: id,
                         creator_id: id
                     };
 
-                return party;
+                return setting;
             }
 
             return child;

@@ -167,13 +167,12 @@
     thisModule.factory('MockedPartySettingsResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
 
-        child.api = '/api/parties/';
+        child.api = '/api/parties';
 
         child.register = function() {
 
-
             // GET /api/parties/:party_id/settings
-            $httpBackend.whenGET(child.fakeUrl + child.api)
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/settings') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
                 console.log('MockedPartySettingsResource whenGET collection', method, url, data, headers, params);
                 var settings = child.dataset.get('SettingsTestCollection'),
@@ -189,7 +188,7 @@
                 });
 
             // POST /api/parties/:party_id/settings
-            $httpBackend.whenPOST(child.fakeUrl + child.api)
+            $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/settings') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
                     console.log('MockedPartySettingsResource whenPOST', method, url, data, headers, params);
                     var setting, match = false,
