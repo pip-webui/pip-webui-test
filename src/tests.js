@@ -28,6 +28,7 @@
         'pipGenerators.Party',
         'pipGenerators.Files',
         'pipGenerators.Avatars',
+        'pipGenerators.Settings',
         
         'pipTestCollection',
         'pipTestDataSet',

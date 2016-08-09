@@ -10,7 +10,7 @@
 
     thisModule.factory('pipPartyDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
 
-            var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
+            var child = new pipDataGenerator('Parties', []);
 
             child.defaultType = 'person';
             child.defaultJoin = 'approve';

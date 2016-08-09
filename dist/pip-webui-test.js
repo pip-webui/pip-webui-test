@@ -28,6 +28,7 @@
         'pipGenerators.Party',
         'pipGenerators.Files',
         'pipGenerators.Avatars',
+        'pipGenerators.Settings',
         
         'pipTestCollection',
         'pipTestDataSet',
@@ -432,11 +433,6 @@
     var thisModule = angular.module('pipGenerators.Avatars', []);
 
     thisModule.factory('pipAvatarsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
-            
-            // var refs = new Array();
-
-            // refs['Goals'] = pipGoalsDataGenerator.newObjectList(10);
-            // refs['Areas'] = pipAreasDataGenerator.newObjectList(10);
 
             var child = new pipDataGenerator('Avatars', []);
 
@@ -780,7 +776,7 @@
 
     thisModule.factory('pipPartyDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
 
-            var child = new pipDataGenerator('User', ['PartyAccess', 'Sessions']);
+            var child = new pipDataGenerator('Parties', []);
 
             child.defaultType = 'person';
             child.defaultJoin = 'approve';
@@ -847,6 +843,50 @@
     }]);
 
 })();
+/**
+ * @file pipSettingsDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+// {
+//     "party_id": "565f12ef8ff2161b1dfeedbf"
+//     "creator_id": "565f12ef8ff2161b1dfeedbf"
+//     "notes": {
+//                 "viewType": "tiles"
+//                 "tips": "2016-08-01T09:30:46.726Z"
+//             }-
+//     "visions": {
+//                     "viewType": "tiles"
+//                 }-
+//     "areas": {
+//                 "navId": "all"
+//                 "tips": "2016-08-05T09:28:04.324Z"
+//             }-
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Settings', []);
+
+    thisModule.factory('pipSettingsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+
+            var child = new pipDataGenerator('Settings', []);
+
+            child.generateObj = function generateObj() {
+                var id = pipBasicGeneratorServices.getObjectId();
+                    setting = {
+                        party_id: id,
+                        creator_id: id
+                    };
+
+                return party;
+            }
+
+            return child;
+    }]);
+
+})();
+ 
 /**
  * @file pipUserDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
@@ -3125,7 +3165,7 @@
             // GET /api/parties/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenGET user', method, url, data, headers, params);
+                    console.log('MockedPartyResource whenGET [party]', method, url, data, headers, params);
                     var party, 
                         idParams,
                         partyId,
@@ -3142,7 +3182,7 @@
                         throw new Error('MockedPartyResource: Parties collection is not found')
                     }
 
-                    party = parties.findById(userId);
+                    party = parties.findById(partyId);
                     console.log('MockedPartyResource whenGET party', party);
                     
                     return [200, party, {}];
@@ -3157,9 +3197,9 @@
                         parties = child.dataset.get('PartiesTestCollection'),
                         partiesCollection;
 
-                    if (!partyData || !partyData['email']) {
-                        console.log('post user', partyData);
-                        throw new Error('MockedPartyResource: user email is not specified')
+                    if (!partyData || !partyData['party_id']) {
+                        console.log('post party', partyData);
+                        throw new Error('MockedPartyResource: party party_id is not specified')
                     }
 
                     if (!parties) {
@@ -3168,7 +3208,7 @@
 
                     partiesCollection = parties.getAll();
                     party = _.find(partiesCollection, function (item) {
-                        return  item.email == partyData.email;
+                        return  item.party_id == partyData.party_id;
                     });
 
                     if (party && party.id) {
@@ -3177,7 +3217,7 @@
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    // add user to collection
+                    // add party to collection
                     party = parties.create(partyData);
 
                     return [200, party, {}];
@@ -3215,7 +3255,7 @@
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
                     console.log('MockedPartyResource whenDELETE', method, url, data, headers, params);
-                    var user, 
+                    var party, 
                         partyData = angular.fromJson(data),
                         idParams,
                         partyId,
@@ -3249,24 +3289,6 @@
                    
         return child;
     }]);
-
-// expected 
-// {
-//     "party_id": "565f12ef8ff2161b1dfeedbf"
-//     "creator_id": "565f12ef8ff2161b1dfeedbf"
-//     "notes": {
-//                 "viewType": "tiles"
-//                 "tips": "2016-08-01T09:30:46.726Z"
-//             }-
-//     "visions": {
-//                     "viewType": "tiles"
-//                 }-
-//     "areas": {
-//                 "navId": "all"
-//                 "tips": "2016-08-05T09:28:04.324Z"
-//             }-
-   
-// }
 
     thisModule.factory('MockedPartySettingsResource', ['$httpBackend', '$log', 'MockedResource', function ($httpBackend, $log, MockedResource) {
         var child = Object.create(MockedResource);
