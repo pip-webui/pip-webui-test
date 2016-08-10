@@ -10,7 +10,7 @@
 
     thisModule.factory('pipEventDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, pipNodeDataGenerator, $log) {
 
-            var refsDefault = new Array(),
+            var refsDefault = {},
                 child,
                 eventIcon = {
                             'danger': 'warn-circle',
@@ -27,7 +27,7 @@
                     node, nodes,
                     event;
 
-                    if (refs && angular.isArray(refs)) {
+                    if (refs && angular.isObject(refs)) {
                         nodes = refs['Nodes'] || [];
                     } else {
                         nodes = refsDefault['Nodes'] || [];

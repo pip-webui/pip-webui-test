@@ -34,15 +34,16 @@
 
             function prepareData() {
                 var nodes,
-                    tcNodes, tcEvents,
-                    eventsRefs = new Array(),
+                    tcNodes, tcEvents, tcNodes1, tcEvents1,
+                    eventsRefs = {},
+                    eventsRefs1 = {},
                     dataSet;
                     
                 // create dataset    
                 dataSet = pipTestDataService.getDataset();
 
                 // create collection without references
-                tcNodes = new TestCollection(pipNodeDataGenerator, 'NodesTestCollection', 20);
+                tcNodes = new TestCollection(pipNodeDataGenerator, 'NodesTestCollection', 2);
                 // init collection
                 tcNodes.init();
 
@@ -53,19 +54,41 @@
                 eventsRefs['Nodes'] = _.cloneDeep(tcNodes.getAll());
 
                 // create users collection   
-                tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 100, eventsRefs);   
+                tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 4, eventsRefs);   
                 dataSet.add(tcEvents);
+
+
+                // create collection without references
+                tcNodes1 = new TestCollection(pipNodeDataGenerator, 'NodesTestCollection1', 3);
+                // init collection
+                tcNodes1.init();
+
+                // add collection to dataset
+                dataSet.add(tcNodes1);
+
+                // form references for users collection
+                eventsRefs1['Nodes'] = _.cloneDeep(tcNodes1.getAll());
+
+                // create users collection   
+                tcEvents1 = new TestCollection(pipEventDataGenerator, 'EventsTestCollection1', 3, eventsRefs1);   
+                dataSet.add(tcEvents1);
 
                 // init collection
                 dataSet.init();
 
-                var events, nodes;
+                var events, nodes, events1, nodes1;
 
                 events = dataSet.get('EventsTestCollection').getAll();
                 nodes = dataSet.get('NodesTestCollection').getAll();
 
                 console.log('EventsTestCollection', events);
                 console.log('NodesTestCollection', nodes);
+
+                events1 = dataSet.get('EventsTestCollection1').getAll();
+                nodes1 = dataSet.get('NodesTestCollection1').getAll();
+
+                console.log('EventsTestCollection1', events1);
+                console.log('NodesTestCollection1', nodes1);
 
                 return dataSet;
             }

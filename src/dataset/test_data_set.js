@@ -16,7 +16,7 @@
 
             this.currentUser = null;
             this.currentParty = null;
-            this.dataSet = new Array();
+            this.dataSet = {};
 
             this.init = init;         
             this.add = add;         
@@ -27,14 +27,16 @@
             this.clearCurrentUser = clearCurrentUser;
             this.setCurrentParty = setCurrentParty;
             this.getCurrentParty = getCurrentParty;
-                    
+
+            return this;        
         }
 
         // Initializes all registered collectons
         function init() {
             var i;
-
+console.log('init this.dataSet',this.dataSet);
             for (i in this.dataSet) {
+                console.log('this.dataSet', this.dataSet[i]);
                 if (this.dataSet[i] && this.dataSet[i].isInit === false) {
                     this.dataSet[i].init();
                 }

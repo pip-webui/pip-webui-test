@@ -11,17 +11,20 @@
     // Collection of test data stored in test dataset
     thisModule.factory('TestCollection', function ($log) {
 
-        var refs;
+        // var refs;
 
         // Define the constructor function.
-        return function (generator, name, size, rs) {
+        return function (generator, name, size, refs) {
             if (!generator) {
                 throw new Error('TestCollection: generator is required');
             }
 
             this.generator = generator;
             this.size = size ? size : 0;
-            refs = getRefs(generator, rs);
+
+
+            this.refs = getRefs(generator, refs);
+
             this.name = getName(generator, name);
             this.collection = [];
             this.isInit = false;
@@ -66,7 +69,7 @@
                 return
             } 
 
-            this.collection = this.generator.newObjectList(this.size, refs);
+            this.collection = this.generator.newObjectList(this.size, this.refs);
             this.isInit = true;
         }
     
@@ -164,8 +167,8 @@
 
         // ----------------------------------
 
-        function getArrayCopy(arr) {
-            var result = [];
+        function getRefsCopy(arr) {
+            var result = {};
 
             for (var key in arr) {
                 result[key] = _.cloneDeep(arr[key]);
@@ -175,12 +178,12 @@
         }
 
         function getRefs(generator, refs) {
-            if (refs && angular.isArray(refs)) {
-                return getArrayCopy(refs);
-            } else if (generator.refs && angular.isArray(generator.refs)) {
-                return getArrayCopy(generator.refs);
+            if (refs && angular.isObject(refs)) {
+                return getRefsCopy(refs);
+            } else if (generator.refs && angular.isObject(generator.refs)) {
+                return getRefsCopy(generator.refs);
             } else {
-                return new Array(); 
+                return {}; 
             }
         }
 

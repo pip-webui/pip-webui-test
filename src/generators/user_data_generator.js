@@ -11,7 +11,7 @@
     thisModule.factory('pipUserDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log, 
         pipPartyAccessDataGenerator, pipSessionsDataGenerator) {
 
-            var refsDefault = new Array();
+            var refsDefault = {};
 
             refsDefault['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
             refsDefault['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
@@ -30,7 +30,7 @@
                         opened: nowDate.toJSON(),
                     });
 
-                if (refs && angular.isArray(refs)) {
+                if (refs && angular.isObject(refs)) {
                     PartyAccess = refs['PartyAccess'] || [];
                     Sessions = refs['Sessions'] || [];
                 } else {

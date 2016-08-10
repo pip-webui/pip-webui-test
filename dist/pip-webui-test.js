@@ -106,17 +106,20 @@
     // Collection of test data stored in test dataset
     thisModule.factory('TestCollection', ['$log', function ($log) {
 
-        var refs;
+        // var refs;
 
         // Define the constructor function.
-        return function (generator, name, size, rs) {
+        return function (generator, name, size, refs) {
             if (!generator) {
                 throw new Error('TestCollection: generator is required');
             }
 
             this.generator = generator;
             this.size = size ? size : 0;
-            refs = getRefs(generator, rs);
+
+
+            this.refs = getRefs(generator, refs);
+
             this.name = getName(generator, name);
             this.collection = [];
             this.isInit = false;
@@ -161,7 +164,7 @@
                 return
             } 
 
-            this.collection = this.generator.newObjectList(this.size, refs);
+            this.collection = this.generator.newObjectList(this.size, this.refs);
             this.isInit = true;
         }
     
@@ -259,8 +262,8 @@
 
         // ----------------------------------
 
-        function getArrayCopy(arr) {
-            var result = [];
+        function getRefsCopy(arr) {
+            var result = {};
 
             for (var key in arr) {
                 result[key] = _.cloneDeep(arr[key]);
@@ -270,12 +273,12 @@
         }
 
         function getRefs(generator, refs) {
-            if (refs && angular.isArray(refs)) {
-                return getArrayCopy(refs);
-            } else if (generator.refs && angular.isArray(generator.refs)) {
-                return getArrayCopy(generator.refs);
+            if (refs && angular.isObject(refs)) {
+                return getRefsCopy(refs);
+            } else if (generator.refs && angular.isObject(generator.refs)) {
+                return getRefsCopy(generator.refs);
             } else {
-                return new Array(); 
+                return {}; 
             }
         }
 
@@ -346,7 +349,7 @@
 
             this.currentUser = null;
             this.currentParty = null;
-            this.dataSet = new Array();
+            this.dataSet = {};
 
             this.init = init;         
             this.add = add;         
@@ -357,14 +360,16 @@
             this.clearCurrentUser = clearCurrentUser;
             this.setCurrentParty = setCurrentParty;
             this.getCurrentParty = getCurrentParty;
-                    
+
+            return this;        
         }
 
         // Initializes all registered collectons
         function init() {
             var i;
-
+console.log('init this.dataSet',this.dataSet);
             for (i in this.dataSet) {
+                console.log('this.dataSet', this.dataSet[i]);
                 if (this.dataSet[i] && this.dataSet[i].isInit === false) {
                     this.dataSet[i].init();
                 }
@@ -582,7 +587,7 @@
 
     thisModule.factory('pipEventDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipNodeDataGenerator', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipNodeDataGenerator, $log) {
 
-            var refsDefault = new Array(),
+            var refsDefault = {},
                 child,
                 eventIcon = {
                             'danger': 'warn-circle',
@@ -599,7 +604,7 @@
                     node, nodes,
                     event;
 
-                    if (refs && angular.isArray(refs)) {
+                    if (refs && angular.isObject(refs)) {
                         nodes = refs['Nodes'] || [];
                     } else {
                         nodes = refsDefault['Nodes'] || [];
@@ -1105,7 +1110,7 @@
     thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log, 
         pipPartyAccessDataGenerator, pipSessionsDataGenerator) {
 
-            var refsDefault = new Array();
+            var refsDefault = {};
 
             refsDefault['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
             refsDefault['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
@@ -1124,7 +1129,7 @@
                         opened: nowDate.toJSON(),
                     });
 
-                if (refs && angular.isArray(refs)) {
+                if (refs && angular.isObject(refs)) {
                     PartyAccess = refs['PartyAccess'] || [];
                     Sessions = refs['Sessions'] || [];
                 } else {
@@ -3484,7 +3489,7 @@
                     nodeId = idParams[0];
 
                     eventsCollection = events.getAll();
-console.log('nodeId', nodeId);
+
                     nodeEventsCollection = _.filter(eventsCollection, function (item) {
                         console.log('compaere', item.node_id == nodeId);
                         return item.node_id == nodeId;
