@@ -62,6 +62,34 @@
                     return [200, node, {}];
                 });
 
+            // GET /api/nodes/:id/events
+            $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp+ child.regEsc('/events') + child.EndStringRegExp))
+                .respond(function(method, url, data, headers, params) {
+                    console.log('MockedNodeResource whenGET node', method, url, data, headers, params);
+                    var events,
+                        nodeId, 
+                        idParams,
+                        events = child.dataset.get('EventsTestCollection'),
+                        eventsCollection, nodeEventsCollection;
+
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedNodeResource: id is not specified into url')
+                    }
+
+                    nodeId = idParams[0];
+
+                    eventsCollection = events.getAll();
+
+                    nodeEventsCollection = _.find(eventsCollection, function (item) {
+                        console.log('compaere', item.node_id == nodeId);
+                        return item.node_id == nodeId;
+                    });
+
+                    return [200, nodeEventsCollection || [], {}];                   
+                });
+
             // PUT /api/nodes/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
@@ -84,7 +112,7 @@
                     }
 
                     node = nodes.findById(nodeId);
-                    node = nodes.update(partyId, nodeData);
+                    node = nodes.update(nodeId, nodeData);
                     console.log('MockedNodeResource whenPUT node', node);
                     
                     return [200, node, {}];
