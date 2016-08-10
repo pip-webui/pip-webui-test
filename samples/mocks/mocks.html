@@ -131,6 +131,34 @@
 <div>    
 
 <div>
+    <h3>Feedbacks</h3>
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onFeedbacksGET($event)">
+            {{ 'GET FEEDBACKS ' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onFeedbackGET($event)">
+            {{ 'GET FEEDBACK' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onFeedbackPOST($event)">
+            {{ 'POST FEEDBACK' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onFeedbackPUT($event)">
+            {{ 'PUT FEEDBACK' }}
+    </md-button>
+
+    <md-button class="lm0 md-raised md-accent flat" 
+            ng-click="onFeedbackDELETE($event)">
+            {{ 'DELETE FEEDBACK' }}
+    </md-button>            
+<div>  
+
+<div>
     <h3>Files and Avatars</h3>
     <md-button class="lm0 md-raised md-accent flat" 
             ng-click="onAvatarGET($event)">

@@ -17,7 +17,7 @@
             pipBasicGeneratorServices, 
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator, pipPartyDataGenerator,
             TestCollection, pipTestDataService,
-            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator, pipSettingsDataGenerator) {
+            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
 
             var dataset = prepareData();
 
@@ -60,6 +60,12 @@
             $scope.onPartiesSettingsGET = onPartiesSettingsGET; 
             $scope.onPartiesSettingsPOST = onPartiesSettingsPOST;
 
+            $scope.onFeedbacksGET = onFeedbacksGET;
+            $scope.onFeedbackGET = onFeedbackGET;
+            $scope.onFeedbackPOST = onFeedbackPOST;
+            $scope.onFeedbackPUT = onFeedbackPUT;
+            $scope.onFeedbackDELETE = onFeedbackDELETE;
+
             pipAppBar.showMenuNavIcon();
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('MOCKS');
@@ -69,7 +75,7 @@
 
             function prepareData() {
                 var i, users, parties = [], settings =[],
-                    tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars, tcParties, tcSettings,
+                    tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars, tcParties, tcSettings, tcFeedback,
                     usersRefs = new Array(),
                     dataSet;
                     
@@ -99,6 +105,11 @@
                 // create avatar collection
                 tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 20);
                 dataSet.add(tcAvatars);
+
+                // create feedback collection
+                tcFeedback = new TestCollection(pipFeedbackDataGenerator, 'FeedbacksTestCollection', 20);
+                dataSet.add(tcFeedback);  
+
                 // init collection
                 dataSet.init();
 
@@ -1117,6 +1128,178 @@
                     }
                 );
             }  
+
+
+            // feedbacks api
+
+            function onFeedbackPOST() {
+                var feedback,
+                    req;
+
+                feedback = pipFeedbackDataGenerator.newObject();
+                console.log('onFeedbackPOST', feedback);
+
+                req = {
+                    method: 'POST',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/feedbacks',
+                    headers: {'Content-Type': undefined},
+                    data: feedback
+                };
+                console.log('onFeedbackPOST req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onFeedbackPOST result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onFeedbackPOST error', error); 
+                    }
+                );
+            }          
+
+            function onFeedbacksGET() {
+                var req = {
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/feedbacks',
+                        headers: {'Content-Type': undefined},
+                        data: null
+                    };
+
+                console.log('onFeedbacksGET req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onFeedbacksGET result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onFeedbacksGET error', error); 
+                    }
+                );
+            }   
+
+            function onFeedbackGET() {
+                var feedback,
+                    index,
+                    count,
+                    feedbacks = dataset.get('FeedbacksTestCollection'),
+                    req;
+
+                if (!feedbacks) {
+                    throw new Error('MocksController: Feedbacks collection is not found');
+                } 
+
+                count = feedbacks.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Feedbacks collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                feedback = feedbacks.getByIndex(index);
+                if (!feedback || !feedback.id) {
+                    throw new Error('MocksController: Feedbacks collection is empty');
+                }
+
+                req = {
+                        method: 'GET',
+                        url: pipBasicGeneratorServices.serverUrl() + '/api/feedbacks/' + feedback.id,
+                        headers: { 'Content-Type': undefined },
+                        data: {}
+                     };
+                console.log('onFeedbackGET req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onFeedbackGET result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onFeedbackGET error', error); 
+                    }
+                );
+            }   
+
+            function onFeedbackPUT() {
+                var feedback,
+                    index,
+                    count,
+                    feedbacks = dataset.get('FeedbacksTestCollection'),
+                    req;
+
+                if (!feedbacks) {
+                    throw new Error('MocksController: Feedbacks collection is not found');
+                } 
+
+                count = feedbacks.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Feedbacks collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                feedback = feedbacks.getByIndex(index);
+                if (!feedback || !feedback.id) {
+                    throw new Error('MocksController: Feedbacks collection is empty');
+                }
+                     
+                // change feedback
+                feedback.title = chance.sentence();
+                feedback.content = chance.paragraph();
+ 
+                req = {
+                    method: 'PUT',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/feedbacks/' + feedback.id,
+                    headers: {'Content-Type': undefined},
+                    data: feedback
+                };
+                console.log('onFeedbackPUT req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onFeedbackPUT result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onFeedbackPUT error', error); 
+                    }
+                );
+            }   
+
+            function onFeedbackDELETE() {
+                var feedback,
+                    index,
+                    count,
+                    feedbacks = dataset.get('FeedbacksTestCollection'),
+                    req;
+
+                if (!feedbacks) {
+                    throw new Error('MocksController: Feedbacks collection is not found');
+                } 
+
+                count = feedbacks.getAll().length;
+                if (count === 0) {
+                    throw new Error('MocksController: Feedbacks collection is empty');
+                } 
+
+                index = _.random(count - 1);
+                feedback = feedbacks.getByIndex(index);
+                if (!feedback || !feedback.id) {
+                    throw new Error('MocksController: Feedbacks collection is empty');
+                }
+
+                var req = {
+                    method: 'DELETE',
+                    url: pipBasicGeneratorServices.serverUrl() + '/api/feedbacks/' + feedback.id,
+                    headers: { 'Content-Type': undefined }
+                };
+                console.log('onFeedbackDELETE req', req);
+
+                $http(req)
+                    .success(function (result) {
+                        console.log('onFeedbackDELETE result', result); 
+                    })
+                    .error(function (error) {
+                        console.log('onFeedbackDELETE error', error); 
+                    }
+                );
+            }   
+                        
         }
     );
 

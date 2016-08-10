@@ -90,7 +90,7 @@
             function getDocs(collection) {
                 var docs, result = [], i;
 
-                docs = pipBasicGeneratorServices.getMany(collection);
+                docs = pipBasicGeneratorServices.getMany(collection, chance.integer({min: 0, max: 5}));
                 for (i = 0; i < docs.length; i++) {
                     result.push({
                         file_id: docs[i].id,
@@ -104,7 +104,7 @@
             function getPictures(collection) {
                 var pics, result = [], i;
 
-                pics = pipBasicGeneratorServices.getMany(collection);
+                pics = pipBasicGeneratorServices.getMany(collection, chance.integer({min: 0, max: 5}));
                 for (i = 0; i < pics.length; i++) {
                     result.push(pics[i].id);
                 }
