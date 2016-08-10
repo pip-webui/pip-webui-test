@@ -53,7 +53,10 @@
         MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
         MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
         MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource,
-        MockedNodeResource, MockedEventsResource) {
+        MockedNodeResource, MockedEventsResource, MockedResource, pipTestDataService) {
+
+
+            MockedResource.setDataset(pipTestDataService.getDataset());
 
             pipMockedResource.addMocks(MockedUsersResource);
             pipMockedResource.addMocks(MockedCurrentUserResource);

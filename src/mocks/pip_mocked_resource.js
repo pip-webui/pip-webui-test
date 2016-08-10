@@ -3,70 +3,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-
-/* API list
-
-+ /api/users/current
-+ /api/users/:id
-
-+ /api/users/:party_id/sessions/:id
-
-/api/parties/:id
-/api/parties/:party_id/settings
-
-/api/signup_validate
-/api/verify_email
-/api/users/:party_id/resend_email_verification
-/api/change_password
-/api/reset_password
-/api/recover_password
-/api/signup
-/api/signout
-/api/signin
-
-/api/image_sets/:id
-/api/images/search
-
-images:
-get serverurl + /api/parties/ + partyId + "/files/" + imageId
-    serverUrl + '/api/parties/' + partyId + '/files
-
-    
-    // document
-$upload.http({
-url: addItemUrl(item),
-headers: { 'Content-Type': file.type },
-data: e.target.result
-})    
-
-serverUrl + '/api/parties/' + partyId + '/files?name='
-
-$http['delete'](getItemIdUrl(item))
-
-// image_sets
-$http['post'](url)
-
-$upload.http({
-url: FILE_URL + '?name=' + file.name,
-headers: { 'Content-Type': file.type },
-data: e.target.result
-
-
-/api/servers/activities/:id
-/api/guides/:id
-/api/tips/:id
-/api/feedbacks/:id
-/api/announcements/:id
-
-})
-
-
-avatar
-get serverUrl + '/api/parties/' + partyId + '/' + entityTypes[type] + '/' + id + '/avatar
-get serverUrl + '/api/parties/' + partyId + '/avatar
-
-*/
-
 (function () {
     'use strict';
 
@@ -74,7 +10,6 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
     thisModule.factory('pipMockedResource', function () {
         var mocks = [];
-
 
         return {
             addMocks: addMocks,
@@ -100,11 +35,11 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 
     });
 
-    thisModule.factory('MockedResource', function ($httpBackend, $log, pipTestDataService, PipResourcesError) {
+    thisModule.factory('MockedResource', function ($httpBackend, $log, PipResourcesError) {
 
             this.api = '';
             this.fakeUrl = 'http://alpha.pipservices.net';
-            this.dataset = pipTestDataService.getDataset();
+            this.dataset = null; // pipTestDataService.getDataset();
 
             this.regEsc = function (str) {
                     //Escape string to be able to use it in a regular expression
@@ -125,6 +60,10 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
                 
                 return result;
             }
+
+            this.setDataset = function (dataset) {
+                this.dataset = dataset;
+            };
 
             this.getError = function (errorCode) {
                 var error;
