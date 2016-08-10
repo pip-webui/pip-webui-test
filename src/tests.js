@@ -21,6 +21,7 @@
         'pipMocked.Avatar',
         'pipMocked.Events',
         'pipMocked.Nodes',
+        'pipMocked.Feedbacks',
 
         'pipGenerators',
         'pipBasicGeneratorServices',        

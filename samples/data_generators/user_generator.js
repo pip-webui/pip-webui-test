@@ -17,7 +17,7 @@
             pipBasicGeneratorServices, 
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
             TestCollection, pipTestDataService,
-            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator
+            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator, pipFeedbackDataGenerator
             ) {
 
             $scope.userCollection = pipUserDataGenerator.newObjectList(10);
@@ -58,7 +58,7 @@
             }
 
             function prepareData() {
-                var tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars,
+                var tcPartyAccess, tcSessions, tcUsers, tcImages, tcAvatars, tcFeedback,
                     usersRefs = new Array(),
                     dataSet;
                     
@@ -88,16 +88,21 @@
                 // create avatar collection
                 tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 20);
                 dataSet.add(tcAvatars);
+
+                // create feedback collection
+                tcFeedback = new TestCollection(pipFeedbackDataGenerator, 'FeedbacksTestCollection', 20);
+                dataSet.add(tcFeedback);                
                 // init collection
                 dataSet.init();
 
-                var Sessions, PartyAccess, Users, Files, Avatars;
+                var Sessions, PartyAccess, Users, Files, Avatars, Feedback;
 
                 Sessions = dataSet.get('SessionsTestCollection').getAll();
                 PartyAccess = dataSet.get('PartyAccessTestCollection').getAll();
                 Users = dataSet.get('UsersTestCollection').getAll();
                 Files = dataSet.get('FilesTestCollection').getAll();
                 Avatars = dataSet.get('AvatarsTestCollection').getAll();
+                Feedback = dataSet.get('FeedbacksTestCollection').getAll();
 
 
                 console.log('SessionsTestCollection', Sessions);
@@ -105,6 +110,7 @@
                 console.log('UsersTestCollection', Users);
                 console.log('FilesTestCollection', Files);
                 console.log('AvatarsTestCollection', Avatars);
+                console.log('FeedbacksTestCollection', Feedback);
 
                 return dataSet;
             }

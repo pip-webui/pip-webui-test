@@ -28,9 +28,10 @@
 
     var thisModule = angular.module('pipGenerators.Feedback', []);
 
-    thisModule.factory('pipFeedbackDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, pipUserDataGenerator, $log) {
+    thisModule.factory('pipFeedbackDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, 
+        pipUserDataGenerator, $log, pipFilesDataGenerator) {
 
-            var refsDefault = {};
+            var refsDefault = {}, child;
 
             refsDefault['Users'] = pipUserDataGenerator.newObjectList(10);
             refsDefault['Files'] = pipFilesDataGenerator.newObjectList(30);
@@ -39,7 +40,10 @@
             child = new pipDataGenerator('Feedback', refsDefault);
 
             child.generateObj = function generateObj(refs) {
-                var files, pictures, users, user, date = chance.timestamp();
+                var feedback, 
+                    files, pictures, users, 
+                    user, 
+                    date = chance.timestamp();
 
                     if (refs && angular.isObject(refs)) {
                         users = refs['Users'] || [];
@@ -61,7 +65,7 @@
                         sender_id: user.id,
                         sender_name: user.name,
                         sender_email: user.email,
-                        type: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']), 
+                        type: pipBasicGeneratorServices.getOne(['support', 'feedback', 'copyright', 'business', 'advertising']), 
                         title: chance.sentence(),
                         content: chance.paragraph(),
                         docs: getDocs(files),
