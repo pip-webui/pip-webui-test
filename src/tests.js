@@ -33,6 +33,7 @@
         'pipGenerators.Settings',
         'pipGenerators.Node',     
         'pipGenerators.Event',  
+        'pipGenerators.Feedback',
         
         'pipTestCollection',
         'pipTestDataSet',
