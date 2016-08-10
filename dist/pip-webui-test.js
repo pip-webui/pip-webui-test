@@ -106,15 +106,17 @@
     // Collection of test data stored in test dataset
     thisModule.factory('TestCollection', ['$log', function ($log) {
 
+        var refs;
+
         // Define the constructor function.
-        return function (generator, name, size, refs) {
+        return function (generator, name, size, rs) {
             if (!generator) {
                 throw new Error('TestCollection: generator is required');
             }
 
             this.generator = generator;
             this.size = size ? size : 0;
-            this.refs = getRefs(generator, refs);
+            refs = getRefs(generator, rs);
             this.name = getName(generator, name);
             this.collection = [];
             this.isInit = false;
@@ -130,7 +132,8 @@
             this.update = update;         
             this.deleteById = deleteById;         
             this.deleteByIndex = deleteByIndex; 
-                    
+
+            return this;             
         }
             
         function getGeneratorName() {
@@ -146,7 +149,7 @@
             if (collection && angular.isArray(collection)) {
                 this.collection = _.cloneDeep(collection);
                 this.size = collection.length;
-                //this.refs = ???
+
                 this.isInit = true;
 
                 return;
@@ -158,7 +161,7 @@
                 return
             } 
 
-            this.collection = this.generator.newObjectList(this.size, this.refs);
+            this.collection = this.generator.newObjectList(this.size, refs);
             this.isInit = true;
         }
     
@@ -256,13 +259,21 @@
 
         // ----------------------------------
 
+        function getArrayCopy(arr) {
+            var result = [];
+
+            for (var key in arr) {
+                result[key] = _.cloneDeep(arr[key]);
+            }
+
+            return result;
+        }
+
         function getRefs(generator, refs) {
-            var result;
-            
             if (refs && angular.isArray(refs)) {
-                return _.cloneDeep(refs);
+                return getArrayCopy(refs);
             } else if (generator.refs && angular.isArray(generator.refs)) {
-                return _.cloneDeep(generator.refs);
+                return getArrayCopy(generator.refs);
             } else {
                 return new Array(); 
             }
@@ -580,7 +591,7 @@
                         };
 
             refsDefault['Nodes'] = pipNodeDataGenerator.newObjectList(10);
-            child = new pipDataGenerator('Nodes', []);
+            child = new pipDataGenerator('Events', refsDefault);
 
             child.generateObj = function generateObj(refs) {
                 var temperature = chance.integer({min: -40, max: 50}),
@@ -593,8 +604,8 @@
                     } else {
                         nodes = refsDefault['Nodes'] || [];
                     }
-                    
-                    node = pipBasicGeneratorServices.getOne(nodes);
+
+                    node = getOne(nodes);
                     event = {
                         id: pipBasicGeneratorServices.getObjectId(),
                         node_id: getNodeId(node),
@@ -655,6 +666,15 @@
 
                 return resultTemp + ' ' + resultRad;
             };
+
+            function getOne(collection) {
+                var index, count;
+
+                count = collection.length;
+                index = _.random(count - 1);
+
+                return _.cloneDeep(collection[index]);
+            }
 
     }]);
 
@@ -1090,7 +1110,7 @@
             refsDefault['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
             refsDefault['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
 
-            var child = new pipDataGenerator('User', refs);
+            var child = new pipDataGenerator('User', refsDefault);
 
             child.generateObj = function generateObj(refs) {
                 var date1 = chance.timestamp(),
@@ -1141,159 +1161,6 @@
 
 })();
  
-/**
- * @file Rest API enumerations service
- * @copyright Digital Living Software Corp. 2014-2016
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('PipResources.Error', []);
-
-    thisModule.factory('PipResourcesError', function () {
-
-        var Errors = {};
-        
-        Errors['1104'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1104,
-                name: 'Bad Request',
-                message: 'Email is already registered'
-            },
-            headers: {}
-        };
-        Errors['1106'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1106,
-                name: 'Bad Request',
-                message: 'User was not found'
-            },
-            headers: {}
-        };
-        Errors['1103'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1103,
-                name: 'Bad Request',
-                message: 'Invalid email verification code'
-            },
-            headers: {}
-        };
-        Errors['1108'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1108,
-                name: 'Bad Request',
-                message: 'Invalid password recovery code'
-            },
-            headers: {}
-        };
-        Errors['1700'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1700,
-                name: 'Bad Request',
-                message: 'Avatar doesn\'t exist'
-            },
-            headers: {}
-        };        
-
-        return Errors;
-    });
-    
-})();
-
-/**
- * @file pipImageResources service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [],
-            size = 0;
-
-        this.setImages = setImages;
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection,
-                getImage: getImage
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
-            }
-
-            imagesMap = _.union(imagesMap, newImagesRes);
-            size = imagesMap.length;
-        }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
-            }
-
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
-
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
-            }
-
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }   
-
-        function getImage() {
-            var i = _.random(0, size - 1);
-
-            if (size > 0) {
-                return _.cloneDeep(imagesMap[i]);
-            } else {
-                return null;
-            }
-        }  
-
-    });
-
-})();
 /**
  * @file String resources for Areas pages
  * @copyright Digital Living Software Corp. 2014-2016
@@ -3601,7 +3468,7 @@
             // GET /api/nodes/:id/events
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp+ child.regEsc('/events') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenGET node', method, url, data, headers, params);
+                    console.log('MockedNodeResource whenGET events for node', method, url, data, headers, params);
                     var events,
                         nodeId, 
                         idParams,
@@ -3617,14 +3484,13 @@
                     nodeId = idParams[0];
 
                     eventsCollection = events.getAll();
-console.log('nodeId', nodeId, eventsCollection);
-
-                    nodeEventsCollection = _.find(eventsCollection, function (item) {
+console.log('nodeId', nodeId);
+                    nodeEventsCollection = _.filter(eventsCollection, function (item) {
                         console.log('compaere', item.node_id == nodeId);
                         return item.node_id == nodeId;
                     });
 
-                    return [200, nodeEventsCollection, {}];                   
+                    return [200, nodeEventsCollection || [], {}];                   
                 });
 
             // PUT /api/nodes/:id
@@ -4401,4 +4267,157 @@ get serverUrl + '/api/parties/' + partyId + '/avatar
 })();
  
 
+/**
+ * @file Rest API enumerations service
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('PipResources.Error', []);
+
+    thisModule.factory('PipResourcesError', function () {
+
+        var Errors = {};
+        
+        Errors['1104'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1104,
+                name: 'Bad Request',
+                message: 'Email is already registered'
+            },
+            headers: {}
+        };
+        Errors['1106'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1106,
+                name: 'Bad Request',
+                message: 'User was not found'
+            },
+            headers: {}
+        };
+        Errors['1103'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1103,
+                name: 'Bad Request',
+                message: 'Invalid email verification code'
+            },
+            headers: {}
+        };
+        Errors['1108'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1108,
+                name: 'Bad Request',
+                message: 'Invalid password recovery code'
+            },
+            headers: {}
+        };
+        Errors['1700'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1700,
+                name: 'Bad Request',
+                message: 'Avatar doesn\'t exist'
+            },
+            headers: {}
+        };        
+
+        return Errors;
+    });
+    
+})();
+
+/**
+ * @file pipImageResources service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
 //# sourceMappingURL=pip-webui-test.js.map

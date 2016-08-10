@@ -16,7 +16,7 @@
             refsDefault['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
             refsDefault['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
 
-            var child = new pipDataGenerator('User', refs);
+            var child = new pipDataGenerator('User', refsDefault);
 
             child.generateObj = function generateObj(refs) {
                 var date1 = chance.timestamp(),

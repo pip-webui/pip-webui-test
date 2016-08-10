@@ -65,7 +65,7 @@
             // GET /api/nodes/:id/events
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp+ child.regEsc('/events') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenGET node', method, url, data, headers, params);
+                    console.log('MockedNodeResource whenGET events for node', method, url, data, headers, params);
                     var events,
                         nodeId, 
                         idParams,
@@ -82,7 +82,7 @@
 
                     eventsCollection = events.getAll();
 
-                    nodeEventsCollection = _.find(eventsCollection, function (item) {
+                    nodeEventsCollection = _.filter(eventsCollection, function (item) {
                         console.log('compaere', item.node_id == nodeId);
                         return item.node_id == nodeId;
                     });

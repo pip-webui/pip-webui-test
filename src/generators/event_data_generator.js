@@ -19,7 +19,7 @@
                         };
 
             refsDefault['Nodes'] = pipNodeDataGenerator.newObjectList(10);
-            child = new pipDataGenerator('Nodes', []);
+            child = new pipDataGenerator('Events', refsDefault);
 
             child.generateObj = function generateObj(refs) {
                 var temperature = chance.integer({min: -40, max: 50}),
@@ -32,8 +32,8 @@
                     } else {
                         nodes = refsDefault['Nodes'] || [];
                     }
-                    
-                    node = pipBasicGeneratorServices.getOne(nodes);
+
+                    node = getOne(nodes);
                     event = {
                         id: pipBasicGeneratorServices.getObjectId(),
                         node_id: getNodeId(node),
@@ -94,6 +94,15 @@
 
                 return resultTemp + ' ' + resultRad;
             };
+
+            function getOne(collection) {
+                var index, count;
+
+                count = collection.length;
+                index = _.random(count - 1);
+
+                return _.cloneDeep(collection[index]);
+            }
 
     });
 

@@ -11,15 +11,17 @@
     // Collection of test data stored in test dataset
     thisModule.factory('TestCollection', function ($log) {
 
+        var refs;
+
         // Define the constructor function.
-        return function (generator, name, size, refs) {
+        return function (generator, name, size, rs) {
             if (!generator) {
                 throw new Error('TestCollection: generator is required');
             }
 
             this.generator = generator;
             this.size = size ? size : 0;
-            this.refs = getRefs(generator, refs);
+            refs = getRefs(generator, rs);
             this.name = getName(generator, name);
             this.collection = [];
             this.isInit = false;
@@ -35,7 +37,8 @@
             this.update = update;         
             this.deleteById = deleteById;         
             this.deleteByIndex = deleteByIndex; 
-                    
+
+            return this;             
         }
             
         function getGeneratorName() {
@@ -51,7 +54,7 @@
             if (collection && angular.isArray(collection)) {
                 this.collection = _.cloneDeep(collection);
                 this.size = collection.length;
-                //this.refs = ???
+
                 this.isInit = true;
 
                 return;
@@ -63,7 +66,7 @@
                 return
             } 
 
-            this.collection = this.generator.newObjectList(this.size, this.refs);
+            this.collection = this.generator.newObjectList(this.size, refs);
             this.isInit = true;
         }
     
@@ -161,13 +164,21 @@
 
         // ----------------------------------
 
+        function getArrayCopy(arr) {
+            var result = [];
+
+            for (var key in arr) {
+                result[key] = _.cloneDeep(arr[key]);
+            }
+
+            return result;
+        }
+
         function getRefs(generator, refs) {
-            var result;
-            
             if (refs && angular.isArray(refs)) {
-                return _.cloneDeep(refs);
+                return getArrayCopy(refs);
             } else if (generator.refs && angular.isArray(generator.refs)) {
-                return _.cloneDeep(generator.refs);
+                return getArrayCopy(generator.refs);
             } else {
                 return new Array(); 
             }

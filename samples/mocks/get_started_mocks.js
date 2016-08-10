@@ -35,7 +35,7 @@
             function prepareData() {
                 var nodes,
                     tcNodes, tcEvents,
-                    usersRefs = new Array(),
+                    eventsRefs = new Array(),
                     dataSet;
                     
                 // create dataset    
@@ -50,10 +50,10 @@
                 dataSet.add(tcNodes);
 
                 // form references for users collection
-                usersRefs['Nodes'] = tcNodes.getAll();
+                eventsRefs['Nodes'] = _.cloneDeep(tcNodes.getAll());
 
                 // create users collection   
-                tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 100, usersRefs);   
+                tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 100, eventsRefs);   
                 dataSet.add(tcEvents);
 
                 // init collection
