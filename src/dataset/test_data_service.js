@@ -12,7 +12,7 @@
 
     thisModule.factory('pipTestDataService', 
         function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
-                 pipPartyDataGenerator, TestCollection, pipTestDataService, pipNodeDataGenerator,
+                 pipPartyDataGenerator, TestCollection, pipNodeDataGenerator,
                  pipEventDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
 
             // Angular service that holds singleton test dataset that is shared across all
