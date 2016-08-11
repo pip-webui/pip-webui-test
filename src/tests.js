@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    var thisModule = angular.module('pipWebuiTests', [
+    var thisModule = angular.module('pipWebuiTest', [
         'pipMocked',
         'pipMocked.Users',
         'pipMocked.Entry',
