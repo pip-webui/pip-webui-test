@@ -106,7 +106,7 @@
                         name: userData.name
                     });
 
-                    party.create({
+                    parties.create({
                         name: user.name,
                         email: user.email,
                         id: user.id,
