@@ -1206,9 +1206,16 @@ console.log('init this.dataSet',this.dataSet);
 
             child.generateObj = function generateObj() {
                 var id = pipBasicGeneratorServices.getObjectId(),
+                    date = chance.timestamp(),
                     setting = {
-                        party_id: id,
-                        creator_id: id
+                        settings: {
+                            party_id: id,
+                            creator_id: id,
+                            goals: {},
+                            areas: {},
+                            intro: {}
+                        },
+                        updated: new Date(date).toJSON()
                     };
 
                 return setting;
@@ -2999,7 +3006,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function(item) {
+                        return item.email == userData.email;
+                    });
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -3042,7 +3051,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function(item) {
+                        return item.email == userData.email;
+                    });
 
                     if (user && user.id) {
                         var error = child.getError('1104');
@@ -3121,10 +3132,12 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function(item) {
+                        return item.email == userData.email;
+                    });
 
-                    if (!user || !user.id) {
-                        var error = child.getError('1106');
+                    if (user && user.id) {
+                        var error = child.getError('1104');
 
                         return [error.StatusCode, error.request, error.headers];
                     }
@@ -3162,7 +3175,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function (item) {
+                        return item.email == userData.email;
+                    });
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -3210,7 +3225,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function(item) {
+                        return item.email == userData.email;
+                    });
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -3250,7 +3267,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function(item) {
+                        return item.email == userData.email;
+                    });
 
                     if (!user || !user.id) {
                         var error = child.getError('1106');
@@ -3422,7 +3441,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     feedbacksCollection = feedbacks.getAll();
-                    feedback = _.find(feedbacksCollection, {id: feedbackData.id});
+                    feedback = _.find(feedbacksCollection, function(item) {
+                        return item.id == feedbackData.id;
+                    });
 
                     if (feedback && feedback.id) {
                         var error = child.getError('1104'); //todo error code
@@ -3974,15 +3995,31 @@ console.log('init this.dataSet',this.dataSet);
                 .respond(function(method, url, data, headers, params) {
                 console.log('MockedPartySettingsResource whenGET collection', method, url, data, headers, params);
                 var settings = child.dataset.get('SettingsTestCollection'),
-                    SettingsCollection;
+                    SettingsCollection, idParams, partyId,
+                    setting;
                   
                     if (!settings) {
                         throw new Error('MockedPartySettingsResource: Settings collection is not found')
                     }
+                    
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedPartyResource: party_id is not specified into url')
+                    }
+
+                    partyId = idParams[0];
 
                     SettingsCollection = settings.getAll();
+                    setting = _.find(SettingsCollection, function (item) {
+                        return item.party_id == partyId;
+                    });
 
-                    return [200, SettingsCollection, {}];                    
+                    if (!setting || !setting.party_id) {
+                        return [200, {}, {}];   
+                    }
+
+                    return [200, setting, {}];                    
                 });
 
             // POST /api/parties/:party_id/settings
@@ -3990,7 +4027,7 @@ console.log('init this.dataSet',this.dataSet);
                 .respond(function(method, url, data, headers, params) {
                     console.log('MockedPartySettingsResource whenPOST', method, url, data, headers, params);
                     var setting, match = false,
-                        settingsData = angular.fromJson(data),
+                        settingsData = angular.fromJson(data) || {},
                         settings = child.dataset.get('SettingsTestCollection'),
                         SettingsCollection;
 
@@ -4008,7 +4045,7 @@ console.log('init this.dataSet',this.dataSet);
                         return item.party_id == settingsData.party_id;
                     });
 
-                    if (setting && settings.party_id) {
+                    if (setting && setting.party_id) {
                          match = true;
                     }
 
@@ -4280,7 +4317,9 @@ console.log('init this.dataSet',this.dataSet);
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function (item) {
+                         return item.email == userData.email;
+                    });
 
                     if (user && user.id) {
                         var error = child.getError('1104'); //todo error code

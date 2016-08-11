@@ -176,15 +176,31 @@
                 .respond(function(method, url, data, headers, params) {
                 console.log('MockedPartySettingsResource whenGET collection', method, url, data, headers, params);
                 var settings = child.dataset.get('SettingsTestCollection'),
-                    SettingsCollection;
+                    SettingsCollection, idParams, partyId,
+                    setting;
                   
                     if (!settings) {
                         throw new Error('MockedPartySettingsResource: Settings collection is not found')
                     }
+                    
+                    idParams = child.getUrlIdParams(url);
+
+                    if (!idParams || idParams.length == 0) {
+                        throw new Error('MockedPartyResource: party_id is not specified into url')
+                    }
+
+                    partyId = idParams[0];
 
                     SettingsCollection = settings.getAll();
+                    setting = _.find(SettingsCollection, function (item) {
+                        return item.party_id == partyId;
+                    });
 
-                    return [200, SettingsCollection, {}];                    
+                    if (!setting || !setting.party_id) {
+                        return [200, {}, {}];   
+                    }
+
+                    return [200, setting, {}];                    
                 });
 
             // POST /api/parties/:party_id/settings
@@ -192,7 +208,7 @@
                 .respond(function(method, url, data, headers, params) {
                     console.log('MockedPartySettingsResource whenPOST', method, url, data, headers, params);
                     var setting, match = false,
-                        settingsData = angular.fromJson(data),
+                        settingsData = angular.fromJson(data) || {},
                         settings = child.dataset.get('SettingsTestCollection'),
                         SettingsCollection;
 
@@ -210,7 +226,7 @@
                         return item.party_id == settingsData.party_id;
                     });
 
-                    if (setting && settings.party_id) {
+                    if (setting && setting.party_id) {
                          match = true;
                     }
 

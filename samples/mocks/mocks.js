@@ -221,25 +221,13 @@
             }  
             
             function onSignupValidate() {
-                var user,
-                    users = dataset.get('UsersTestCollection'),
-                    req = {
+                var req = {
                         method: 'POST',
                         url: pipBasicGeneratorServices.serverUrl() + '/api/signup_validate',
                         headers: { 'Content-Type': undefined },
-                        data: {}
+                        data: {email: pipBasicGeneratorServices.getEmail()}
                     };
 
-                if (!users) {
-                    throw new Error('MocksController: Users collection is not found');
-                } 
-
-                user = users.getByIndex(0);
-                if (!user || !user.id) {
-                    throw new Error('MocksController: Users collection is empty');
-                }
-
-                req.data = {email: user.email}
                 console.log('onSignupValidate req', req);
 
                 $http(req)

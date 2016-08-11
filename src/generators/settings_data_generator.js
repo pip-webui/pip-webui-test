@@ -29,9 +29,16 @@
 
             child.generateObj = function generateObj() {
                 var id = pipBasicGeneratorServices.getObjectId(),
+                    date = chance.timestamp(),
                     setting = {
-                        party_id: id,
-                        creator_id: id
+                        settings: {
+                            party_id: id,
+                            creator_id: id,
+                            goals: {},
+                            areas: {},
+                            intro: {}
+                        },
+                        updated: new Date(date).toJSON()
                     };
 
                 return setting;

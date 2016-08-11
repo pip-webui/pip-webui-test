@@ -58,7 +58,9 @@
                     }
 
                     feedbacksCollection = feedbacks.getAll();
-                    feedback = _.find(feedbacksCollection, {id: feedbackData.id});
+                    feedback = _.find(feedbacksCollection, function(item) {
+                        return item.id == feedbackData.id;
+                    });
 
                     if (feedback && feedback.id) {
                         var error = child.getError('1104'); //todo error code

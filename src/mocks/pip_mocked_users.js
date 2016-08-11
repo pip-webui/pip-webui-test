@@ -91,7 +91,9 @@
                     }
 
                     usersCollection = users.getAll();
-                    user = _.find(usersCollection, {email: userData.email});
+                    user = _.find(usersCollection, function (item) {
+                         return item.email == userData.email;
+                    });
 
                     if (user && user.id) {
                         var error = child.getError('1104'); //todo error code
