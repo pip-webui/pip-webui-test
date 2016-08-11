@@ -52,7 +52,7 @@
                 // form references for users collection
                 eventsRefs['Nodes'] = _.cloneDeep(tcNodes.getAll());
 
-                // create users collection   
+                // create events collection   
                 tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 100, eventsRefs);   
                 dataSet.add(tcEvents);
 
