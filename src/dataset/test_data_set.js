@@ -34,7 +34,7 @@
         // Initializes all registered collectons
         function init() {
             var i;
-console.log('init this.dataSet',this.dataSet);
+
             for (i in this.dataSet) {
                 console.log('this.dataSet', this.dataSet[i]);
                 if (this.dataSet[i] && this.dataSet[i].isInit === false) {

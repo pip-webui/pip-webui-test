@@ -46,55 +46,116 @@
         'pipImageResources'
     ]);
 
-
-    thisModule.run(
-        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImageSetResource', 'MockedPartyResource', 'MockedServersActivitiesResource', 'MockedAvatarResource', 'MockedImagesResource', 'MockedPartySettingsResource', 'MockedNodeResource', 'MockedEventsResource', 'MockedResource', 'pipTestDataService', function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
+    thisModule.service('pipWebuiTest', 
+        ['pipMockedResource', 'MockedUsersResource', 'MockedCurrentUserResource', 'TruePathResource', 'MockedSigninResource', 'MockedSignupResource', 'MockedSignoutResource', 'MockedSignupValidateResource', 'MockedVerifyEmailResource', 'MockedRecoverPasswordResource', 'MockedResetPasswordResource', 'MockedChangePasswordResource', 'MockedUserSessionsResource', 'MockedTipsResource', 'MockedAnnouncementsResource', 'MockedFeedbacksResource', 'MockedGuidesResource', 'MockedImageSetResource', 'MockedPartyResource', 'MockedServersActivitiesResource', 'MockedAvatarResource', 'MockedImagesResource', 'MockedPartySettingsResource', 'MockedNodeResource', 'MockedEventsResource', 'MockedResource', 'pipTestDataService', 'pipBasicGeneratorServices', function (pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
         MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
         MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
         MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
         MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource,
-        MockedNodeResource, MockedEventsResource, MockedResource, pipTestDataService) {
+        MockedNodeResource, MockedEventsResource, MockedResource, pipTestDataService, pipBasicGeneratorServices) {
 
 
-            MockedResource.setDataset(pipTestDataService.getDataset());
+            return {
+                runFakeServer: runFakeServer
+            };
 
-            pipMockedResource.addMocks(MockedUsersResource);
-            pipMockedResource.addMocks(MockedCurrentUserResource);
-            pipMockedResource.addMocks(MockedUserSessionsResource);
+            //------------------------
 
-            // entry
-            pipMockedResource.addMocks(MockedSigninResource);
-            pipMockedResource.addMocks(MockedSignupResource);
-            pipMockedResource.addMocks(MockedSignoutResource);
-            pipMockedResource.addMocks(MockedSignupValidateResource);
-            pipMockedResource.addMocks(MockedVerifyEmailResource);
-            pipMockedResource.addMocks(MockedRecoverPasswordResource);
-            pipMockedResource.addMocks(MockedResetPasswordResource);
-            pipMockedResource.addMocks(MockedChangePasswordResource);
+            function runFakeServer(serverUrl) {
 
-            // ----------------
-            pipMockedResource.addMocks(MockedTipsResource);
-            pipMockedResource.addMocks(MockedAnnouncementsResource);
-            pipMockedResource.addMocks(MockedFeedbacksResource);
-            pipMockedResource.addMocks(MockedGuidesResource);
-            pipMockedResource.addMocks(MockedPartyResource);
-            pipMockedResource.addMocks(MockedPartySettingsResource);
-            pipMockedResource.addMocks(MockedServersActivitiesResource);
-            
-            // files and images
-            pipMockedResource.addMocks(MockedImageSetResource);
-            pipMockedResource.addMocks(MockedAvatarResource);
-            pipMockedResource.addMocks(MockedImagesResource);
 
-            pipMockedResource.addMocks(MockedEventsResource);
-            pipMockedResource.addMocks(MockedNodeResource);
+                pipBasicGeneratorServices.serverUrl(serverUrl);
+                MockedResource.fakeUrl = pipBasicGeneratorServices.serverUrl();
 
-            pipMockedResource.addMocks(TruePathResource);
-            
-            pipMockedResource.registerStandardResources();
+                MockedResource.setDataset(pipTestDataService.getDataset());
+
+                pipMockedResource.addMocks(MockedUsersResource);
+                pipMockedResource.addMocks(MockedCurrentUserResource);
+                pipMockedResource.addMocks(MockedUserSessionsResource);
+
+                // entry
+                pipMockedResource.addMocks(MockedSigninResource);
+                pipMockedResource.addMocks(MockedSignupResource);
+                pipMockedResource.addMocks(MockedSignoutResource);
+                pipMockedResource.addMocks(MockedSignupValidateResource);
+                pipMockedResource.addMocks(MockedVerifyEmailResource);
+                pipMockedResource.addMocks(MockedRecoverPasswordResource);
+                pipMockedResource.addMocks(MockedResetPasswordResource);
+                pipMockedResource.addMocks(MockedChangePasswordResource);
+
+                // ----------------
+                pipMockedResource.addMocks(MockedTipsResource);
+                pipMockedResource.addMocks(MockedAnnouncementsResource);
+                pipMockedResource.addMocks(MockedFeedbacksResource);
+                pipMockedResource.addMocks(MockedGuidesResource);
+                pipMockedResource.addMocks(MockedPartyResource);
+                pipMockedResource.addMocks(MockedPartySettingsResource);
+                pipMockedResource.addMocks(MockedServersActivitiesResource);
+                
+                // files and images
+                pipMockedResource.addMocks(MockedImageSetResource);
+                pipMockedResource.addMocks(MockedAvatarResource);
+                pipMockedResource.addMocks(MockedImagesResource);
+
+                pipMockedResource.addMocks(MockedEventsResource);
+                pipMockedResource.addMocks(MockedNodeResource);
+
+                pipMockedResource.addMocks(TruePathResource);
+                
+                pipMockedResource.registerStandardResources();
+            };
 
         }]
     );
+
+    // thisModule.run(
+    //     function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
+    //     MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
+    //     MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
+    //     MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
+    //     MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource,
+    //     MockedNodeResource, MockedEventsResource, MockedResource, pipTestDataService) {
+
+
+    //         MockedResource.setDataset(pipTestDataService.getDataset());
+
+    //         pipMockedResource.addMocks(MockedUsersResource);
+    //         pipMockedResource.addMocks(MockedCurrentUserResource);
+    //         pipMockedResource.addMocks(MockedUserSessionsResource);
+
+    //         // entry
+    //         pipMockedResource.addMocks(MockedSigninResource);
+    //         pipMockedResource.addMocks(MockedSignupResource);
+    //         pipMockedResource.addMocks(MockedSignoutResource);
+    //         pipMockedResource.addMocks(MockedSignupValidateResource);
+    //         pipMockedResource.addMocks(MockedVerifyEmailResource);
+    //         pipMockedResource.addMocks(MockedRecoverPasswordResource);
+    //         pipMockedResource.addMocks(MockedResetPasswordResource);
+    //         pipMockedResource.addMocks(MockedChangePasswordResource);
+
+    //         // ----------------
+    //         pipMockedResource.addMocks(MockedTipsResource);
+    //         pipMockedResource.addMocks(MockedAnnouncementsResource);
+    //         pipMockedResource.addMocks(MockedFeedbacksResource);
+    //         pipMockedResource.addMocks(MockedGuidesResource);
+    //         pipMockedResource.addMocks(MockedPartyResource);
+    //         pipMockedResource.addMocks(MockedPartySettingsResource);
+    //         pipMockedResource.addMocks(MockedServersActivitiesResource);
+            
+    //         // files and images
+    //         pipMockedResource.addMocks(MockedImageSetResource);
+    //         pipMockedResource.addMocks(MockedAvatarResource);
+    //         pipMockedResource.addMocks(MockedImagesResource);
+
+    //         pipMockedResource.addMocks(MockedEventsResource);
+    //         pipMockedResource.addMocks(MockedNodeResource);
+
+    //         pipMockedResource.addMocks(TruePathResource);
+            
+    //         pipMockedResource.registerStandardResources();
+
+    //     }
+    // );
 
 })();
 
@@ -445,7 +506,7 @@
         // Initializes all registered collectons
         function init() {
             var i;
-console.log('init this.dataSet',this.dataSet);
+
             for (i in this.dataSet) {
                 console.log('this.dataSet', this.dataSet[i]);
                 if (this.dataSet[i] && this.dataSet[i].isInit === false) {
@@ -1368,159 +1429,6 @@ console.log('init this.dataSet',this.dataSet);
 
 })();
  
-/**
- * @file Rest API enumerations service
- * @copyright Digital Living Software Corp. 2014-2016
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('PipResources.Error', []);
-
-    thisModule.factory('PipResourcesError', function () {
-
-        var Errors = {};
-        
-        Errors['1104'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1104,
-                name: 'Bad Request',
-                message: 'Email is already registered'
-            },
-            headers: {}
-        };
-        Errors['1106'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1106,
-                name: 'Bad Request',
-                message: 'User was not found'
-            },
-            headers: {}
-        };
-        Errors['1103'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1103,
-                name: 'Bad Request',
-                message: 'Invalid email verification code'
-            },
-            headers: {}
-        };
-        Errors['1108'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1108,
-                name: 'Bad Request',
-                message: 'Invalid password recovery code'
-            },
-            headers: {}
-        };
-        Errors['1700'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1700,
-                name: 'Bad Request',
-                message: 'Avatar doesn\'t exist'
-            },
-            headers: {}
-        };        
-
-        return Errors;
-    });
-    
-})();
-
-/**
- * @file pipImageResources service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [],
-            size = 0;
-
-        this.setImages = setImages;
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection,
-                getImage: getImage
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
-            }
-
-            imagesMap = _.union(imagesMap, newImagesRes);
-            size = imagesMap.length;
-        }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
-            }
-
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
-
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
-            }
-
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }   
-
-        function getImage() {
-            var i = _.random(0, size - 1);
-
-            if (size > 0) {
-                return _.cloneDeep(imagesMap[i]);
-            } else {
-                return null;
-            }
-        }  
-
-    });
-
-})();
 /**
  * @file String resources for Areas pages
  * @copyright Digital Living Software Corp. 2014-2016
@@ -4740,4 +4648,157 @@ console.log('init this.dataSet',this.dataSet);
 })();
  
 
+/**
+ * @file Rest API enumerations service
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('PipResources.Error', []);
+
+    thisModule.factory('PipResourcesError', function () {
+
+        var Errors = {};
+        
+        Errors['1104'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1104,
+                name: 'Bad Request',
+                message: 'Email is already registered'
+            },
+            headers: {}
+        };
+        Errors['1106'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1106,
+                name: 'Bad Request',
+                message: 'User was not found'
+            },
+            headers: {}
+        };
+        Errors['1103'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1103,
+                name: 'Bad Request',
+                message: 'Invalid email verification code'
+            },
+            headers: {}
+        };
+        Errors['1108'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1108,
+                name: 'Bad Request',
+                message: 'Invalid password recovery code'
+            },
+            headers: {}
+        };
+        Errors['1700'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1700,
+                name: 'Bad Request',
+                message: 'Avatar doesn\'t exist'
+            },
+            headers: {}
+        };        
+
+        return Errors;
+    });
+    
+})();
+
+/**
+ * @file pipImageResources service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
 //# sourceMappingURL=pip-webui-test.js.map

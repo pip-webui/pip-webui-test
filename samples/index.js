@@ -17,7 +17,7 @@
     );
 
     thisModule.controller('AppController',
-        function ($scope, $rootScope, $state, $mdSidenav, $timeout, pipTranslate, $mdTheming, pipTheme, $mdMedia, pipAppBar) {
+        function ($scope, $rootScope, $state, $mdSidenav, $timeout, pipTranslate, $mdTheming, pipTheme, $mdMedia, pipAppBar, pipWebuiTest) {
 
 
             $scope.pages = [ 
@@ -53,6 +53,7 @@
             pipAppBar.showLanguage();
             pipAppBar.showTitleText('NAVIGATION_CONTROLS');
 
+            pipWebuiTest.runFakeServer('http://fakeserver.net'); // http://alpha.pipservices.net
         }
     );
 
