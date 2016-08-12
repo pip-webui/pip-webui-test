@@ -29,15 +29,12 @@
             // expected data { email: email, password: password, remember: remember}                 
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('signin whenPOST', method, url, data, headers, params);
-                    // todo:  может хранить имена этих коллекций в настройках??
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
                         usersCollection;
 
                     if (!userData || !userData['email']) {
-                        console.log('signin data', userData, userData.email, userData["email"]);
                         throw new Error('MockedSigninResource: login is not specified')
                     }
                     if (!users) {
@@ -75,7 +72,6 @@
             // expected data { name: name, email: email, password: password, language: language}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('signup whenPOST', data, headers, params);
                     var user, party,
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -114,8 +110,6 @@
                         created: user.created
                     });
 
-                    console.log('signup: add new user', user);
-
                     // set current user
                     child.dataset.setCurrentUser(user);
 
@@ -136,7 +130,6 @@
             // POST /api/signout
             // expected data {}
             $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('signout whenPOST', data, headers, params);
                 child.dataset.clearCurrentUser();
 
                 return [200, "OK", {}];
@@ -157,7 +150,6 @@
             // expected data {email: newValue}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('signup_validate whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -199,7 +191,6 @@
             // expected data {email: $scope.data.email, code: $scope.data.code}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('verify_email whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -250,7 +241,6 @@
             // expected data {email: $scope.data.email}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('recover_password whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -292,7 +282,6 @@
             // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('reset_password whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -339,7 +328,6 @@
             // todo: expected ??
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('change_password whenPOST', data, headers, params);
 
                     return [200, "OK", {}];
                 });             

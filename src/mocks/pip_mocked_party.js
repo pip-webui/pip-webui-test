@@ -23,7 +23,6 @@
             // GET /api/parties
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedPartyResource whenGET collection', method, url, data, headers, params);
                 var parties = child.dataset.get('PartiesTestCollection'),
                     partiesCollection;
                   
@@ -39,7 +38,6 @@
             // GET /api/parties/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenGET [party]', method, url, data, headers, params);
                     var party, 
                         idParams,
                         partyId,
@@ -57,7 +55,6 @@
                     }
 
                     party = parties.findById(partyId);
-                    console.log('MockedPartyResource whenGET party', party);
                     
                     return [200, party, {}];
                 });
@@ -65,14 +62,12 @@
             // POST /api/parties
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenPOST', method, url, data, headers, params);
                     var party, 
                         partyData = angular.fromJson(data),
                         parties = child.dataset.get('PartiesTestCollection'),
                         partiesCollection;
 
                     if (!partyData || !partyData['id']) {
-                        console.log('post party', partyData);
                         throw new Error('MockedPartyResource: party id is not specified')
                     }
 
@@ -100,7 +95,6 @@
             // PUT /api/parties/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenPUT', method, url, data, headers, params);
                     var party, 
                         partyData = angular.fromJson(data),
                         idParams,
@@ -120,7 +114,6 @@
 
                     party = parties.findById(partyId);
                     party = parties.update(partyId, partyData);
-                    console.log('MockedPartyResource whenPUT party', party);
                     
                     return [200, party, {}];
                 });   
@@ -128,7 +121,6 @@
             // DELETE /api/parties/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenDELETE', method, url, data, headers, params);
                     var party, 
                         partyData = angular.fromJson(data),
                         idParams,
@@ -153,9 +145,7 @@
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedPartyResource whenDELETE party', party);
                     parties.deleteById(party.id);
-                    console.log('parties collection', parties.getAll());
 
                     return [200, "OK", {}];
                 });                       
@@ -174,7 +164,6 @@
             // GET /api/parties/:party_id/settings
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/settings') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedPartySettingsResource whenGET collection', method, url, data, headers, params);
                 var settings = child.dataset.get('SettingsTestCollection'),
                     SettingsCollection, idParams, partyId,
                     setting;
@@ -206,14 +195,12 @@
             // POST /api/parties/:party_id/settings
             $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/settings') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartySettingsResource whenPOST', method, url, data, headers, params);
                     var setting, match = false,
                         settingsData = angular.fromJson(data) || {},
                         settings = child.dataset.get('SettingsTestCollection'),
                         SettingsCollection;
 
                     if (!settingsData || !settingsData['party_id']) {
-                        console.log('post settings', settingsData);
                         throw new Error('MockedPartySettingsResource: Settings party_id is not specified')
                     }
 

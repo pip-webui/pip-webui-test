@@ -93,9 +93,6 @@
                 return [200, {}, {}];
             });  
 
-var ex = new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'));
-var match = ex.test('http://fakeserver.net/api/parties/sjooujozxrkxe8bezq55zxv4/avatar?default_template=letter&bg=rgba(3,169,244,1)&fg=white&chr=4&timestamp=1470991105000&obj_id=sjooujozxrkxe8bezq55zxv4');
-console.log('avatar', match, ex);
             // GET for party /api/parties/:party_id/avatar? ...
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
                console.log('MockedAvatarResource whenGET party', data, headers);

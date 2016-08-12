@@ -42,7 +42,6 @@
             // GET object /api/parties/:party_id/files/:image_id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers) {
-                    console.log('MockedImagesResource whenGET object', data, headers);
 
                     var file = child.dataset.get('FilesTestCollection').getByIndex(0);
                     return [200, file, {}];
@@ -51,12 +50,8 @@
             // GET image /api/parties/:party_id/files/:image_id/content
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.regEsc('/content') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers) {
-                console.log('MockedImagesResource whenGET image', data, headers);
                     
                     var idParams = child.getUrlIdParams(url);
-
-                    console.log('MockedImagesResource GET image url', url);
-                    console.log('MockedImagesResource GET image idParams', idParams);
 
                     var file = child.dataset.get('FilesTestCollection').getByIndex(0) || {};
                     return [200, file.url, {}];

@@ -25,7 +25,6 @@
             // GET /api/feedbacks
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedFeedbacksResource whenGET collection', method, url, data, headers, params);
                 var feedback, 
                     feedbacks = child.dataset.get('FeedbacksTestCollection'),
                     feedbacksCollection;
@@ -42,14 +41,12 @@
             // POST /api/feedbacks
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenPOST', method, url, data, headers, params);
                     var feedback, 
                         feedbackData = angular.fromJson(data),
                         feedbacks= child.dataset.get('FeedbacksTestCollection'),
                         feedbacksCollection;
 
                     if (!feedbackData || !feedbackData['sender_id']) {
-                        console.log('post feedback', feedbackData);
                         throw new Error('MockedFeedbacksResource: feedback sender_id is not specified')
                     }
 
@@ -79,7 +76,6 @@
             // GET /api/feedbacks/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenGET feedback', method, url, data, headers, params);
                     var feedback, 
                         idParams,
                         feedbackId,
@@ -97,7 +93,6 @@
                     }
 
                     feedback = feedbacks.findById(feedbackId);
-                    console.log('MockedFeedbacksResource whenGET feedback', feedback);
                     
                     return [200, feedback, {}];
                 });
@@ -105,7 +100,6 @@
             // PUT /api/feedbacks/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenPUT', method, url, data, headers, params);
                     var feedback, 
                         feedbackData = angular.fromJson(data),
                         idParams,
@@ -125,7 +119,6 @@
 
                     feedback = feedbacks.findById(feedbackId);
                     feedback = feedbacks.update(feedbackId, feedbackData);
-                    console.log('MockedFeedbacksResource whenPUT feedback', feedback);
                     
                     return [200, feedback, {}];
                 });   
@@ -133,7 +126,6 @@
             // DELETE /api/feedbacks/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenDELETE', method, url, data, headers, params);
                     var feedback, 
                         feedbackData = angular.fromJson(data),
                         idParams,
@@ -158,9 +150,7 @@
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedFeedbacksResource whenDELETE feedback', feedback);
                     feedbacks.deleteById(feedback.id);
-                    console.log('feedbackscollection', feedbacks.getAll());
 
                     return [200, "OK", {}];
                 });     

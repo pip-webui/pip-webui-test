@@ -96,6 +96,7 @@
 
             child.register = function() {
                 $httpBackend.whenGET(/.*/).passThrough();           
+                $httpBackend.whenGET(/.*.svg/).passThrough();           
                 $httpBackend.whenJSONP(/.*/).passThrough();           
             }
             return child;

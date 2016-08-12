@@ -36,7 +36,6 @@
             var i;
 
             for (i in this.dataSet) {
-                console.log('this.dataSet', this.dataSet[i]);
                 if (this.dataSet[i] && this.dataSet[i].isInit === false) {
                     this.dataSet[i].init();
                 }

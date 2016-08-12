@@ -29,7 +29,6 @@
 
         // Add images collection
         function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
             if (!angular.isArray(newImagesRes)) {
                 new Error('pipImageResources setImages: first argument should be an object');
             }
@@ -40,7 +39,6 @@
 
         // Get images collection
         function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
             if (!!search && !angular.isString(search)) {
                 new Error('pipImageResources getImages: second argument should be a string');
             }

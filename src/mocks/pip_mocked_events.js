@@ -22,7 +22,6 @@
             // GET /api/events
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedEventsResource whenGET collection', method, url, data, headers, params);
                 var events = child.dataset.get('EventsTestCollection'),
                     eventsCollection;
                   
@@ -38,7 +37,7 @@
             // GET /api/events/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedEventsResource whenGET event', method, url, data, headers, params);
+                    ('MockedEventsResource whenGET event', method, url, data, headers, params);
                     var event, 
                         idParams,
                         eventId,
@@ -56,7 +55,6 @@
                     }
 
                     event = events.findById(eventId);
-                    console.log('MockedEventsResource whenGET event', event);
                     
                     return [200, event, {}];
                 });

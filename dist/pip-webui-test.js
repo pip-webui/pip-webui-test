@@ -442,10 +442,9 @@
                 tcUsers = dataSet.get('UsersTestCollection');
 
                 // create default user name
-                tcUsers.create({name: 'Sample User', email: 'sample_user@sample.piplife.com'});
+                tcUsers.create({name: 'Sample User', email: 'test@sample.net', id: 'q1w2e3r4t5y6u7i8o9p0a1s2'});
                 users = tcUsers.getAll();
-                
-                console.log('users', users);
+
                 // generate party and settings for each user
                 for (i = 0; i < users.length; i ++) {
                     var party = pipPartyDataGenerator.initObject({
@@ -515,7 +514,6 @@
             var i;
 
             for (i in this.dataSet) {
-                console.log('this.dataSet', this.dataSet[i]);
                 if (this.dataSet[i] && this.dataSet[i].isInit === false) {
                     this.dataSet[i].init();
                 }
@@ -1017,7 +1015,7 @@
  * @copyright Digital Living Software Corp. 2014-2015
  */
 
-(function (_, chance) {
+(function () {
     'use strict';
 
     var thisModule = angular.module('pipBasicGeneratorServices', []);
@@ -1134,7 +1132,7 @@
 
     });
 
-})(window._, window.chance);
+})();
 
 /**
  * @file pipNodeDataGenerator
@@ -1553,7 +1551,6 @@
 
         // Add images collection
         function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
             if (!angular.isArray(newImagesRes)) {
                 new Error('pipImageResources setImages: first argument should be an object');
             }
@@ -1564,7 +1561,6 @@
 
         // Get images collection
         function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
             if (!!search && !angular.isString(search)) {
                 new Error('pipImageResources getImages: second argument should be a string');
             }
@@ -3240,9 +3236,6 @@
                 return [200, {}, {}];
             });  
 
-var ex = new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'));
-var match = ex.test('http://fakeserver.net/api/parties/sjooujozxrkxe8bezq55zxv4/avatar?default_template=letter&bg=rgba(3,169,244,1)&fg=white&chr=4&timestamp=1470991105000&obj_id=sjooujozxrkxe8bezq55zxv4');
-console.log('avatar', match, ex);
             // GET for party /api/parties/:party_id/avatar? ...
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
                console.log('MockedAvatarResource whenGET party', data, headers);
@@ -3322,15 +3315,12 @@ console.log('avatar', match, ex);
             // expected data { email: email, password: password, remember: remember}                 
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('signin whenPOST', method, url, data, headers, params);
-                    // todo:  может хранить имена этих коллекций в настройках??
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
                         usersCollection;
 
                     if (!userData || !userData['email']) {
-                        console.log('signin data', userData, userData.email, userData["email"]);
                         throw new Error('MockedSigninResource: login is not specified')
                     }
                     if (!users) {
@@ -3368,7 +3358,6 @@ console.log('avatar', match, ex);
             // expected data { name: name, email: email, password: password, language: language}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('signup whenPOST', data, headers, params);
                     var user, party,
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -3407,8 +3396,6 @@ console.log('avatar', match, ex);
                         created: user.created
                     });
 
-                    console.log('signup: add new user', user);
-
                     // set current user
                     child.dataset.setCurrentUser(user);
 
@@ -3429,7 +3416,6 @@ console.log('avatar', match, ex);
             // POST /api/signout
             // expected data {}
             $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
-                console.log('signout whenPOST', data, headers, params);
                 child.dataset.clearCurrentUser();
 
                 return [200, "OK", {}];
@@ -3450,7 +3436,6 @@ console.log('avatar', match, ex);
             // expected data {email: newValue}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('signup_validate whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -3492,7 +3477,6 @@ console.log('avatar', match, ex);
             // expected data {email: $scope.data.email, code: $scope.data.code}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('verify_email whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -3543,7 +3527,6 @@ console.log('avatar', match, ex);
             // expected data {email: $scope.data.email}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('recover_password whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -3585,7 +3568,6 @@ console.log('avatar', match, ex);
             // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('reset_password whenPOST', data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
@@ -3632,7 +3614,6 @@ console.log('avatar', match, ex);
             // todo: expected ??
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('change_password whenPOST', data, headers, params);
 
                     return [200, "OK", {}];
                 });             
@@ -3668,7 +3649,6 @@ console.log('avatar', match, ex);
             // GET /api/events
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedEventsResource whenGET collection', method, url, data, headers, params);
                 var events = child.dataset.get('EventsTestCollection'),
                     eventsCollection;
                   
@@ -3684,7 +3664,7 @@ console.log('avatar', match, ex);
             // GET /api/events/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedEventsResource whenGET event', method, url, data, headers, params);
+                    ('MockedEventsResource whenGET event', method, url, data, headers, params);
                     var event, 
                         idParams,
                         eventId,
@@ -3702,7 +3682,6 @@ console.log('avatar', match, ex);
                     }
 
                     event = events.findById(eventId);
-                    console.log('MockedEventsResource whenGET event', event);
                     
                     return [200, event, {}];
                 });
@@ -3740,7 +3719,6 @@ console.log('avatar', match, ex);
             // GET /api/feedbacks
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedFeedbacksResource whenGET collection', method, url, data, headers, params);
                 var feedback, 
                     feedbacks = child.dataset.get('FeedbacksTestCollection'),
                     feedbacksCollection;
@@ -3757,14 +3735,12 @@ console.log('avatar', match, ex);
             // POST /api/feedbacks
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenPOST', method, url, data, headers, params);
                     var feedback, 
                         feedbackData = angular.fromJson(data),
                         feedbacks= child.dataset.get('FeedbacksTestCollection'),
                         feedbacksCollection;
 
                     if (!feedbackData || !feedbackData['sender_id']) {
-                        console.log('post feedback', feedbackData);
                         throw new Error('MockedFeedbacksResource: feedback sender_id is not specified')
                     }
 
@@ -3794,7 +3770,6 @@ console.log('avatar', match, ex);
             // GET /api/feedbacks/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenGET feedback', method, url, data, headers, params);
                     var feedback, 
                         idParams,
                         feedbackId,
@@ -3812,7 +3787,6 @@ console.log('avatar', match, ex);
                     }
 
                     feedback = feedbacks.findById(feedbackId);
-                    console.log('MockedFeedbacksResource whenGET feedback', feedback);
                     
                     return [200, feedback, {}];
                 });
@@ -3820,7 +3794,6 @@ console.log('avatar', match, ex);
             // PUT /api/feedbacks/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenPUT', method, url, data, headers, params);
                     var feedback, 
                         feedbackData = angular.fromJson(data),
                         idParams,
@@ -3840,7 +3813,6 @@ console.log('avatar', match, ex);
 
                     feedback = feedbacks.findById(feedbackId);
                     feedback = feedbacks.update(feedbackId, feedbackData);
-                    console.log('MockedFeedbacksResource whenPUT feedback', feedback);
                     
                     return [200, feedback, {}];
                 });   
@@ -3848,7 +3820,6 @@ console.log('avatar', match, ex);
             // DELETE /api/feedbacks/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedFeedbacksResource whenDELETE', method, url, data, headers, params);
                     var feedback, 
                         feedbackData = angular.fromJson(data),
                         idParams,
@@ -3873,9 +3844,7 @@ console.log('avatar', match, ex);
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedFeedbacksResource whenDELETE feedback', feedback);
                     feedbacks.deleteById(feedback.id);
-                    console.log('feedbackscollection', feedbacks.getAll());
 
                     return [200, "OK", {}];
                 });     
@@ -3957,7 +3926,6 @@ console.log('avatar', match, ex);
             // GET object /api/parties/:party_id/files/:image_id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers) {
-                    console.log('MockedImagesResource whenGET object', data, headers);
 
                     var file = child.dataset.get('FilesTestCollection').getByIndex(0);
                     return [200, file, {}];
@@ -3966,12 +3934,8 @@ console.log('avatar', match, ex);
             // GET image /api/parties/:party_id/files/:image_id/content
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/files/') + child.IdRegExp + child.regEsc('/content') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers) {
-                console.log('MockedImagesResource whenGET image', data, headers);
                     
                     var idParams = child.getUrlIdParams(url);
-
-                    console.log('MockedImagesResource GET image url', url);
-                    console.log('MockedImagesResource GET image idParams', idParams);
 
                     var file = child.dataset.get('FilesTestCollection').getByIndex(0) || {};
                     return [200, file.url, {}];
@@ -4050,7 +4014,6 @@ console.log('avatar', match, ex);
             // GET /api/parties
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedNodeResource whenGET collection', method, url, data, headers, params);
                 var nodes = child.dataset.get('NodesTestCollection'),
                     nodesCollection;
                   
@@ -4066,7 +4029,6 @@ console.log('avatar', match, ex);
             // GET /api/nodes/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenGET node', method, url, data, headers, params);
                     var node, 
                         idParams,
                         nodeId,
@@ -4084,7 +4046,6 @@ console.log('avatar', match, ex);
                     }
 
                     node = nodes.findById(nodeId);
-                    console.log('MockedNodeResource whenGET node', node);
                     
                     return [200, node, {}];
                 });
@@ -4092,7 +4053,6 @@ console.log('avatar', match, ex);
             // GET /api/nodes/:id/events
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp+ child.regEsc('/events') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenGET events for node', method, url, data, headers, params);
                     var events,
                         nodeId, 
                         idParams,
@@ -4110,7 +4070,6 @@ console.log('avatar', match, ex);
                     eventsCollection = events.getAll();
 
                     nodeEventsCollection = _.filter(eventsCollection, function (item) {
-                        console.log('compaere', item.node_id == nodeId);
                         return item.node_id == nodeId;
                     });
 
@@ -4120,7 +4079,6 @@ console.log('avatar', match, ex);
             // PUT /api/nodes/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenPUT', method, url, data, headers, params);
                     var node, 
                         nodeData = angular.fromJson(data),
                         idParams,
@@ -4140,7 +4098,6 @@ console.log('avatar', match, ex);
 
                     node = nodes.findById(nodeId);
                     node = nodes.update(nodeId, nodeData);
-                    console.log('MockedNodeResource whenPUT node', node);
                     
                     return [200, node, {}];
                 });   
@@ -4176,7 +4133,6 @@ console.log('avatar', match, ex);
             // GET /api/parties
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedPartyResource whenGET collection', method, url, data, headers, params);
                 var parties = child.dataset.get('PartiesTestCollection'),
                     partiesCollection;
                   
@@ -4192,7 +4148,6 @@ console.log('avatar', match, ex);
             // GET /api/parties/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenGET [party]', method, url, data, headers, params);
                     var party, 
                         idParams,
                         partyId,
@@ -4210,7 +4165,6 @@ console.log('avatar', match, ex);
                     }
 
                     party = parties.findById(partyId);
-                    console.log('MockedPartyResource whenGET party', party);
                     
                     return [200, party, {}];
                 });
@@ -4218,14 +4172,12 @@ console.log('avatar', match, ex);
             // POST /api/parties
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenPOST', method, url, data, headers, params);
                     var party, 
                         partyData = angular.fromJson(data),
                         parties = child.dataset.get('PartiesTestCollection'),
                         partiesCollection;
 
                     if (!partyData || !partyData['id']) {
-                        console.log('post party', partyData);
                         throw new Error('MockedPartyResource: party id is not specified')
                     }
 
@@ -4253,7 +4205,6 @@ console.log('avatar', match, ex);
             // PUT /api/parties/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenPUT', method, url, data, headers, params);
                     var party, 
                         partyData = angular.fromJson(data),
                         idParams,
@@ -4273,7 +4224,6 @@ console.log('avatar', match, ex);
 
                     party = parties.findById(partyId);
                     party = parties.update(partyId, partyData);
-                    console.log('MockedPartyResource whenPUT party', party);
                     
                     return [200, party, {}];
                 });   
@@ -4281,7 +4231,6 @@ console.log('avatar', match, ex);
             // DELETE /api/parties/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartyResource whenDELETE', method, url, data, headers, params);
                     var party, 
                         partyData = angular.fromJson(data),
                         idParams,
@@ -4306,9 +4255,7 @@ console.log('avatar', match, ex);
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedPartyResource whenDELETE party', party);
                     parties.deleteById(party.id);
-                    console.log('parties collection', parties.getAll());
 
                     return [200, "OK", {}];
                 });                       
@@ -4327,7 +4274,6 @@ console.log('avatar', match, ex);
             // GET /api/parties/:party_id/settings
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/settings') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedPartySettingsResource whenGET collection', method, url, data, headers, params);
                 var settings = child.dataset.get('SettingsTestCollection'),
                     SettingsCollection, idParams, partyId,
                     setting;
@@ -4359,14 +4305,12 @@ console.log('avatar', match, ex);
             // POST /api/parties/:party_id/settings
             $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/settings') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedPartySettingsResource whenPOST', method, url, data, headers, params);
                     var setting, match = false,
                         settingsData = angular.fromJson(data) || {},
                         settings = child.dataset.get('SettingsTestCollection'),
                         SettingsCollection;
 
                     if (!settingsData || !settingsData['party_id']) {
-                        console.log('post settings', settingsData);
                         throw new Error('MockedPartySettingsResource: Settings party_id is not specified')
                     }
 
@@ -4497,6 +4441,7 @@ console.log('avatar', match, ex);
 
             child.register = function() {
                 $httpBackend.whenGET(/.*/).passThrough();           
+                $httpBackend.whenGET(/.*.svg/).passThrough();           
                 $httpBackend.whenJSONP(/.*/).passThrough();           
             }
             return child;
@@ -4590,7 +4535,6 @@ console.log('avatar', match, ex);
             // GET /api/users/current
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedCurrentUserResource whenGET current', method, url, data, headers, params);
                     var user;
 
                     user = child.dataset.getCurrentUser();
@@ -4619,7 +4563,6 @@ console.log('avatar', match, ex);
             // GET /api/users
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenGET collection', method, url, data, headers, params);
                 var user, 
                     users = child.dataset.get('UsersTestCollection'),
                     usersCollection;
@@ -4636,14 +4579,12 @@ console.log('avatar', match, ex);
             // POST /api/users
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenPOST', method, url, data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
                         usersCollection;
 
                     if (!userData || !userData['email']) {
-                        console.log('post user', userData);
                         throw new Error('MockedUsersResource: user email is not specified')
                     }
 
@@ -4671,7 +4612,6 @@ console.log('avatar', match, ex);
             // GET /api/users/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenGET user', method, url, data, headers, params);
                     var user, 
                         idParams,
                         userId,
@@ -4689,7 +4629,6 @@ console.log('avatar', match, ex);
                     }
 
                     user = users.findById(userId);
-                    console.log('MockedUsersResource whenGET user', user);
                     
                     return [200, user, {}];
                 });
@@ -4697,7 +4636,6 @@ console.log('avatar', match, ex);
             // PUT /api/users/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenPUT', method, url, data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         idParams,
@@ -4717,7 +4655,6 @@ console.log('avatar', match, ex);
 
                     user = users.findById(userId);
                     user = users.update(userId, userData);
-                    console.log('MockedUsersResource whenPUT user', user);
                     
                     return [200, user, {}];
                 });   
@@ -4725,7 +4662,6 @@ console.log('avatar', match, ex);
             // DELETE /api/users/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenDELETE', method, url, data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         idParams,
@@ -4750,9 +4686,7 @@ console.log('avatar', match, ex);
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedUsersResource whenDELETE user', user);
                     users.deleteById(user.id);
-                    console.log('users collection', users.getAll());
 
                     return [200, "OK", {}];
                 });                       
@@ -4771,7 +4705,6 @@ console.log('avatar', match, ex);
             // GET /api/users/:party_id/sessions
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions')))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUserSessionsResource whenGET', method, url, data, headers, params);
                     var user, 
                         idParams,
                         userId,
@@ -4795,15 +4728,12 @@ console.log('avatar', match, ex);
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedUserSessionsResource whenGET', user.sessions);
-
                     return [200, user.sessions, {}];
                 });
 
             // DELETE  /api/users/:party_id/sessions/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUserSessionsResource whenDELETE', method, url, data, headers, params);
                     var user, i, match = false,
                         idParams,
                         userId, sessionId,
@@ -4836,8 +4766,6 @@ console.log('avatar', match, ex);
                         }
                     }
                     user = users.update(userId, users);
-
-                    console.log('MockedUserSessionsResource whenDELETE', user.sessions);
 
                     return [200, match ? "OK" : null, {}];
                 });      

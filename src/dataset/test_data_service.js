@@ -81,10 +81,9 @@
                 tcUsers = dataSet.get('UsersTestCollection');
 
                 // create default user name
-                tcUsers.create({name: 'Sample User', email: 'sample_user@sample.piplife.com'});
+                tcUsers.create({name: 'Sample User', email: 'test@sample.net', id: 'q1w2e3r4t5y6u7i8o9p0a1s2'});
                 users = tcUsers.getAll();
-                
-                console.log('users', users);
+
                 // generate party and settings for each user
                 for (i = 0; i < users.length; i ++) {
                     var party = pipPartyDataGenerator.initObject({

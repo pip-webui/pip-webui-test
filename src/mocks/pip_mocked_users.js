@@ -29,7 +29,6 @@
             // GET /api/users/current
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedCurrentUserResource whenGET current', method, url, data, headers, params);
                     var user;
 
                     user = child.dataset.getCurrentUser();
@@ -58,7 +57,6 @@
             // GET /api/users
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedUsersResource whenGET collection', method, url, data, headers, params);
                 var user, 
                     users = child.dataset.get('UsersTestCollection'),
                     usersCollection;
@@ -75,14 +73,12 @@
             // POST /api/users
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenPOST', method, url, data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         users = child.dataset.get('UsersTestCollection'),
                         usersCollection;
 
                     if (!userData || !userData['email']) {
-                        console.log('post user', userData);
                         throw new Error('MockedUsersResource: user email is not specified')
                     }
 
@@ -110,7 +106,6 @@
             // GET /api/users/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenGET user', method, url, data, headers, params);
                     var user, 
                         idParams,
                         userId,
@@ -128,7 +123,6 @@
                     }
 
                     user = users.findById(userId);
-                    console.log('MockedUsersResource whenGET user', user);
                     
                     return [200, user, {}];
                 });
@@ -136,7 +130,6 @@
             // PUT /api/users/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenPUT', method, url, data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         idParams,
@@ -156,7 +149,6 @@
 
                     user = users.findById(userId);
                     user = users.update(userId, userData);
-                    console.log('MockedUsersResource whenPUT user', user);
                     
                     return [200, user, {}];
                 });   
@@ -164,7 +156,6 @@
             // DELETE /api/users/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUsersResource whenDELETE', method, url, data, headers, params);
                     var user, 
                         userData = angular.fromJson(data),
                         idParams,
@@ -189,9 +180,7 @@
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedUsersResource whenDELETE user', user);
                     users.deleteById(user.id);
-                    console.log('users collection', users.getAll());
 
                     return [200, "OK", {}];
                 });                       
@@ -210,7 +199,6 @@
             // GET /api/users/:party_id/sessions
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions')))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUserSessionsResource whenGET', method, url, data, headers, params);
                     var user, 
                         idParams,
                         userId,
@@ -234,15 +222,12 @@
                         return [error.StatusCode, error.request, error.headers];
                     }
 
-                    console.log('MockedUserSessionsResource whenGET', user.sessions);
-
                     return [200, user.sessions, {}];
                 });
 
             // DELETE  /api/users/:party_id/sessions/:id
             $httpBackend.whenDELETE(new RegExp(child.regEsc(child.fakeUrl + '/api/users/') + child.IdRegExp + child.regEsc('/sessions/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedUserSessionsResource whenDELETE', method, url, data, headers, params);
                     var user, i, match = false,
                         idParams,
                         userId, sessionId,
@@ -275,8 +260,6 @@
                         }
                     }
                     user = users.update(userId, users);
-
-                    console.log('MockedUserSessionsResource whenDELETE', user.sessions);
 
                     return [200, match ? "OK" : null, {}];
                 });      

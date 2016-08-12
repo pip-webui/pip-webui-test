@@ -23,7 +23,6 @@
             // GET /api/parties
             $httpBackend.whenGET(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
-                console.log('MockedNodeResource whenGET collection', method, url, data, headers, params);
                 var nodes = child.dataset.get('NodesTestCollection'),
                     nodesCollection;
                   
@@ -39,7 +38,6 @@
             // GET /api/nodes/:id
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenGET node', method, url, data, headers, params);
                     var node, 
                         idParams,
                         nodeId,
@@ -57,7 +55,6 @@
                     }
 
                     node = nodes.findById(nodeId);
-                    console.log('MockedNodeResource whenGET node', node);
                     
                     return [200, node, {}];
                 });
@@ -65,7 +62,6 @@
             // GET /api/nodes/:id/events
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp+ child.regEsc('/events') + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenGET events for node', method, url, data, headers, params);
                     var events,
                         nodeId, 
                         idParams,
@@ -83,7 +79,6 @@
                     eventsCollection = events.getAll();
 
                     nodeEventsCollection = _.filter(eventsCollection, function (item) {
-                        console.log('compaere', item.node_id == nodeId);
                         return item.node_id == nodeId;
                     });
 
@@ -93,7 +88,6 @@
             // PUT /api/nodes/:id
             $httpBackend.whenPUT(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.EndStringRegExp))
                 .respond(function(method, url, data, headers, params) {
-                    console.log('MockedNodeResource whenPUT', method, url, data, headers, params);
                     var node, 
                         nodeData = angular.fromJson(data),
                         idParams,
@@ -113,7 +107,6 @@
 
                     node = nodes.findById(nodeId);
                     node = nodes.update(nodeId, nodeData);
-                    console.log('MockedNodeResource whenPUT node', node);
                     
                     return [200, node, {}];
                 });   
