@@ -27,8 +27,8 @@
                         loc_pos: {
                             type: 'Point',
                             coordinates: [
-                                chance.floating({min: -120, max: 120}),
-                                chance.floating({min: -120, max: 120})
+                                chance.floating({min: 32, max: 40}),
+                                chance.floating({min: -110, max: -90})
                             ]
                         },
                         join: child.defaultJoin,

@@ -30,7 +30,7 @@
                         type: type,
                         location_points: {
                             type: 'Point',
-                            coordinates: [ chance.floating({min: -120, max: 120}), chance.floating({min: -120, max: 120}) ],
+                            coordinates: [ chance.floating({min: 32, max: 42}), chance.floating({min: -121, max: -70}) ],
                             fill: getNodeColor(type)
                         },
                     };

@@ -37,6 +37,7 @@
                     event = {
                         id: pipBasicGeneratorServices.getObjectId(),
                         node_id: getNodeId(node),
+                        node_name: getNodeName(node),
                         description: getDesciption(temperature, radiation_level),
                         temperature: temperature,
                         rad_level: radiation_level,
@@ -59,6 +60,19 @@
 
                 return id;
             };     
+
+
+            function getNodeName(node) {
+                var name;
+
+                if (node && node.name) {
+                    name = node.name;
+                } else {
+                    name =  chance.name();
+                }
+
+                return name;
+            };   
 
             function getIcon(temperature, radiation_level) {
                 var type = pipNodeDataGenerator.getNodeType(temperature, radiation_level);
