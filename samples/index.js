@@ -11,7 +11,7 @@
             'ngMaterial', 'wu.masonry', 'LocalStorageModule', 'angularFileUpload', 'ngAnimate',
             'pipLayout', 'pipCore', 'pipRest.State', 'pipNav',
             
-            'pipWebuiTest',
+            'pipWebuiTests',
             'appTests.Mocks', 'appTests.GenerateUsers', 'appTests.GASMocks'
         ]
     );

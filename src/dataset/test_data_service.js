@@ -53,6 +53,7 @@
 
                 // create users collection
                 tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);
+
                 dataSet.add(tcUsers);
 
                 // create feedback collection
@@ -77,7 +78,13 @@
                 // init collection
                 dataSet.init();
 
-                users = dataSet.get('UsersTestCollection').getAll();
+                tcUsers = dataSet.get('UsersTestCollection');
+
+                // create default user name
+                tcUsers.create({name: 'Sample User', email: 'sample_user@sample.piplife.com'});
+                users = tcUsers.getAll();
+                
+                console.log('users', users);
                 // generate party and settings for each user
                 for (i = 0; i < users.length; i ++) {
                     var party = pipPartyDataGenerator.initObject({

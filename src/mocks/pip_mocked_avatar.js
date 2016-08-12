@@ -103,6 +103,27 @@ console.log('avatar', match, ex);
                  return [200, {}, {}];
             });
 
+            // GET for party /api/parties/:party_id/avatar? ...
+            $httpBackend.expectGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
+               console.log('MockedAvatarResource expectGET party', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // GET for party /api/parties/:party_id/avatar? ...
+            $httpBackend.expect('GET', new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
+               console.log('MockedAvatarResource expect party', data, headers);
+
+                 return [200, {}, {}];
+            });
+
+            // GET for party /api/parties/:party_id/avatar? ...
+            $httpBackend.when('', new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
+               console.log('MockedAvatarResource when party', data, headers);
+
+                 return [200, {}, {}];
+            });
+
             // PUT for party /api/parties/:party_id/avatar?name= ...
             $httpBackend.whenPOST(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?name='))).respond(function(method, url, data, headers) {
                 console.log('MockedAvatarResource whenPUT party', data, headers);

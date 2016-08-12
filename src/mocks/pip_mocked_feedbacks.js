@@ -48,9 +48,9 @@
                         feedbacks= child.dataset.get('FeedbacksTestCollection'),
                         feedbacksCollection;
 
-                    if (!feedbackData || !feedbackData['id']) {
+                    if (!feedbackData || !feedbackData['sender_id']) {
                         console.log('post feedback', feedbackData);
-                        throw new Error('MockedFeedbacksResource: feedback id is not specified')
+                        throw new Error('MockedFeedbacksResource: feedback sender_id is not specified')
                     }
 
                     if (!feedbacks) {
@@ -58,9 +58,11 @@
                     }
 
                     feedbacksCollection = feedbacks.getAll();
-                    feedback = _.find(feedbacksCollection, function(item) {
-                        return item.id == feedbackData.id;
-                    });
+                    if (feedbackData.id) {
+                        feedback = _.find(feedbacksCollection, function(item) {
+                            return item.id == feedbackData.id;
+                        });
+                    }
 
                     if (feedback && feedback.id) {
                         var error = child.getError('1104'); //todo error code
