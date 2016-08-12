@@ -160,416 +160,6 @@
 })();
 
 /**
- * @file pipTestCollection
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipTestCollection', []);
-
-    // Collection of test data stored in test dataset
-    thisModule.factory('TestCollection', ['$log', function ($log) {
-
-        // var refs;
-
-        // Define the constructor function.
-        return function (generator, name, size, refs) {
-            if (!generator) {
-                throw new Error('TestCollection: generator is required');
-            }
-
-            this.generator = generator;
-            this.size = size ? size : 0;
-
-
-            this.refs = getRefs(generator, refs);
-
-            this.name = getName(generator, name);
-            this.collection = [];
-            this.isInit = false;
-
-            this.getGeneratorName = getGeneratorName;
-            this.getSize = getSize;         
-
-            this.init = init;         
-            this.getAll = getAll;         
-            this.getByIndex = getByIndex;         
-            this.findById = findById;         
-            this.create = create;         
-            this.update = update;         
-            this.deleteById = deleteById;         
-            this.deleteByIndex = deleteByIndex; 
-
-            return this;             
-        }
-            
-        function getGeneratorName() {
-                return this.generator.name;
-            }
-
-        function getSize() {
-                return this.collection.length;
-            }    
-
-        // public init(collection: any[]): void;
-        function init(collection) {
-            if (collection && angular.isArray(collection)) {
-                this.collection = _.cloneDeep(collection);
-                this.size = collection.length;
-
-                this.isInit = true;
-
-                return;
-            }
-
-            if (this.size === 0) { 
-                this.collection = [];
-
-                return
-            } 
-
-            this.collection = this.generator.newObjectList(this.size, this.refs);
-            this.isInit = true;
-        }
-    
-        // public getAll(): any[];
-        function getAll() {
-            return _.cloneDeep(this.collection);
-        }     
-
-        // public get(index: number): any[];
-        function getByIndex(index) {
-            var result = null;
-
-            if (index === undefined || index === null || index < 0 || index > this.collection.length - 1) {
-                return result;
-            }
-
-            result = _.cloneDeep(this.collection[index]);
-
-            return result;
-        }    
-
-        // public findById(id: string): any;
-        function findById(id, field) {
-            var result = null,
-                fieldId = field ? field : 'id';
-
-            if (id === undefined || id === null) {
-                return result;
-            }
-
-            result = _.find(this.collection, function(item) {
-                return item[fieldId] == id;
-            }); 
-            
-            return result || null;
-        }    
-
-        // public create(obj: any): any;
-        function create(obj) {
-            var result = this.generator.initObject(obj);
-
-            if (angular.isObject(result)) {
-                this.collection.push(result);
-            }
-
-            return result;
-        }    
-
-        // public update(id: string, obj: any): any;
-        function update(id, obj, idField) {
-            var result;
-
-            if (id === undefined || id === null || !angular.isObject(obj)) {
-                // todo: trow error?
-                return null;
-            }
-
-            result = this.findById(id, idField);
-
-            if (angular.isObject(result)) {
-                result = _.assign(result, obj);
-                // todo: replace into collection ???
-            } else {
-                result = null;
-            }
-
-            return result;
-        }    
-
-        // public delete(id: string): any;
-        function deleteById(id) {
-            var i, match = false;
-
-            for (i = 0; i < this.collection.length; i++) {
-                if (this.collection[i].id === id) {
-                    match = true;
-                    this.collection.splice(i, 1);
-                    break;
-                }
-            }
-
-            return match;            
-        }    
-
-        // public delete(id: string): any;
-        function deleteByIndex(index) {
-            if (index === undefined || index === null || index < 0 || index > this.collection.length - 1) {
-                return false;
-            }
-
-            this.collection.splice(index, 1);
-
-            return true;            
-        }
-
-        // ----------------------------------
-
-        function getRefsCopy(arr) {
-            var result = {};
-
-            for (var key in arr) {
-                result[key] = _.cloneDeep(arr[key]);
-            }
-
-            return result;
-        }
-
-        function getRefs(generator, refs) {
-            if (refs && angular.isObject(refs)) {
-                return getRefsCopy(refs);
-            } else if (generator.refs && angular.isObject(generator.refs)) {
-                return getRefsCopy(generator.refs);
-            } else {
-                return {}; 
-            }
-        }
-
-        function getName(generator, name) {
-            if (name) {
-                return name;
-            } else {
-                return generator.name;
-            } 
-        }
-
-    }]);
-
-})();
-/**
- * @file pipTestDataService
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipTestDataService', []);
-
-    thisModule.factory('pipTestDataService', 
-        ['pipTestDataSet', 'pipUserDataGenerator', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', 'pipPartyDataGenerator', 'TestCollection', 'pipNodeDataGenerator', 'pipEventDataGenerator', 'pipSettingsDataGenerator', 'pipFeedbackDataGenerator', function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
-                 pipPartyDataGenerator, TestCollection, pipNodeDataGenerator,
-                 pipEventDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
-
-            // Angular service that holds singleton test dataset that is shared across all
-            var dataSet = new pipTestDataSet();
-
-            return {
-                
-                getDataset: getDataset,
-                createTestDataset: createTestDataset
-
-            };
-
-            // Get singleton dataset
-            function getDataset() {
-
-                return dataSet;
-
-            }
-
-            // Create test dataset
-            function createTestDataset() {
-                var i, users, parties = [], settings =[],
-                    tcPartyAccess, tcSessions, tcUsers, tcParties, tcSettings, tcFeedback,
-                    tcNodes, tcEvents, usersRefs = new Array(), eventsRefs = new Array();
-
-                // create collection without references
-                tcPartyAccess = new TestCollection(pipPartyAccessDataGenerator, 'PartyAccessTestCollection', 20);
-                tcSessions = new TestCollection(pipSessionsDataGenerator, 'SessionsTestCollection', 20);
-                // init collection
-                tcPartyAccess.init();
-                tcSessions.init();
-                // add collection to dataset
-                dataSet.add(tcPartyAccess);
-                dataSet.add(tcSessions);
-                // form references for users collection
-                usersRefs['PartyAccess'] = tcPartyAccess.getAll();
-                usersRefs['Sessions'] = tcSessions.getAll();
-
-                // create users collection
-                tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);
-                dataSet.add(tcUsers);
-
-                // create feedback collection
-                tcFeedback = new TestCollection(pipFeedbackDataGenerator, 'FeedbacksTestCollection', 20);
-                dataSet.add(tcFeedback);
-
-                // create collection without references
-                tcNodes = new TestCollection(pipNodeDataGenerator, 'NodesTestCollection', 20);
-                // init collection
-                tcNodes.init();
-
-                // add collection to dataset
-                dataSet.add(tcNodes);
-
-                // form references for users collection
-                eventsRefs['Nodes'] = _.cloneDeep(tcNodes.getAll());
-
-                // create events collection
-                tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 100, eventsRefs);
-                dataSet.add(tcEvents);
-
-                // init collection
-                dataSet.init();
-
-                users = dataSet.get('UsersTestCollection').getAll();
-                // generate party and settings for each user
-                for (i = 0; i < users.length; i ++) {
-                    var party = pipPartyDataGenerator.initObject({
-                        name: users[i].name,
-                        email: users[i].email,
-                        id: users[i].id,
-                        updated: users[i].updated,
-                        created: users[i].created
-                    });
-                    parties.push(party);
-                    var setting = {
-                        party_id: party.id,
-                        creator_id: party.id
-                    };
-                    settings.push(setting);
-                }
-
-                tcParties = new TestCollection(pipPartyDataGenerator, 'PartiesTestCollection', parties.length);
-                tcParties.init(parties);
-                dataSet.add(tcParties);
-
-                tcSettings = new TestCollection(pipSettingsDataGenerator, 'SettingsTestCollection', settings.length);
-                tcSettings.init(settings);
-                dataSet.add(tcSettings);
-
-                return dataSet;
-            }
-        }]
-    );
-
-})();
-/**
- * @file pipTestDataSet
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipTestDataSet', []);
-
-    // Test dataset, that can be used to hold state of rest api
-    thisModule.factory('pipTestDataSet', ['$log', function ($log) {
-        
-        // Define the constructor function.
-        return function () {
-
-            this.currentUser = null;
-            this.currentParty = null;
-            this.dataSet = {};
-
-            this.init = init;         
-            this.add = add;         
-            this.get = get;         
-
-            this.getCurrentUser = getCurrentUser;
-            this.setCurrentUser = setCurrentUser;
-            this.clearCurrentUser = clearCurrentUser;
-            this.setCurrentParty = setCurrentParty;
-            this.getCurrentParty = getCurrentParty;
-
-            return this;        
-        }
-
-        // Initializes all registered collectons
-        function init() {
-            var i;
-
-            for (i in this.dataSet) {
-                console.log('this.dataSet', this.dataSet[i]);
-                if (this.dataSet[i] && this.dataSet[i].isInit === false) {
-                    this.dataSet[i].init();
-                }
-            }    
-        }
-   
-        // Registers a new collection
-        function add(collection) {
-            var name;
-            
-            if (collection && angular.isObject(collection) && collection.name) {
-                name = collection.name;
-                this.dataSet[name] = _.cloneDeep(collection);
-            } else {
-                throw new Error('pipTestDataSet: collection is required');
-            }
-        }
-
-        // Gets registered collection by its name
-        function get(name) {
-            if (name && angular.isString(name)) {
-                return this.dataSet[name];
-            } else {
-                throw new Error('pipTestDataSet: name must be a string');
-            }
-        }
-
-        // ---------------------------
-
-        function setCurrentUser(user) {
-            if (user && angular.isObject(user) && user.id) {
-                this.currentUser = _.cloneDeep(user);
-            } else {
-                throw new Error('pipTestDataSet: currentUser must be a object');
-            }
-        }        
-
-        function getCurrentUser() {
-            return this.currentUser;
-        }
-
-        function clearCurrentUser() {
-            this.currentUser = null;
-        }
-   
-        function setCurrentParty(party) {
-            if (party && angular.isObject(party) && party.id) {
-                this.currentParty = _.cloneDeep(party);
-            } else {
-                throw new Error('pipTestDataSet: currentParty must be a object');
-            }
-        }
-
-        function getCurrentParty() {
-            return this.currentParty;
-        }      
-
-    }]);
-
-})();
-/**
  * @file pipAvatarsDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -1405,7 +995,7 @@
                         pwd_fail_count: 0,
                         name: pipBasicGeneratorServices.getName(),
                         email: chance.email(),
-                        language: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']), 
+                        language: pipBasicGeneratorServices.getOne(['en', 'ru']), 
                         paid: chance.bool({likelihood: 30}),
                         admin: false,
                         party_access: pipBasicGeneratorServices.getMany(PartyAccess),
@@ -1430,156 +1020,413 @@
 })();
  
 /**
- * @file Rest API enumerations service
+ * @file pipTestCollection
  * @copyright Digital Living Software Corp. 2014-2016
  */
- 
- /* global _, angular */
 
 (function () {
     'use strict';
 
-    var thisModule = angular.module('PipResources.Error', []);
+    var thisModule = angular.module('pipTestCollection', []);
 
-    thisModule.factory('PipResourcesError', function () {
+    // Collection of test data stored in test dataset
+    thisModule.factory('TestCollection', ['$log', function ($log) {
 
-        var Errors = {};
-        
-        Errors['1104'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1104,
-                name: 'Bad Request',
-                message: 'Email is already registered'
-            },
-            headers: {}
-        };
-        Errors['1106'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1106,
-                name: 'Bad Request',
-                message: 'User was not found'
-            },
-            headers: {}
-        };
-        Errors['1103'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1103,
-                name: 'Bad Request',
-                message: 'Invalid email verification code'
-            },
-            headers: {}
-        };
-        Errors['1108'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1108,
-                name: 'Bad Request',
-                message: 'Invalid password recovery code'
-            },
-            headers: {}
-        };
-        Errors['1700'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1700,
-                name: 'Bad Request',
-                message: 'Avatar doesn\'t exist'
-            },
-            headers: {}
-        };        
+        // var refs;
 
-        return Errors;
-    });
-    
-})();
-
-/**
- * @file pipImageResources service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [],
-            size = 0;
-
-        this.setImages = setImages;
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection,
-                getImage: getImage
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            console.log('setImages', newImagesRes);
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
+        // Define the constructor function.
+        return function (generator, name, size, refs) {
+            if (!generator) {
+                throw new Error('TestCollection: generator is required');
             }
 
-            imagesMap = _.union(imagesMap, newImagesRes);
-            size = imagesMap.length;
+            this.generator = generator;
+            this.size = size ? size : 0;
+
+
+            this.refs = getRefs(generator, refs);
+
+            this.name = getName(generator, name);
+            this.collection = [];
+            this.isInit = false;
+
+            this.getGeneratorName = getGeneratorName;
+            this.getSize = getSize;         
+
+            this.init = init;         
+            this.getAll = getAll;         
+            this.getByIndex = getByIndex;         
+            this.findById = findById;         
+            this.create = create;         
+            this.update = update;         
+            this.deleteById = deleteById;         
+            this.deleteByIndex = deleteByIndex; 
+
+            return this;             
         }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            console.log('getImagesCollection imagesMap', imagesMap);
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
+            
+        function getGeneratorName() {
+                return this.generator.name;
             }
 
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
+        function getSize() {
+                return this.collection.length;
+            }    
 
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
+        // public init(collection: any[]): void;
+        function init(collection) {
+            if (collection && angular.isArray(collection)) {
+                this.collection = _.cloneDeep(collection);
+                this.size = collection.length;
+
+                this.isInit = true;
+
+                return;
             }
 
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }   
+            if (this.size === 0) { 
+                this.collection = [];
 
-        function getImage() {
-            var i = _.random(0, size - 1);
+                return
+            } 
 
-            if (size > 0) {
-                return _.cloneDeep(imagesMap[i]);
-            } else {
+            this.collection = this.generator.newObjectList(this.size, this.refs);
+            this.isInit = true;
+        }
+    
+        // public getAll(): any[];
+        function getAll() {
+            return _.cloneDeep(this.collection);
+        }     
+
+        // public get(index: number): any[];
+        function getByIndex(index) {
+            var result = null;
+
+            if (index === undefined || index === null || index < 0 || index > this.collection.length - 1) {
+                return result;
+            }
+
+            result = _.cloneDeep(this.collection[index]);
+
+            return result;
+        }    
+
+        // public findById(id: string): any;
+        function findById(id, field) {
+            var result = null,
+                fieldId = field ? field : 'id';
+
+            if (id === undefined || id === null) {
+                return result;
+            }
+
+            result = _.find(this.collection, function(item) {
+                return item[fieldId] == id;
+            }); 
+            
+            return result || null;
+        }    
+
+        // public create(obj: any): any;
+        function create(obj) {
+            var result = this.generator.initObject(obj);
+
+            if (angular.isObject(result)) {
+                this.collection.push(result);
+            }
+
+            return result;
+        }    
+
+        // public update(id: string, obj: any): any;
+        function update(id, obj, idField) {
+            var result;
+
+            if (id === undefined || id === null || !angular.isObject(obj)) {
+                // todo: trow error?
                 return null;
             }
-        }  
 
-    });
+            result = this.findById(id, idField);
+
+            if (angular.isObject(result)) {
+                result = _.assign(result, obj);
+                // todo: replace into collection ???
+            } else {
+                result = null;
+            }
+
+            return result;
+        }    
+
+        // public delete(id: string): any;
+        function deleteById(id) {
+            var i, match = false;
+
+            for (i = 0; i < this.collection.length; i++) {
+                if (this.collection[i].id === id) {
+                    match = true;
+                    this.collection.splice(i, 1);
+                    break;
+                }
+            }
+
+            return match;            
+        }    
+
+        // public delete(id: string): any;
+        function deleteByIndex(index) {
+            if (index === undefined || index === null || index < 0 || index > this.collection.length - 1) {
+                return false;
+            }
+
+            this.collection.splice(index, 1);
+
+            return true;            
+        }
+
+        // ----------------------------------
+
+        function getRefsCopy(arr) {
+            var result = {};
+
+            for (var key in arr) {
+                result[key] = _.cloneDeep(arr[key]);
+            }
+
+            return result;
+        }
+
+        function getRefs(generator, refs) {
+            if (refs && angular.isObject(refs)) {
+                return getRefsCopy(refs);
+            } else if (generator.refs && angular.isObject(generator.refs)) {
+                return getRefsCopy(generator.refs);
+            } else {
+                return {}; 
+            }
+        }
+
+        function getName(generator, name) {
+            if (name) {
+                return name;
+            } else {
+                return generator.name;
+            } 
+        }
+
+    }]);
+
+})();
+/**
+ * @file pipTestDataService
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipTestDataService', []);
+
+    thisModule.factory('pipTestDataService', 
+        ['pipTestDataSet', 'pipUserDataGenerator', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', 'pipPartyDataGenerator', 'TestCollection', 'pipNodeDataGenerator', 'pipEventDataGenerator', 'pipSettingsDataGenerator', 'pipFeedbackDataGenerator', function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
+                 pipPartyDataGenerator, TestCollection, pipNodeDataGenerator,
+                 pipEventDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
+
+            // Angular service that holds singleton test dataset that is shared across all
+            var dataSet = new pipTestDataSet();
+
+            return {
+                
+                getDataset: getDataset,
+                createTestDataset: createTestDataset
+
+            };
+
+            // Get singleton dataset
+            function getDataset() {
+
+                return dataSet;
+
+            }
+
+            // Create test dataset
+            function createTestDataset() {
+                var i, users, parties = [], settings =[],
+                    tcPartyAccess, tcSessions, tcUsers, tcParties, tcSettings, tcFeedback,
+                    tcNodes, tcEvents, usersRefs = new Array(), eventsRefs = new Array();
+
+                // create collection without references
+                tcPartyAccess = new TestCollection(pipPartyAccessDataGenerator, 'PartyAccessTestCollection', 20);
+                tcSessions = new TestCollection(pipSessionsDataGenerator, 'SessionsTestCollection', 20);
+                // init collection
+                tcPartyAccess.init();
+                tcSessions.init();
+                // add collection to dataset
+                dataSet.add(tcPartyAccess);
+                dataSet.add(tcSessions);
+                // form references for users collection
+                usersRefs['PartyAccess'] = tcPartyAccess.getAll();
+                usersRefs['Sessions'] = tcSessions.getAll();
+
+                // create users collection
+                tcUsers = new TestCollection(pipUserDataGenerator, 'UsersTestCollection', 20, usersRefs);
+                dataSet.add(tcUsers);
+
+                // create feedback collection
+                tcFeedback = new TestCollection(pipFeedbackDataGenerator, 'FeedbacksTestCollection', 20);
+                dataSet.add(tcFeedback);
+
+                // create collection without references
+                tcNodes = new TestCollection(pipNodeDataGenerator, 'NodesTestCollection', 20);
+                // init collection
+                tcNodes.init();
+
+                // add collection to dataset
+                dataSet.add(tcNodes);
+
+                // form references for users collection
+                eventsRefs['Nodes'] = _.cloneDeep(tcNodes.getAll());
+
+                // create events collection
+                tcEvents = new TestCollection(pipEventDataGenerator, 'EventsTestCollection', 100, eventsRefs);
+                dataSet.add(tcEvents);
+
+                // init collection
+                dataSet.init();
+
+                users = dataSet.get('UsersTestCollection').getAll();
+                // generate party and settings for each user
+                for (i = 0; i < users.length; i ++) {
+                    var party = pipPartyDataGenerator.initObject({
+                        name: users[i].name,
+                        email: users[i].email,
+                        id: users[i].id,
+                        updated: users[i].updated,
+                        created: users[i].created
+                    });
+                    parties.push(party);
+                    var setting = {
+                        party_id: party.id,
+                        creator_id: party.id
+                    };
+                    settings.push(setting);
+                }
+
+                tcParties = new TestCollection(pipPartyDataGenerator, 'PartiesTestCollection', parties.length);
+                tcParties.init(parties);
+                dataSet.add(tcParties);
+
+                tcSettings = new TestCollection(pipSettingsDataGenerator, 'SettingsTestCollection', settings.length);
+                tcSettings.init(settings);
+                dataSet.add(tcSettings);
+
+                return dataSet;
+            }
+        }]
+    );
+
+})();
+/**
+ * @file pipTestDataSet
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipTestDataSet', []);
+
+    // Test dataset, that can be used to hold state of rest api
+    thisModule.factory('pipTestDataSet', ['$log', function ($log) {
+        
+        // Define the constructor function.
+        return function () {
+
+            this.currentUser = null;
+            this.currentParty = null;
+            this.dataSet = {};
+
+            this.init = init;         
+            this.add = add;         
+            this.get = get;         
+
+            this.getCurrentUser = getCurrentUser;
+            this.setCurrentUser = setCurrentUser;
+            this.clearCurrentUser = clearCurrentUser;
+            this.setCurrentParty = setCurrentParty;
+            this.getCurrentParty = getCurrentParty;
+
+            return this;        
+        }
+
+        // Initializes all registered collectons
+        function init() {
+            var i;
+
+            for (i in this.dataSet) {
+                console.log('this.dataSet', this.dataSet[i]);
+                if (this.dataSet[i] && this.dataSet[i].isInit === false) {
+                    this.dataSet[i].init();
+                }
+            }    
+        }
+   
+        // Registers a new collection
+        function add(collection) {
+            var name;
+            
+            if (collection && angular.isObject(collection) && collection.name) {
+                name = collection.name;
+                this.dataSet[name] = _.cloneDeep(collection);
+            } else {
+                throw new Error('pipTestDataSet: collection is required');
+            }
+        }
+
+        // Gets registered collection by its name
+        function get(name) {
+            if (name && angular.isString(name)) {
+                return this.dataSet[name];
+            } else {
+                throw new Error('pipTestDataSet: name must be a string');
+            }
+        }
+
+        // ---------------------------
+
+        function setCurrentUser(user) {
+            if (user && angular.isObject(user) && user.id) {
+                this.currentUser = _.cloneDeep(user);
+            } else {
+                throw new Error('pipTestDataSet: currentUser must be a object');
+            }
+        }        
+
+        function getCurrentUser() {
+            return this.currentUser;
+        }
+
+        function clearCurrentUser() {
+            this.currentUser = null;
+        }
+   
+        function setCurrentParty(party) {
+            if (party && angular.isObject(party) && party.id) {
+                this.currentParty = _.cloneDeep(party);
+            } else {
+                throw new Error('pipTestDataSet: currentParty must be a object');
+            }
+        }
+
+        function getCurrentParty() {
+            return this.currentParty;
+        }      
+
+    }]);
 
 })();
 /**
@@ -4801,4 +4648,157 @@
 })();
  
 
+/**
+ * @file Rest API enumerations service
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('PipResources.Error', []);
+
+    thisModule.factory('PipResourcesError', function () {
+
+        var Errors = {};
+        
+        Errors['1104'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1104,
+                name: 'Bad Request',
+                message: 'Email is already registered'
+            },
+            headers: {}
+        };
+        Errors['1106'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1106,
+                name: 'Bad Request',
+                message: 'User was not found'
+            },
+            headers: {}
+        };
+        Errors['1103'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1103,
+                name: 'Bad Request',
+                message: 'Invalid email verification code'
+            },
+            headers: {}
+        };
+        Errors['1108'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1108,
+                name: 'Bad Request',
+                message: 'Invalid password recovery code'
+            },
+            headers: {}
+        };
+        Errors['1700'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1700,
+                name: 'Bad Request',
+                message: 'Avatar doesn\'t exist'
+            },
+            headers: {}
+        };        
+
+        return Errors;
+    });
+    
+})();
+
+/**
+ * @file pipImageResources service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            console.log('setImages', newImagesRes);
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            console.log('getImagesCollection imagesMap', imagesMap);
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
 //# sourceMappingURL=pip-webui-test.js.map

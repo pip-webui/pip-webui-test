@@ -43,7 +43,7 @@
                         pwd_fail_count: 0,
                         name: pipBasicGeneratorServices.getName(),
                         email: chance.email(),
-                        language: pipBasicGeneratorServices.getOne(['en', 'ru', 'fr']), 
+                        language: pipBasicGeneratorServices.getOne(['en', 'ru']), 
                         paid: chance.bool({likelihood: 30}),
                         admin: false,
                         party_access: pipBasicGeneratorServices.getMany(PartyAccess),
