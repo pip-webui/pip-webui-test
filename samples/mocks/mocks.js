@@ -651,7 +651,8 @@
             function onAvatarGET() {
                 var req = {
                     method: 'GET',
-                    url: 'http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/avatar?default_template=goal&bg=rgba(0,188,212,1)&fg=white&timestamp=1470388249000&obj_id=57891f214997deb8138fe233',
+                    // url: 'http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/avatar?default_template=goal&bg=rgba(0,188,212,1)&fg=white&timestamp=1470388249000&obj_id=57891f214997deb8138fe233',
+                    url: 'http://fakeserver.net/api/parties/sjooujozxrkxe8bezq55zxv4/avatar?default_template=letter&bg=rgba(3,169,244,1)&fg=white&chr=4&timestamp=1470991105000&obj_id=sjooujozxrkxe8bezq55zxv4',
                     headers: {
                       'Content-Type': 'image/jpg'
                     },
