@@ -3,26 +3,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-// {
-//   "sender_id": "565f12ef8ff2161b1dfeedbf",
-//   "sender_name": "Миньошка",
-//   "sender_email": "1@1.com",
-//   "type": "support",
-//   "title": "test",
-//   "content": "test message",
-//   "docs": [
-//     {
-//       "file_id": "57ab07a9f6dd4d642c1daf96",
-//       "file_name": "Screenshot_3.png"
-//     }
-//   ],
-//   "pic_ids": [
-//     "57ab07a7f6dd4d642c1daf95"
-//   ],
-//   "sent": "2016-08-10T10:22:55.479Z",
-//   "id": "57ab007ff6dd4d642c1daf94"
-// }
-
 (function () {
     'use strict';
 

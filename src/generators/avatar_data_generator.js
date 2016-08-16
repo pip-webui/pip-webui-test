@@ -3,22 +3,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-// {
-//   "id": "56cde0d1b0c1dcf82cf50cb6",
-//   "name": "cat4.jpg",
-//   "content_type": "image/jpeg",
-//   "length": 36916,
-//   "creator_id": "565f12ef8ff2161b1dfeedbf",
-//   "created": "2016-08-05T09:22:59.141Z",
-//   "refs": [
-//     {
-//       "ref_type": "goal",
-//       "ref_id": "56cde0d1b0c1dcf82cf50cb6"
-//     }
-//   ],
-//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/56cde0d1b0c1dcf82cf50cb6/cat4.jpg"
-// }
-
 (function () {
     'use strict';
 

@@ -26,7 +26,6 @@
         child.register = function() {
 
             // POST /api/signin
-            // expected data { email: email, password: password, remember: remember}                 
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -69,7 +68,6 @@
         child.register = function() {
 
             // POST /api/signup
-            // expected data { name: name, email: email, password: password, language: language}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, party,
@@ -128,7 +126,6 @@
         child.register = function() {
 
             // POST /api/signout
-            // expected data {}
             $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
                 child.dataset.clearCurrentUser();
 
@@ -147,7 +144,6 @@
         child.register = function() {
 
             // POST /api/signup_validate,
-            // expected data {email: newValue}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -188,7 +184,6 @@
         child.register = function() {
 
             // POST /api/verify_email,
-            // expected data {email: $scope.data.email, code: $scope.data.code}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -238,7 +233,6 @@
         child.register = function() {
 
             // POST /api/recover_password,
-            // expected data {email: $scope.data.email}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -279,7 +273,6 @@
         child.register = function() {
 
             // POST /api/reset_password,
-            // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -325,7 +318,6 @@
         child.register = function() {
 
             // POST /api/change_password, 
-            // todo: expected ??
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
 

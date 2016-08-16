@@ -3,18 +3,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-// {
-//   "id": "57a459fbf6dd4d642c1daf23",
-//   "name": "Screenshot_2.png",
-//   "content_type": "image/png",
-//   "length": 78848,
-//   "party_id": "565f12ef8ff2161b1dfeedbf",
-//   "creator_id": "565f12ef8ff2161b1dfeedbf",
-//   "created": "2016-08-05T09:18:52.304Z",
-//   "refs": [],
-//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/57a459fbf6dd4d642c1daf23/Screenshot_2.png"
-// }
-
 (function () {
     'use strict';
 

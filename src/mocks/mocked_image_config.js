@@ -1,5 +1,5 @@
 /**
- * @file String resources for Areas pages
+ * @file Image  resources for samples
  * @copyright Digital Living Software Corp. 2014-2016
  */
 /* global angular */

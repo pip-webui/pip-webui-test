@@ -108,55 +108,6 @@
         }]
     );
 
-    // thisModule.run(
-    //     function(pipMockedResource, MockedUsersResource, MockedCurrentUserResource, TruePathResource, MockedSigninResource,
-    //     MockedSignupResource, MockedSignoutResource, MockedSignupValidateResource, MockedVerifyEmailResource,
-    //     MockedRecoverPasswordResource, MockedResetPasswordResource, MockedChangePasswordResource, MockedUserSessionsResource,
-    //     MockedTipsResource, MockedAnnouncementsResource, MockedFeedbacksResource, MockedGuidesResource, MockedImageSetResource,
-    //     MockedPartyResource, MockedServersActivitiesResource, MockedAvatarResource, MockedImagesResource, MockedPartySettingsResource,
-    //     MockedNodeResource, MockedEventsResource, MockedResource, pipTestDataService) {
-
-
-    //         MockedResource.setDataset(pipTestDataService.getDataset());
-
-    //         pipMockedResource.addMocks(MockedUsersResource);
-    //         pipMockedResource.addMocks(MockedCurrentUserResource);
-    //         pipMockedResource.addMocks(MockedUserSessionsResource);
-
-    //         // entry
-    //         pipMockedResource.addMocks(MockedSigninResource);
-    //         pipMockedResource.addMocks(MockedSignupResource);
-    //         pipMockedResource.addMocks(MockedSignoutResource);
-    //         pipMockedResource.addMocks(MockedSignupValidateResource);
-    //         pipMockedResource.addMocks(MockedVerifyEmailResource);
-    //         pipMockedResource.addMocks(MockedRecoverPasswordResource);
-    //         pipMockedResource.addMocks(MockedResetPasswordResource);
-    //         pipMockedResource.addMocks(MockedChangePasswordResource);
-
-    //         // ----------------
-    //         pipMockedResource.addMocks(MockedTipsResource);
-    //         pipMockedResource.addMocks(MockedAnnouncementsResource);
-    //         pipMockedResource.addMocks(MockedFeedbacksResource);
-    //         pipMockedResource.addMocks(MockedGuidesResource);
-    //         pipMockedResource.addMocks(MockedPartyResource);
-    //         pipMockedResource.addMocks(MockedPartySettingsResource);
-    //         pipMockedResource.addMocks(MockedServersActivitiesResource);
-            
-    //         // files and images
-    //         pipMockedResource.addMocks(MockedImageSetResource);
-    //         pipMockedResource.addMocks(MockedAvatarResource);
-    //         pipMockedResource.addMocks(MockedImagesResource);
-
-    //         pipMockedResource.addMocks(MockedEventsResource);
-    //         pipMockedResource.addMocks(MockedNodeResource);
-
-    //         pipMockedResource.addMocks(TruePathResource);
-            
-    //         pipMockedResource.registerStandardResources();
-
-    //     }
-    // );
-
 })();
 
 /**
@@ -470,7 +421,7 @@
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
-// todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
+                // todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
                 return dataSet;
             }
         }]
@@ -579,22 +530,6 @@
  * @file pipAvatarsDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
-
-// {
-//   "id": "56cde0d1b0c1dcf82cf50cb6",
-//   "name": "cat4.jpg",
-//   "content_type": "image/jpeg",
-//   "length": 36916,
-//   "creator_id": "565f12ef8ff2161b1dfeedbf",
-//   "created": "2016-08-05T09:22:59.141Z",
-//   "refs": [
-//     {
-//       "ref_type": "goal",
-//       "ref_id": "56cde0d1b0c1dcf82cf50cb6"
-//     }
-//   ],
-//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/56cde0d1b0c1dcf82cf50cb6/cat4.jpg"
-// }
 
 (function () {
     'use strict';
@@ -848,26 +783,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-// {
-//   "sender_id": "565f12ef8ff2161b1dfeedbf",
-//   "sender_name": "Миньошка",
-//   "sender_email": "1@1.com",
-//   "type": "support",
-//   "title": "test",
-//   "content": "test message",
-//   "docs": [
-//     {
-//       "file_id": "57ab07a9f6dd4d642c1daf96",
-//       "file_name": "Screenshot_3.png"
-//     }
-//   ],
-//   "pic_ids": [
-//     "57ab07a7f6dd4d642c1daf95"
-//   ],
-//   "sent": "2016-08-10T10:22:55.479Z",
-//   "id": "57ab007ff6dd4d642c1daf94"
-// }
-
 (function () {
     'use strict';
 
@@ -964,18 +879,6 @@
  * @file pipFilesDataGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
-
-// {
-//   "id": "57a459fbf6dd4d642c1daf23",
-//   "name": "Screenshot_2.png",
-//   "content_type": "image/png",
-//   "length": 78848,
-//   "party_id": "565f12ef8ff2161b1dfeedbf",
-//   "creator_id": "565f12ef8ff2161b1dfeedbf",
-//   "created": "2016-08-05T09:18:52.304Z",
-//   "refs": [],
-//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/57a459fbf6dd4d642c1daf23/Screenshot_2.png"
-// }
 
 (function () {
     'use strict';
@@ -1334,21 +1237,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-// {
-//     "party_id": "565f12ef8ff2161b1dfeedbf"
-//     "creator_id": "565f12ef8ff2161b1dfeedbf"
-//     "notes": {
-//                 "viewType": "tiles"
-//                 "tips": "2016-08-01T09:30:46.726Z"
-//             }-
-//     "visions": {
-//                     "viewType": "tiles"
-//                 }-
-//     "areas": {
-//                 "navId": "all"
-//                 "tips": "2016-08-05T09:28:04.324Z"
-//             }-
-
 (function () {
     'use strict';
 
@@ -1451,7 +1339,158 @@
 })();
  
 /**
- * @file String resources for Areas pages
+ * @file Rest API enumerations service
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('PipResources.Error', []);
+
+    thisModule.factory('PipResourcesError', function () {
+
+        var Errors = {};
+        
+        Errors['1104'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1104,
+                name: 'Bad Request',
+                message: 'Email is already registered'
+            },
+            headers: {}
+        };
+        Errors['1106'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1106,
+                name: 'Bad Request',
+                message: 'User was not found'
+            },
+            headers: {}
+        };
+        Errors['1103'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1103,
+                name: 'Bad Request',
+                message: 'Invalid email verification code'
+            },
+            headers: {}
+        };
+        Errors['1108'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1108,
+                name: 'Bad Request',
+                message: 'Invalid password recovery code'
+            },
+            headers: {}
+        };
+        Errors['1700'] = {
+            StatusCode: 400,
+            StatusMessage: 'Bad Request',
+            request: {
+                code: 1700,
+                name: 'Bad Request',
+                message: 'Avatar doesn\'t exist'
+            },
+            headers: {}
+        };        
+
+        return Errors;
+    });
+    
+})();
+
+/**
+ * @file pipImageResources service
+ * @copyright Digital Living Software Corp. 2014-2016
+ * @todo:
+ */
+ 
+ /* global _, angular */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipImageResources', []);
+
+    thisModule.provider('pipImageResources', function() {
+        var imagesMap = [],
+            size = 0;
+
+        this.setImages = setImages;
+
+        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
+
+
+            return {
+                setImages: setImages,
+                getImagesCollection: getImagesCollection,
+                getImage: getImage
+            }
+        }];
+
+        // Add images collection
+        function setImages(newImagesRes) {
+            if (!angular.isArray(newImagesRes)) {
+                new Error('pipImageResources setImages: first argument should be an object');
+            }
+
+            imagesMap = _.union(imagesMap, newImagesRes);
+            size = imagesMap.length;
+        }
+
+        // Get images collection
+        function getImagesCollection(size, search) {
+            if (!!search && !angular.isString(search)) {
+                new Error('pipImageResources getImages: second argument should be a string');
+            }
+
+            var result, queryLowercase,
+                resultSize = size && size < imagesMap.length ? size : -1;
+
+            if (!search) {
+                result = imagesMap;
+            } else {
+                queryLowercase = search.toLowerCase();
+                result = _.filter(imagesMap, function (item) {
+                        if (item.title) {
+                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
+                        } else return false;
+                    }) || [];
+            }
+
+            if (resultSize === -1) {
+                return _.cloneDeep(result);
+            } else {
+                return _.take(result, resultSize);
+            }                        
+        }   
+
+        function getImage() {
+            var i = _.random(0, size - 1);
+
+            if (size > 0) {
+                return _.cloneDeep(imagesMap[i]);
+            } else {
+                return null;
+            }
+        }  
+
+    });
+
+})();
+/**
+ * @file Image  resources for samples
  * @copyright Digital Living Software Corp. 2014-2016
  */
 /* global angular */
@@ -2995,41 +3034,7 @@
 /**
  * @file MockedAvatarResource
  * @copyright Digital Living Software Corp. 2014-2016
- * 
- * Mocked:
- * get/delete: serverUrl + '/api/parties/' + partyId + '/' + entityTypes[type] + '/' + id + '/avatar
- *              serverUrl + '/api/parties/' + partyId + '/' + entityTypes[type] + '/' + id + '/avatar
- * upload: serverUrl + '/api/parties/' + partyId + '/files?name='
  */
-
-// exemple
-// get: 
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/57891f214997deb8138fe233/avatar?default_template=goal&bg=rgba(0,188,212,1)&fg=white&timestamp=1470388249000&obj_id=57891f214997deb8138fe233
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/avatar?default_template=area&bg=rgba(236,64,122,1)&fg=white&timestamp=1470391804000&obj_id=578501864997deb8138fd78d
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/5788cf214997deb8138fe020/avatar?default_template=goal&bg=rgba(236,64,122,1)&fg=white&timestamp=1470388248000&obj_id=5788cf214997deb8138fe020
-// post 
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/56cde0d1b0c1dcf82cf50cb6/avatar?name=cat4.jpg
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/avatar?name=2017-Hyundai-Elantra-1-e1454492227615.jpg
-// delete 
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/goals/56cde0d1b0c1dcf82cf50cb6/avatar
-//      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/avatar
-
-// respond to post
-// {
-//   "id": "56cde0d1b0c1dcf82cf50cb6",
-//   "name": "cat4.jpg",
-//   "content_type": "image/jpeg",
-//   "length": 36916,
-//   "creator_id": "565f12ef8ff2161b1dfeedbf",
-//   "created": "2016-08-05T09:22:59.141Z",
-//   "refs": [
-//     {
-//       "ref_type": "goal",
-//       "ref_id": "56cde0d1b0c1dcf82cf50cb6"
-//     }
-//   ],
-//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/56cde0d1b0c1dcf82cf50cb6/cat4.jpg"
-// }
 
 (function () {
     'use strict';
@@ -3163,7 +3168,6 @@
         child.register = function() {
 
             // POST /api/signin
-            // expected data { email: email, password: password, remember: remember}                 
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -3206,7 +3210,6 @@
         child.register = function() {
 
             // POST /api/signup
-            // expected data { name: name, email: email, password: password, language: language}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, party,
@@ -3265,7 +3268,6 @@
         child.register = function() {
 
             // POST /api/signout
-            // expected data {}
             $httpBackend.whenPOST(child.fakeUrl + child.api).respond(function(method, url, data, headers, params) {
                 child.dataset.clearCurrentUser();
 
@@ -3284,7 +3286,6 @@
         child.register = function() {
 
             // POST /api/signup_validate,
-            // expected data {email: newValue}            
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -3325,7 +3326,6 @@
         child.register = function() {
 
             // POST /api/verify_email,
-            // expected data {email: $scope.data.email, code: $scope.data.code}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -3375,7 +3375,6 @@
         child.register = function() {
 
             // POST /api/recover_password,
-            // expected data {email: $scope.data.email}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -3416,7 +3415,6 @@
         child.register = function() {
 
             // POST /api/reset_password,
-            // expected data {email: $scope.data.email,code: $scope.data.code,password: $scope.data.password}
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
                     var user, 
@@ -3462,7 +3460,6 @@
         child.register = function() {
 
             // POST /api/change_password, 
-            // todo: expected ??
             $httpBackend.whenPOST(child.fakeUrl + child.api)
                 .respond(function(method, url, data, headers, params) {
 
@@ -3736,31 +3733,7 @@
 /**
  * @file MockedImagesResource
  * @copyright Digital Living Software Corp. 2014-2016
- * 
- * Mocked:
- * get/delete: serverurl + /api/parties/ + partyId + '/files/' + imageId + '/content'
- * upload: serverUrl + '/api/parties/' + partyId + '/files?name='
  */
-
-// example  
-// get image src     http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files/578ddc6b4997deb8138fe5ac/content
-// get image object  http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files/578ddc6b4997deb8138fe5ac
-// post image        http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files?name=Screenshot_2.png
-// delete image      http://alpha.pipservices.net/api/parties/565f12ef8ff2161b1dfeedbf/files/578ddd944997deb8138fe5d3
-
-// response to post or get (serverurl + /api/parties/ + partyId + '/files/' + imageId)
-// {
-//   "id": "57a459fbf6dd4d642c1daf23",
-//   "name": "Screenshot_2.png",
-//   "content_type": "image/png",
-//   "length": 78848,
-//   "party_id": "565f12ef8ff2161b1dfeedbf",
-//   "creator_id": "565f12ef8ff2161b1dfeedbf",
-//   "created": "2016-08-05T09:18:52.304Z",
-//   "refs": [],
-//   "url": "https://s3-us-west-1.amazonaws.com/alpha-uploads.piplife.com/57a459fbf6dd4d642c1daf23/Screenshot_2.png"
-// }
-
 
 (function () {
     'use strict';
@@ -4293,7 +4266,9 @@
             child.register = function() {
                 $httpBackend.whenGET(/.*/).passThrough();           
                 $httpBackend.whenGET(/.*.svg/).passThrough();           
-                $httpBackend.whenJSONP(/.*/).passThrough();           
+                $httpBackend.whenJSONP(/.*/).passThrough();      
+                $httpBackend.whenGET(/^\w+.*/).passThrough();
+                $httpBackend.whenPOST(/^\w+.*/).passThrough();                       
             }
             return child;
     }]);
@@ -4628,155 +4603,4 @@
 })();
  
 
-/**
- * @file Rest API enumerations service
- * @copyright Digital Living Software Corp. 2014-2016
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('PipResources.Error', []);
-
-    thisModule.factory('PipResourcesError', function () {
-
-        var Errors = {};
-        
-        Errors['1104'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1104,
-                name: 'Bad Request',
-                message: 'Email is already registered'
-            },
-            headers: {}
-        };
-        Errors['1106'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1106,
-                name: 'Bad Request',
-                message: 'User was not found'
-            },
-            headers: {}
-        };
-        Errors['1103'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1103,
-                name: 'Bad Request',
-                message: 'Invalid email verification code'
-            },
-            headers: {}
-        };
-        Errors['1108'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1108,
-                name: 'Bad Request',
-                message: 'Invalid password recovery code'
-            },
-            headers: {}
-        };
-        Errors['1700'] = {
-            StatusCode: 400,
-            StatusMessage: 'Bad Request',
-            request: {
-                code: 1700,
-                name: 'Bad Request',
-                message: 'Avatar doesn\'t exist'
-            },
-            headers: {}
-        };        
-
-        return Errors;
-    });
-    
-})();
-
-/**
- * @file pipImageResources service
- * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
- */
- 
- /* global _, angular */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipImageResources', []);
-
-    thisModule.provider('pipImageResources', function() {
-        var imagesMap = [],
-            size = 0;
-
-        this.setImages = setImages;
-
-        this.$get = ['$rootScope', '$timeout', 'localStorageService', 'pipAssert', function ($rootScope, $timeout, localStorageService, pipAssert) {
-
-
-            return {
-                setImages: setImages,
-                getImagesCollection: getImagesCollection,
-                getImage: getImage
-            }
-        }];
-
-        // Add images collection
-        function setImages(newImagesRes) {
-            if (!angular.isArray(newImagesRes)) {
-                new Error('pipImageResources setImages: first argument should be an object');
-            }
-
-            imagesMap = _.union(imagesMap, newImagesRes);
-            size = imagesMap.length;
-        }
-
-        // Get images collection
-        function getImagesCollection(size, search) {
-            if (!!search && !angular.isString(search)) {
-                new Error('pipImageResources getImages: second argument should be a string');
-            }
-
-            var result, queryLowercase,
-                resultSize = size && size < imagesMap.length ? size : -1;
-
-            if (!search) {
-                result = imagesMap;
-            } else {
-                queryLowercase = search.toLowerCase();
-                result = _.filter(imagesMap, function (item) {
-                        if (item.title) {
-                            return (item.title.toLowerCase().indexOf(queryLowercase) >= 0);
-                        } else return false;
-                    }) || [];
-            }
-
-            if (resultSize === -1) {
-                return _.cloneDeep(result);
-            } else {
-                return _.take(result, resultSize);
-            }                        
-        }   
-
-        function getImage() {
-            var i = _.random(0, size - 1);
-
-            if (size > 0) {
-                return _.cloneDeep(imagesMap[i]);
-            } else {
-                return null;
-            }
-        }  
-
-    });
-
-})();
 //# sourceMappingURL=pip-webui-test.js.map

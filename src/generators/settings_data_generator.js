@@ -3,21 +3,6 @@
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
-// {
-//     "party_id": "565f12ef8ff2161b1dfeedbf"
-//     "creator_id": "565f12ef8ff2161b1dfeedbf"
-//     "notes": {
-//                 "viewType": "tiles"
-//                 "tips": "2016-08-01T09:30:46.726Z"
-//             }-
-//     "visions": {
-//                     "viewType": "tiles"
-//                 }-
-//     "areas": {
-//                 "navId": "all"
-//                 "tips": "2016-08-05T09:28:04.324Z"
-//             }-
-
 (function () {
     'use strict';
 

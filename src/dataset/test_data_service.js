@@ -109,7 +109,7 @@
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
-// todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
+                // todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
                 return dataSet;
             }
         }
