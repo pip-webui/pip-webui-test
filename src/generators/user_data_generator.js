@@ -54,7 +54,8 @@
                         lock: false,
                         email_ver: false,
                         id: pipBasicGeneratorServices.getObjectId(),
-                        last_session_id: currentSession.id  
+                        last_session_id: currentSession.id,
+                        theme: pipBasicGeneratorServices.getOne(['navy', 'blue', 'amber', 'grey', 'orange']),   
                     };
 
                     user.sessions.push(currentSession);

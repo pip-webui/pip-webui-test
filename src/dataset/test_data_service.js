@@ -81,7 +81,7 @@
                 tcUsers = dataSet.get('UsersTestCollection');
 
                 // create default user name
-                tcUsers.create({name: 'Sample User', email: 'test@sample.net', id: 'q1w2e3r4t5y6u7i8o9p0a1s2'});
+                tcUsers.create({name: 'Sample User', email: 'test@sample.net', id: 'q1w2e3r4t5y6u7i8o9p0a1s2', theme: 'navy'});
                 users = tcUsers.getAll();
 
                 // generate party and settings for each user
@@ -109,6 +109,7 @@
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
+// todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
                 return dataSet;
             }
         }
