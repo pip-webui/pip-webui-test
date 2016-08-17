@@ -59,6 +59,7 @@
                 return [200, {}, {}];
             });  
 
+            // todo: this mocks do not work
             // GET for party /api/parties/:party_id/avatar? ...
             $httpBackend.whenGET(new RegExp(child.regEsc(child.fakeUrl + child.api + '/') + child.IdRegExp + child.regEsc('/avatar?'))).respond(function(method, url, data, headers) {
                console.log('MockedAvatarResource whenGET party', data, headers);
