@@ -17,6 +17,7 @@
 
             $compileProvider.debugInfoEnabled(false);
             $httpProvider.useApplyAsync(true);
+            pipRestProvider.serverUrl('http://fakeserver.net');
             
             var content = [
                     { title: 'Mocks', state: 'mocks', url: '/mocks', auth: false,
@@ -25,7 +26,10 @@
                         controller: 'GASMocksController', templateUrl: '../samples/mocks/get_started_mocks.html' },                        
                     { title: 'User Generator', state: 'user_generator', url: '/user_generator', auth: false,
                         controller: 'GenerateUsersController', templateUrl: '../samples/data_generators/user_generator.html' 
-                    }               
+                    },
+                    { title: 'Avatar Mocks', state: 'avatar_mocs', url: '/avatar_mocs', auth: false,
+                        controller: 'AvatarMocksController', templateUrl: '../samples/mocks/mocks_avatar.html' 
+                    }                                    
                 ],
                 contentItem, i;
 

@@ -1,0 +1,20 @@
+<h2 class="text-title tm0 bm24">Mocks for Get And Started:</h2>
+<div> 
+
+    <pre>
+        Press signIn and see user avatar
+    </pre>
+    <md-button class="md-raised md-primary"
+            ng-click="onSignIn()">
+        SignIn
+    </md-button> 
+    <div>
+                <pip-avatar ng-if="isSignIn"
+                            pip-party-id="party.id"
+                            pip-default-icon="icon-person"
+                            pip-party-name="party.name"
+                            pip-rebind-avatar="true"
+                            pip-rebind="true">
+                </pip-avatar>
+    </div>
+</div>
