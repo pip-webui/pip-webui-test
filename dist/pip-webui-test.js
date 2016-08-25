@@ -123,8 +123,6 @@
     // Collection of test data stored in test dataset
     thisModule.factory('TestCollection', ['$log', function ($log) {
 
-        // var refs;
-
         // Define the constructor function.
         return function (generator, name, size, refs) {
             if (!generator) {
@@ -133,17 +131,13 @@
 
             this.generator = generator;
             this.size = size ? size : 0;
-
-
             this.refs = getRefs(generator, refs);
-
             this.name = getName(generator, name);
             this.collection = [];
             this.isInit = false;
 
             this.getGeneratorName = getGeneratorName;
             this.getSize = getSize;         
-
             this.init = init;         
             this.getAll = getAll;         
             this.getByIndex = getByIndex;         
@@ -235,15 +229,13 @@
             var result;
 
             if (id === undefined || id === null || !angular.isObject(obj)) {
-                // todo: trow error?
-                return null;
+                throw new Error('pipTestCollection: id parametr misseed in update function.');
             }
 
             result = this.findById(id, idField);
 
             if (angular.isObject(result)) {
                 result = _.assign(result, obj);
-                // todo: replace into collection ???
             } else {
                 result = null;
             }
@@ -323,8 +315,8 @@
     var thisModule = angular.module('pipTestDataService', []);
 
     thisModule.factory('pipTestDataService', 
-        ['pipTestDataSet', 'pipUserDataGenerator', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', 'pipPartyDataGenerator', 'TestCollection', 'pipNodeDataGenerator', 'pipEventDataGenerator', 'pipSettingsDataGenerator', 'pipFeedbackDataGenerator', function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
-                 pipPartyDataGenerator, TestCollection, pipNodeDataGenerator,
+        ['pipTestDataSet', 'pipUserDataGenerator', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', 'pipPartyDataGenerator', 'TestCollection', 'pipNodeDataGenerator', 'pipAvatarsDataGenerator', 'pipEventDataGenerator', 'pipSettingsDataGenerator', 'pipFeedbackDataGenerator', function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
+                 pipPartyDataGenerator, TestCollection, pipNodeDataGenerator, pipAvatarsDataGenerator,
                  pipEventDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
 
             // Angular service that holds singleton test dataset that is shared across all
@@ -421,7 +413,17 @@
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
-                // todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
+                var sampleAvatar = 'http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg';
+                var tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 1);
+                var avatars = [];
+                
+                avatars.push(pipAvatarsDataGenerator.initObject({
+                    name: 'request-a-sample--547-p.jpg',
+                    url: sampleAvatar
+                }));
+                
+                tcAvatars.init(avatars);
+
                 return dataSet;
             }
         }]
@@ -1218,7 +1220,7 @@
                 var date = new Date(chance.timestamp()),
                     session = {
                         address: chance.ip(),
-                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), // todo:  заменить на массивы из dataGenerators?
+                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), 
                         platform: pipBasicGeneratorServices.getOne(['windows 8', 'windows 7', 'linux']),
                         last_req: date.toJSON(),
                         opened: date.toJSON(),
@@ -3454,7 +3456,7 @@
                     }
 
                     if (feedback && feedback.id) {
-                        var error = child.getError('1104'); //todo error code
+                        var error = child.getError('1104'); 
 
                         return [error.StatusCode, error.request, error.headers];
                     }
@@ -3865,7 +3867,7 @@
                     });
 
                     if (party && party.id) {
-                        var error = child.getError('1104'); //todo error code
+                        var error = child.getError('1104'); 
 
                         return [error.StatusCode, error.request, error.headers];
                     }
@@ -4274,7 +4276,7 @@
                     });
 
                     if (user && user.id) {
-                        var error = child.getError('1104'); //todo error code
+                        var error = child.getError('1104'); 
 
                         return [error.StatusCode, error.request, error.headers];
                     }
@@ -4528,7 +4530,6 @@
 /**
  * @file pipImageResources service
  * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
  */
  
  /* global _, angular */
