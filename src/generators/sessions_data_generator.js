@@ -16,7 +16,7 @@
                 var date = new Date(chance.timestamp()),
                     session = {
                         address: chance.ip(),
-                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), // todo:  заменить на массивы из dataGenerators?
+                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), 
                         platform: pipBasicGeneratorServices.getOne(['windows 8', 'windows 7', 'linux']),
                         last_req: date.toJSON(),
                         opened: date.toJSON(),

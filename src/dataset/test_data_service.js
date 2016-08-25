@@ -109,7 +109,17 @@
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
-                // todo: add to avatar and image dataset. http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg
+                var sampleAvatar = 'http://www.flooringvillage.co.uk/ekmps/shops/flooringvillage/images/request-a-sample--547-p.jpg';
+                var tcAvatars = new TestCollection(pipAvatarsDataGenerator, 'AvatarsTestCollection', 1);
+                var avatars = [];
+                
+                avatars.push(pipAvatarsDataGenerator.initObject({
+                    name: 'request-a-sample--547-p.jpg',
+                    url: sampleAvatar
+                }));
+                
+                tcAvatars.init(avatars);
+
                 return dataSet;
             }
         }

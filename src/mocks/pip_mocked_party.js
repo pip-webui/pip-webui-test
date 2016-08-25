@@ -81,7 +81,7 @@
                     });
 
                     if (party && party.id) {
-                        var error = child.getError('1104'); //todo error code
+                        var error = child.getError('1104'); 
 
                         return [error.StatusCode, error.request, error.headers];
                     }

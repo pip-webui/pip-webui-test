@@ -11,8 +11,6 @@
     // Collection of test data stored in test dataset
     thisModule.factory('TestCollection', function ($log) {
 
-        // var refs;
-
         // Define the constructor function.
         return function (generator, name, size, refs) {
             if (!generator) {
@@ -21,17 +19,13 @@
 
             this.generator = generator;
             this.size = size ? size : 0;
-
-
             this.refs = getRefs(generator, refs);
-
             this.name = getName(generator, name);
             this.collection = [];
             this.isInit = false;
 
             this.getGeneratorName = getGeneratorName;
             this.getSize = getSize;         
-
             this.init = init;         
             this.getAll = getAll;         
             this.getByIndex = getByIndex;         
@@ -123,15 +117,13 @@
             var result;
 
             if (id === undefined || id === null || !angular.isObject(obj)) {
-                // todo: trow error?
-                return null;
+                throw new Error('pipTestCollection: id parametr misseed in update function.');
             }
 
             result = this.findById(id, idField);
 
             if (angular.isObject(result)) {
                 result = _.assign(result, obj);
-                // todo: replace into collection ???
             } else {
                 result = null;
             }

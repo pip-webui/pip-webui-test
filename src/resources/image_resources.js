@@ -1,7 +1,6 @@
 /**
  * @file pipImageResources service
  * @copyright Digital Living Software Corp. 2014-2016
- * @todo:
  */
  
  /* global _, angular */
