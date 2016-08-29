@@ -529,818 +529,6 @@
 
 })();
 /**
- * @file pipAvatarsDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Avatars', []);
-
-    thisModule.factory('pipAvatarsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
-
-            var child = new pipDataGenerator('Avatars', []);
-
-            child.defaultContentType = 'image/jpeg';
-
-            child.generateObj = function generateObj() {
-                var image = pipImageResources.getImage(),
-                    imageName = pipBasicGeneratorServices.getFileName(image.link),
-                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
-                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),                
-                    obj = {
-                        id: pipBasicGeneratorServices.getObjectId(),
-                        name: imageName, 
-                        content_type: imageContentType, 
-                        length: chance.integer({min: 10000, max: 1000000}),
-                        creator_id: pipBasicGeneratorServices.getObjectId(),
-                        created: chance.date({year: 2015}).toJSON(), 
-                        refs: [
-
-                        ],
-                        url: image.link
-                    };
-
-                return obj;
-            }
-
-            return child;
-    }]);
-
-})();
-/**
- * @file pipDataGenerators
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators', []);
-
-    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
-
-        var dataGenerator = function(name, refs) {
-
-            // Collection name
-            this.name = name;
-            // List of references collection 
-            this.refs = refs; 
-
-             // Initializes object with default fields
-            this.initObject = function (obj) {
-                var result = this.newObject();
-
-                if (obj) {
-                    result = _.assign(result, obj);
-                }
-
-                return result;
-            }
-
-            // Create a new random object
-            this.newObject = function (refs) {
-                var objRefs = refs ? refs : this.refs,
-                    result = this.generateObj(objRefs);
-
-                return result;                
-            }
-
-            this.newObjectList = function (count, refs) {
-                var i, obj, result = [];
-
-                if (count > 0) {
-                    for (i = 0; i < count; i++) {
-                        obj = this.newObject(refs);
-                        result.push(obj);
-                    }
-                }
-
-                return result;                
-            }
-
-            this.initObjectList = function (obj) {
-                var i, newObj, result = [];
-
-                if (count > 0) {
-                    for (i = 0; i < count; i++) {
-                        newObj = this.newObject();
-                        result.push(_.assign(newObj, obj));
-                    }
-                }
-
-                return result;              
-            }
-
-            this.updateObject = function (obj, refs) {
-                var result = this.newObject(refs);
-
-                if (obj) {
-                    result = _.assign(result, obj);
-                    
-                    return result; 
-                } else {
-                    return null  
-                }
-            }
-
-            this.generateObj = function generateObj(refs) {
-                return {};
-            }
-
-        }
-
-        return dataGenerator;
-
-    }]);
-
-})();
- 
-/**
- * @file pipEventDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Event', []);
-
-    thisModule.factory('pipEventDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipNodeDataGenerator', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipNodeDataGenerator, $log) {
-
-            var refsDefault = {},
-                child,
-                eventIcon = {
-                            'danger': 'warn-circle',
-                            'info': 'info-circle-outline',
-                            'warn': 'warn-triangle'
-                        };
-
-            refsDefault['Nodes'] = pipNodeDataGenerator.newObjectList(10);
-            child = new pipDataGenerator('Events', refsDefault);
-
-            child.generateObj = function generateObj(refs) {
-                var temperature = chance.integer({min: -40, max: 50}),
-                    radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
-                    node, nodes,
-                    event;
-
-                    if (refs && angular.isObject(refs)) {
-                        nodes = refs['Nodes'] || [];
-                    } else {
-                        nodes = refsDefault['Nodes'] || [];
-                    }
-
-                    node = getOne(nodes);
-                    event = {
-                        id: pipBasicGeneratorServices.getObjectId(),
-                        node_id: getNodeId(node),
-                        node_name: getNodeName(node),
-                        description: getDesciption(temperature, radiation_level),
-                        temperature: temperature,
-                        rad_level: radiation_level,
-                        icon: getIcon(temperature, radiation_level)
-                    };
-
-                return event;
-            }
-
-            return child;
-
-            function getNodeId(node) {
-                var id;
-
-                if (node && node.id) {
-                    id = node.id;
-                } else {
-                    id = pipBasicGeneratorServices.getObjectId();
-                }
-
-                return id;
-            };     
-
-
-            function getNodeName(node) {
-                var name;
-
-                if (node && node.name) {
-                    name = node.name;
-                } else {
-                    name =  chance.name();
-                }
-
-                return name;
-            };   
-
-            function getIcon(temperature, radiation_level) {
-                var type = pipNodeDataGenerator.getNodeType(temperature, radiation_level);
-
-                return eventIcon[type] || eventIcon['info'];
-            };
-    
-            function getDesciption(temperature, radiation_level) {
-                var radiation_hi = 5, radiation_middle = 2,
-                    temperature_hi = 45, temperature_middle = 36,  
-                    temperature_low = -25, temperature_lower = -15,
-                    resultTemp, resultRad;
-
-                if (temperature > temperature_hi) {
-                    resultTemp = pipBasicGeneratorServices.getOne(['Thermal shock.', 'Eruption.']);
-                } else  if (temperature > temperature_middle) {
-                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature change.', 'Temperature increase.', 'Temperature decrease.']);
-                } else  if (temperature < temperature_low) {
-                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature dropped significantly.', 'Thermal shock.']);
-                } else  if (temperature < temperature_lower) {
-                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature change.', 'Temperature increase.', 'Temperature decrease.']);
-                } else {
-                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature change.', 'Temperature increase.', 'Temperature decrease.']);                    
-                }
-
-                if (radiation_level > radiation_hi) {
-                    resultRad = pipBasicGeneratorServices.getOne(['Radioactive emission.', 'Reactor explosion.', 'Nuclear tests.']);   
-                } else if (radiation_level > radiation_middle) {
-                    resultRad = pipBasicGeneratorServices.getOne(['Radiation level increase.', 'Radiation level decrease.', 'Radioactive emission.']); 
-                } else {
-                    resultRad = pipBasicGeneratorServices.getOne(['Radiation level decrease.', 'Radiation levels normal.']); 
-                }
-
-                return resultTemp + ' ' + resultRad;
-            };
-
-            function getOne(collection) {
-                var index, count;
-
-                count = collection.length;
-                index = _.random(count - 1);
-
-                return _.cloneDeep(collection[index]);
-            }
-
-    }]);
-
-})();
-/**
- * @file pipFeedbackDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Feedback', []);
-
-    thisModule.factory('pipFeedbackDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipUserDataGenerator', '$log', 'pipFilesDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, 
-        pipUserDataGenerator, $log, pipFilesDataGenerator) {
-
-            var refsDefault = {}, child;
-
-            refsDefault['Users'] = pipUserDataGenerator.newObjectList(10);
-            refsDefault['Files'] = pipFilesDataGenerator.newObjectList(30);
-            refsDefault['Pictures'] = pipFilesDataGenerator.newObjectList(30);
-
-            child = new pipDataGenerator('Feedback', refsDefault);
-
-            child.generateObj = function generateObj(refs) {
-                var feedback, 
-                    files, pictures, users, 
-                    user, 
-                    date = chance.timestamp();
-
-                    if (refs && angular.isObject(refs)) {
-                        users = refs['Users'] || [];
-                        files = refs['Files'] || [];
-                        pictures = refs['Pictures'] || [];
-                    } else {
-                        users = refsDefault['Users'] || [];
-                        files = refsDefault['Files'] || [];
-                        pictures = refsDefault['Pictures'] || [];
-                    }
-
-                    user = getOne(users);
-                    if (!user || !user.id) {
-                        user = pipUserDataGenerator.newObject();
-                    }
-
-                    feedback = {
-                        id: pipBasicGeneratorServices.getObjectId(),
-                        sender_id: user.id,
-                        sender_name: user.name,
-                        sender_email: user.email,
-                        type: pipBasicGeneratorServices.getOne(['support', 'feedback', 'copyright', 'business', 'advertising']), 
-                        title: chance.sentence(),
-                        content: chance.paragraph(),
-                        docs: getDocs(files),
-                        pic_ids: getPictures(pictures), 
-                        sent: new Date(date).toJSON()
-                    };
-
-                return feedback;
-            }
-
-            return child;
-
-            function getOne(collection) {
-                var index, count;
-
-                count = collection.length;
-                index = _.random(count - 1);
-
-                return _.cloneDeep(collection[index]);
-            }
-
-            function getDocs(collection) {
-                var docs, result = [], i;
-
-                docs = pipBasicGeneratorServices.getMany(collection, chance.integer({min: 0, max: 5}));
-                for (i = 0; i < docs.length; i++) {
-                    result.push({
-                        file_id: docs[i].id,
-                        file_name: docs[i].name
-                    });
-                }
-
-                return result;
-            }
-
-            function getPictures(collection) {
-                var pics, result = [], i;
-
-                pics = pipBasicGeneratorServices.getMany(collection, chance.integer({min: 0, max: 5}));
-                for (i = 0; i < pics.length; i++) {
-                    result.push(pics[i].id);
-                }
-
-                return result;
-            }                        
-
-    }]);
-
-})();
-/**
- * @file pipFilesDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Files', []);
-
-    thisModule.factory('pipFilesDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
-            
-            var child = new pipDataGenerator('Files', []);
-
-            child.generateObj = function generateObj() {
-                var image = pipImageResources.getImage(),
-                    imageName = pipBasicGeneratorServices.getFileName(image.link),
-                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
-                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),
-                    creatorId = pipBasicGeneratorServices.getObjectId(), 
-                    obj = {
-                        id: pipBasicGeneratorServices.getObjectId(),
-                        name: imageName, 
-                        content_type: imageContentType, 
-                        length: chance.integer({min: 10000, max: 1000000}),
-                        party_id: creatorId,
-                        creator_id: creatorId,
-                        created: chance.date({year: 2015}).toJSON(), 
-                        refs: [],
-                        url: image.link
-                    };
-
-                return obj;
-            }
-
-            return child;
-    }]);
-
-})();
-/**
- * @file Service provide utils
- * @copyright Digital Living Software Corp. 2014-2015
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipBasicGeneratorServices', []);
-
-    thisModule.service('pipBasicGeneratorServices', function () {
-        
-        var ABCD = 'abcdefghijklmnopqrstuvwxyz',
-            ABCD_CAPITALIZE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            DIGIT = '0123456789',
-            SIGN = ' .,;:-!?',
-            CONTENT_TYPES = {
-                'jpg': 'image/jpg',
-                'jpeg': 'image/jpeg',
-                'gif': 'image/gif',
-                'png': 'image/png'
-            },
-
-            SERVER_URL = 'http://alpha.pipservices.net';
-
-        return {
-            ABCD: ABCD,
-            ABCD_CAPITALIZE: ABCD_CAPITALIZE,
-            DIGIT: DIGIT,
-            SIGN: SIGN,
-
-            getObjectId: getObjectId,
-            getOneWord: getOneWord,
-            getPassword: getPassword,
-            getEmail: getEmail,
-            serverUrl:serverUrl,
-            getName: getName,
-            getOne: getOne,
-            getMany: getMany,
-            getFileName: getFileName,
-            getFileExt: getFileExt,
-            getContentType: getContentType
-        };
-
-        // Returns random ID
-        function getObjectId(n, allowedChars) {
-            var poolObjectId = ABCD + DIGIT,
-                length = n || 24,
-                pool = allowedChars || poolObjectId;
-
-            return chance.string({length: length, pool: pool});
-        }
-
-        function getEmail() {
-            return chance.email();
-        }
-
-        function getPassword() {
-            return getOneWord(8);
-        }
-
-        // Returns random one from the passed asset
-        function getOne(arr) {
-            return _.sample(arr);
-        }
-
-        // Returns random one from the passed asset
-        function getMany(arr, count) {
-            var number = count ? count : Math.floor(Math.random() * arr.length); 
-
-            return _.sampleSize(arr, number);
-        }
-
-        function serverUrl(serverUrl) {
-            if (serverUrl) {
-                SERVER_URL = serverUrl;
-            }
-
-            return SERVER_URL;
-        }
-
-        // Returns random word
-        function getOneWord(n) {
-            var length = n && n > 0 ? Math.floor(Math.random() * n) : null,
-                poolWord = ABCD + ABCD_CAPITALIZE;
-
-            return chance.word({length: length, pool: poolWord});
-        }
-
-        function getName() {
-            var name = chance.first() + ' ' + chance.name();
-
-            return name;
-        }
-
-        function getFileName(url) {
-             var name = url.slice(url.lastIndexOf('/') + 1, url.length).split('?')[0];
-
-             return name;
-        }
-
-        function getFileExt(name) {
-             var ext = name.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
-
-             return ext;
-        }
-
-        function getContentType(fileExt) {
-            var default_CT = 'image/jpg',
-                result;
-
-            result = CONTENT_TYPES[fileExt];
-
-            if (!result) {
-                result = default_CT;
-            }
-
-            return result;
-        }
-
-    });
-
-})();
-
-/**
- * @file pipNodeDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Node', []);
-
-    thisModule.factory('pipNodeDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-
-            var child = new pipDataGenerator('Nodes', []),
-                pointCollors = {
-                        'danger': '#EF5350',
-                        'info': '#8BC34A',
-                        'warn': '#FFD54F'
-                    };
-
-            child.getNodeType = getNodeType;
-            child.generateObj = function generateObj() {
-                var temperature = chance.integer({min: -40, max: 50}),
-                    radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
-                    type = getNodeType(temperature, radiation_level),
-                    node = {
-                        id: pipBasicGeneratorServices.getObjectId(),
-                        name: chance.name(),
-                        temperature: temperature, 
-                        radiation_level: radiation_level,
-                        type: type,
-                        location_points: {
-                            type: 'Point',
-                            coordinates: [ chance.floating({min: 32, max: 42}), chance.floating({min: -121, max: -70}) ],
-                            fill: getNodeColor(type)
-                        },
-                    };
-
-                return node;
-            }
-
-            return child;
-
-            function getNodeColor(type) {
-                return pointCollors[type];
-            }
-
-            function getNodeType(temperature, radiation_level) {
-                var hi = 10, low = 4, level_denger = 8, level_warn = 4, 
-                    radiation_hi = 5, radiation_middle = 2,
-                    temperature_hi = 45, temperature_middle = 36,  
-                    temperature_low = -25, temperature_lower = -15,  
-                    level = 0;
-
-                if (temperature > temperature_hi || temperature < temperature_low) {
-                    level += hi;
-                } else if (temperature > temperature_middle || temperature < temperature_lower) {
-                    level += low;
-                }
-
-                if (radiation_level > radiation_hi) {
-                     level += hi;
-                } else if (radiation_level > radiation_middle) {
-                    level += low;
-                }
-
-                if (level >= level_denger) {
-                    return 'danger';
-                } else if (level >= level_warn) {
-                    return 'warn';
-                } else {
-                    return 'info';
-                }
-            };
-
-    }]);
-
-})();
-/**
- * @file pipPartyAccessDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.PartyAccess', []);
-
-    thisModule.factory('pipPartyAccessDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-            
-            var child = new pipDataGenerator('PartyAccess', []);
-
-            child.isContributorChance = 30;
-            child.isManagerChance = 30;
-            child.defaultShareLevel = 0;
-            child.defaultType = 'partner';
-
-            child.generateObj = function generateObj() {
-                var isContributor = chance.bool({likelihood: child.isContributorChance}),
-                    obj = {
-                        share_level: child.defaultShareLevel,
-                        type: child.defaultType,
-                        party_name: chance.first() + ' ' + chance.name(),
-                        party_id: pipBasicGeneratorServices.getObjectId(),
-                        contributor: chance.bool({likelihood: child.isContributorChance}),
-                        manager: isContributor ? chance.bool({likelihood: child.isManagerChance}) : false,
-                        id: pipBasicGeneratorServices.getObjectId()
-                    };
-
-                return obj;
-            }
-
-            return child;
-    }]);
-
-})();
-/**
- * @file pipPartyDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Party', []);
-
-    thisModule.factory('pipPartyDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-
-            var child = new pipDataGenerator('Parties', []);
-
-            child.defaultType = 'person';
-            child.defaultJoin = 'approve';
-
-            child.generateObj = function generateObj() {
-                var date1 = chance.timestamp(),
-                    date2 = chance.timestamp(),
-                    party = {
-                        name: chance.first() + ' ' + chance.name(),
-                        email: chance.email(),
-                        type: child.defaultType,
-                        gender: chance.gender().toLowerCase(),
-                        loc_name: chance.address(),
-                        loc_pos: {
-                            type: 'Point',
-                            coordinates: [
-                                chance.floating({min: 32, max: 40}),
-                                chance.floating({min: -110, max: -90})
-                            ]
-                        },
-                        join: child.defaultJoin,
-                        updated: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
-                        created: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
-                        id: pipBasicGeneratorServices.getObjectId()
-                    };
-
-                return party;
-            }
-
-            return child;
-    }]);
-
-})();
- 
-/**
- * @file pipSessionsDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Sessions', []);
-
-    thisModule.factory('pipSessionsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-            
-            var child = new pipDataGenerator('Sessions', []);
-
-            child.generateObj = function generateObj() {
-                var date = new Date(chance.timestamp()),
-                    session = {
-                        address: chance.ip(),
-                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), 
-                        platform: pipBasicGeneratorServices.getOne(['windows 8', 'windows 7', 'linux']),
-                        last_req: date.toJSON(),
-                        opened: date.toJSON(),
-                        id: pipBasicGeneratorServices.getObjectId()
-                    };
-
-                return session;
-            }
-
-            return child;
-    }]);
-
-})();
-/**
- * @file pipSettingsDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.Settings', []);
-
-    thisModule.factory('pipSettingsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
-
-            var child = new pipDataGenerator('Settings', []);
-
-            child.generateObj = function generateObj() {
-                var id = pipBasicGeneratorServices.getObjectId(),
-                    date = chance.timestamp(),
-                    setting = {
-                        settings: {
-                            party_id: id,
-                            creator_id: id,
-                            goals: {},
-                            areas: {},
-                            intro: {}
-                        },
-                        updated: new Date(date).toJSON()
-                    };
-
-                return setting;
-            }
-
-            return child;
-    }]);
-
-})();
- 
-/**
- * @file pipUserDataGenerator
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-(function () {
-    'use strict';
-
-    var thisModule = angular.module('pipGenerators.User', []);
-
-    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log, 
-        pipPartyAccessDataGenerator, pipSessionsDataGenerator) {
-
-            var refsDefault = {};
-
-            refsDefault['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
-            refsDefault['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
-
-            var child = new pipDataGenerator('User', refsDefault);
-
-            child.generateObj = function generateObj(refs) {
-                var date1 = chance.timestamp(),
-                    date2 = chance.timestamp(),
-                    nowDate = new Date(),
-                    user,
-                    PartyAccess = [],
-                    Sessions = [],
-                    currentSession = pipSessionsDataGenerator.initObject({
-                        last_req: nowDate.toJSON(),
-                        opened: nowDate.toJSON(),
-                    });
-
-                if (refs && angular.isObject(refs)) {
-                    PartyAccess = refs['PartyAccess'] || [];
-                    Sessions = refs['Sessions'] || [];
-                } else {
-                    PartyAccess = refsDefault['PartyAccess'] || [];
-                    Sessions = refsDefault['Sessions'] || [];
-                }
-
-                    user = {
-                        pwd_last_fail: null,
-                        pwd_fail_count: 0,
-                        name: pipBasicGeneratorServices.getName(),
-                        email: chance.email(),
-                        language: pipBasicGeneratorServices.getOne(['en', 'ru']), 
-                        paid: chance.bool({likelihood: 30}),
-                        admin: false,
-                        party_access: pipBasicGeneratorServices.getMany(PartyAccess),
-                        sessions: pipBasicGeneratorServices.getMany(Sessions),
-                        signin: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
-                        signup: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
-                        active: true,
-                        lock: false,
-                        email_ver: false,
-                        id: pipBasicGeneratorServices.getObjectId(),
-                        last_session_id: currentSession.id,
-                        theme: pipBasicGeneratorServices.getOne(['navy', 'blue', 'amber', 'grey', 'orange']),   
-                    };
-
-                    user.sessions.push(currentSession);
-
-                return user;
-            }
-
-            return child;
-    }]);
-
-})();
- 
-/**
  * @file Image  resources for samples
  * @copyright Digital Living Software Corp. 2014-2016
  */
@@ -4455,6 +3643,818 @@
 })();
  
 
+/**
+ * @file pipAvatarsDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Avatars', []);
+
+    thisModule.factory('pipAvatarsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
+
+            var child = new pipDataGenerator('Avatars', []);
+
+            child.defaultContentType = 'image/jpeg';
+
+            child.generateObj = function generateObj() {
+                var image = pipImageResources.getImage(),
+                    imageName = pipBasicGeneratorServices.getFileName(image.link),
+                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
+                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),                
+                    obj = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        name: imageName, 
+                        content_type: imageContentType, 
+                        length: chance.integer({min: 10000, max: 1000000}),
+                        creator_id: pipBasicGeneratorServices.getObjectId(),
+                        created: chance.date({year: 2015}).toJSON(), 
+                        refs: [
+
+                        ],
+                        url: image.link
+                    };
+
+                return obj;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
+ * @file pipDataGenerators
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators', []);
+
+    thisModule.factory('pipDataGenerator', ['$log', function ($log) {
+
+        var dataGenerator = function(name, refs) {
+
+            // Collection name
+            this.name = name;
+            // List of references collection 
+            this.refs = refs; 
+
+             // Initializes object with default fields
+            this.initObject = function (obj) {
+                var result = this.newObject();
+
+                if (obj) {
+                    result = _.assign(result, obj);
+                }
+
+                return result;
+            }
+
+            // Create a new random object
+            this.newObject = function (refs) {
+                var objRefs = refs ? refs : this.refs,
+                    result = this.generateObj(objRefs);
+
+                return result;                
+            }
+
+            this.newObjectList = function (count, refs) {
+                var i, obj, result = [];
+
+                if (count > 0) {
+                    for (i = 0; i < count; i++) {
+                        obj = this.newObject(refs);
+                        result.push(obj);
+                    }
+                }
+
+                return result;                
+            }
+
+            this.initObjectList = function (obj) {
+                var i, newObj, result = [];
+
+                if (count > 0) {
+                    for (i = 0; i < count; i++) {
+                        newObj = this.newObject();
+                        result.push(_.assign(newObj, obj));
+                    }
+                }
+
+                return result;              
+            }
+
+            this.updateObject = function (obj, refs) {
+                var result = this.newObject(refs);
+
+                if (obj) {
+                    result = _.assign(result, obj);
+                    
+                    return result; 
+                } else {
+                    return null  
+                }
+            }
+
+            this.generateObj = function generateObj(refs) {
+                return {};
+            }
+
+        }
+
+        return dataGenerator;
+
+    }]);
+
+})();
+ 
+/**
+ * @file pipEventDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Event', []);
+
+    thisModule.factory('pipEventDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipNodeDataGenerator', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipNodeDataGenerator, $log) {
+
+            var refsDefault = {},
+                child,
+                eventIcon = {
+                            'danger': 'warn-circle',
+                            'info': 'info-circle-outline',
+                            'warn': 'warn-triangle'
+                        };
+
+            refsDefault['Nodes'] = pipNodeDataGenerator.newObjectList(10);
+            child = new pipDataGenerator('Events', refsDefault);
+
+            child.generateObj = function generateObj(refs) {
+                var temperature = chance.integer({min: -40, max: 50}),
+                    radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
+                    node, nodes,
+                    event;
+
+                    if (refs && angular.isObject(refs)) {
+                        nodes = refs['Nodes'] || [];
+                    } else {
+                        nodes = refsDefault['Nodes'] || [];
+                    }
+
+                    node = getOne(nodes);
+                    event = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        node_id: getNodeId(node),
+                        node_name: getNodeName(node),
+                        description: getDesciption(temperature, radiation_level),
+                        temperature: temperature,
+                        rad_level: radiation_level,
+                        icon: getIcon(temperature, radiation_level)
+                    };
+
+                return event;
+            }
+
+            return child;
+
+            function getNodeId(node) {
+                var id;
+
+                if (node && node.id) {
+                    id = node.id;
+                } else {
+                    id = pipBasicGeneratorServices.getObjectId();
+                }
+
+                return id;
+            };     
+
+
+            function getNodeName(node) {
+                var name;
+
+                if (node && node.name) {
+                    name = node.name;
+                } else {
+                    name =  chance.name();
+                }
+
+                return name;
+            };   
+
+            function getIcon(temperature, radiation_level) {
+                var type = pipNodeDataGenerator.getNodeType(temperature, radiation_level);
+
+                return eventIcon[type] || eventIcon['info'];
+            };
+    
+            function getDesciption(temperature, radiation_level) {
+                var radiation_hi = 5, radiation_middle = 2,
+                    temperature_hi = 45, temperature_middle = 36,  
+                    temperature_low = -25, temperature_lower = -15,
+                    resultTemp, resultRad;
+
+                if (temperature > temperature_hi) {
+                    resultTemp = pipBasicGeneratorServices.getOne(['Thermal shock.', 'Eruption.']);
+                } else  if (temperature > temperature_middle) {
+                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature change.', 'Temperature increase.', 'Temperature decrease.']);
+                } else  if (temperature < temperature_low) {
+                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature dropped significantly.', 'Thermal shock.']);
+                } else  if (temperature < temperature_lower) {
+                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature change.', 'Temperature increase.', 'Temperature decrease.']);
+                } else {
+                    resultTemp = pipBasicGeneratorServices.getOne(['Temperature change.', 'Temperature increase.', 'Temperature decrease.']);                    
+                }
+
+                if (radiation_level > radiation_hi) {
+                    resultRad = pipBasicGeneratorServices.getOne(['Radioactive emission.', 'Reactor explosion.', 'Nuclear tests.']);   
+                } else if (radiation_level > radiation_middle) {
+                    resultRad = pipBasicGeneratorServices.getOne(['Radiation level increase.', 'Radiation level decrease.', 'Radioactive emission.']); 
+                } else {
+                    resultRad = pipBasicGeneratorServices.getOne(['Radiation level decrease.', 'Radiation levels normal.']); 
+                }
+
+                return resultTemp + ' ' + resultRad;
+            };
+
+            function getOne(collection) {
+                var index, count;
+
+                count = collection.length;
+                index = _.random(count - 1);
+
+                return _.cloneDeep(collection[index]);
+            }
+
+    }]);
+
+})();
+/**
+ * @file pipFeedbackDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Feedback', []);
+
+    thisModule.factory('pipFeedbackDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipUserDataGenerator', '$log', 'pipFilesDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, 
+        pipUserDataGenerator, $log, pipFilesDataGenerator) {
+
+            var refsDefault = {}, child;
+
+            refsDefault['Users'] = pipUserDataGenerator.newObjectList(10);
+            refsDefault['Files'] = pipFilesDataGenerator.newObjectList(30);
+            refsDefault['Pictures'] = pipFilesDataGenerator.newObjectList(30);
+
+            child = new pipDataGenerator('Feedback', refsDefault);
+
+            child.generateObj = function generateObj(refs) {
+                var feedback, 
+                    files, pictures, users, 
+                    user, 
+                    date = chance.timestamp();
+
+                    if (refs && angular.isObject(refs)) {
+                        users = refs['Users'] || [];
+                        files = refs['Files'] || [];
+                        pictures = refs['Pictures'] || [];
+                    } else {
+                        users = refsDefault['Users'] || [];
+                        files = refsDefault['Files'] || [];
+                        pictures = refsDefault['Pictures'] || [];
+                    }
+
+                    user = getOne(users);
+                    if (!user || !user.id) {
+                        user = pipUserDataGenerator.newObject();
+                    }
+
+                    feedback = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        sender_id: user.id,
+                        sender_name: user.name,
+                        sender_email: user.email,
+                        type: pipBasicGeneratorServices.getOne(['support', 'feedback', 'copyright', 'business', 'advertising']), 
+                        title: chance.sentence(),
+                        content: chance.paragraph(),
+                        docs: getDocs(files),
+                        pic_ids: getPictures(pictures), 
+                        sent: new Date(date).toJSON()
+                    };
+
+                return feedback;
+            }
+
+            return child;
+
+            function getOne(collection) {
+                var index, count;
+
+                count = collection.length;
+                index = _.random(count - 1);
+
+                return _.cloneDeep(collection[index]);
+            }
+
+            function getDocs(collection) {
+                var docs, result = [], i;
+
+                docs = pipBasicGeneratorServices.getMany(collection, chance.integer({min: 0, max: 5}));
+                for (i = 0; i < docs.length; i++) {
+                    result.push({
+                        file_id: docs[i].id,
+                        file_name: docs[i].name
+                    });
+                }
+
+                return result;
+            }
+
+            function getPictures(collection) {
+                var pics, result = [], i;
+
+                pics = pipBasicGeneratorServices.getMany(collection, chance.integer({min: 0, max: 5}));
+                for (i = 0; i < pics.length; i++) {
+                    result.push(pics[i].id);
+                }
+
+                return result;
+            }                        
+
+    }]);
+
+})();
+/**
+ * @file pipFilesDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Files', []);
+
+    thisModule.factory('pipFilesDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', 'pipImageResources', '$log', function (pipDataGenerator, pipBasicGeneratorServices, pipImageResources, $log) {
+            
+            var child = new pipDataGenerator('Files', []);
+
+            child.generateObj = function generateObj() {
+                var image = pipImageResources.getImage(),
+                    imageName = pipBasicGeneratorServices.getFileName(image.link),
+                    imageExt = pipBasicGeneratorServices.getFileExt(imageName),
+                    imageContentType = pipBasicGeneratorServices.getContentType(imageExt),
+                    creatorId = pipBasicGeneratorServices.getObjectId(), 
+                    obj = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        name: imageName, 
+                        content_type: imageContentType, 
+                        length: chance.integer({min: 10000, max: 1000000}),
+                        party_id: creatorId,
+                        creator_id: creatorId,
+                        created: chance.date({year: 2015}).toJSON(), 
+                        refs: [],
+                        url: image.link
+                    };
+
+                return obj;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
+ * @file Service provide utils
+ * @copyright Digital Living Software Corp. 2014-2015
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipBasicGeneratorServices', []);
+
+    thisModule.service('pipBasicGeneratorServices', function () {
+        
+        var ABCD = 'abcdefghijklmnopqrstuvwxyz',
+            ABCD_CAPITALIZE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            DIGIT = '0123456789',
+            SIGN = ' .,;:-!?',
+            CONTENT_TYPES = {
+                'jpg': 'image/jpg',
+                'jpeg': 'image/jpeg',
+                'gif': 'image/gif',
+                'png': 'image/png'
+            },
+
+            SERVER_URL = 'http://alpha.pipservices.net';
+
+        return {
+            ABCD: ABCD,
+            ABCD_CAPITALIZE: ABCD_CAPITALIZE,
+            DIGIT: DIGIT,
+            SIGN: SIGN,
+
+            getObjectId: getObjectId,
+            getOneWord: getOneWord,
+            getPassword: getPassword,
+            getEmail: getEmail,
+            serverUrl:serverUrl,
+            getName: getName,
+            getOne: getOne,
+            getMany: getMany,
+            getFileName: getFileName,
+            getFileExt: getFileExt,
+            getContentType: getContentType
+        };
+
+        // Returns random ID
+        function getObjectId(n, allowedChars) {
+            var poolObjectId = ABCD + DIGIT,
+                length = n || 24,
+                pool = allowedChars || poolObjectId;
+
+            return chance.string({length: length, pool: pool});
+        }
+
+        function getEmail() {
+            return chance.email();
+        }
+
+        function getPassword() {
+            return getOneWord(8);
+        }
+
+        // Returns random one from the passed asset
+        function getOne(arr) {
+            return _.sample(arr);
+        }
+
+        // Returns random one from the passed asset
+        function getMany(arr, count) {
+            var number = count ? count : Math.floor(Math.random() * arr.length); 
+
+            return _.sampleSize(arr, number);
+        }
+
+        function serverUrl(serverUrl) {
+            if (serverUrl) {
+                SERVER_URL = serverUrl;
+            }
+
+            return SERVER_URL;
+        }
+
+        // Returns random word
+        function getOneWord(n) {
+            var length = n && n > 0 ? Math.floor(Math.random() * n) : null,
+                poolWord = ABCD + ABCD_CAPITALIZE;
+
+            return chance.word({length: length, pool: poolWord});
+        }
+
+        function getName() {
+            var name = chance.first() + ' ' + chance.name();
+
+            return name;
+        }
+
+        function getFileName(url) {
+             var name = url.slice(url.lastIndexOf('/') + 1, url.length).split('?')[0];
+
+             return name;
+        }
+
+        function getFileExt(name) {
+             var ext = name.slice(name.lastIndexOf('.') + 1, name.length).split('?')[0];
+
+             return ext;
+        }
+
+        function getContentType(fileExt) {
+            var default_CT = 'image/jpg',
+                result;
+
+            result = CONTENT_TYPES[fileExt];
+
+            if (!result) {
+                result = default_CT;
+            }
+
+            return result;
+        }
+
+    });
+
+})();
+
+/**
+ * @file pipNodeDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Node', []);
+
+    thisModule.factory('pipNodeDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+
+            var child = new pipDataGenerator('Nodes', []),
+                pointCollors = {
+                        'danger': '#EF5350',
+                        'info': '#8BC34A',
+                        'warn': '#FFD54F'
+                    };
+
+            child.getNodeType = getNodeType;
+            child.generateObj = function generateObj() {
+                var temperature = chance.integer({min: -40, max: 50}),
+                    radiation_level = chance.bool({likelihood: 70}) ? chance.floating({fixed: 2, min: 0, max: 5}) : chance.floating({fixed: 2, min: 0, max: 22}),
+                    type = getNodeType(temperature, radiation_level),
+                    node = {
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        name: chance.name(),
+                        temperature: temperature, 
+                        radiation_level: radiation_level,
+                        type: type,
+                        location_points: {
+                            type: 'Point',
+                            coordinates: [ chance.floating({min: 32, max: 42}), chance.floating({min: -121, max: -70}) ],
+                            fill: getNodeColor(type)
+                        },
+                    };
+
+                return node;
+            }
+
+            return child;
+
+            function getNodeColor(type) {
+                return pointCollors[type];
+            }
+
+            function getNodeType(temperature, radiation_level) {
+                var hi = 10, low = 4, level_denger = 8, level_warn = 4, 
+                    radiation_hi = 5, radiation_middle = 2,
+                    temperature_hi = 45, temperature_middle = 36,  
+                    temperature_low = -25, temperature_lower = -15,  
+                    level = 0;
+
+                if (temperature > temperature_hi || temperature < temperature_low) {
+                    level += hi;
+                } else if (temperature > temperature_middle || temperature < temperature_lower) {
+                    level += low;
+                }
+
+                if (radiation_level > radiation_hi) {
+                     level += hi;
+                } else if (radiation_level > radiation_middle) {
+                    level += low;
+                }
+
+                if (level >= level_denger) {
+                    return 'danger';
+                } else if (level >= level_warn) {
+                    return 'warn';
+                } else {
+                    return 'info';
+                }
+            };
+
+    }]);
+
+})();
+/**
+ * @file pipPartyAccessDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.PartyAccess', []);
+
+    thisModule.factory('pipPartyAccessDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            
+            var child = new pipDataGenerator('PartyAccess', []);
+
+            child.isContributorChance = 30;
+            child.isManagerChance = 30;
+            child.defaultShareLevel = 0;
+            child.defaultType = 'partner';
+
+            child.generateObj = function generateObj() {
+                var isContributor = chance.bool({likelihood: child.isContributorChance}),
+                    obj = {
+                        share_level: child.defaultShareLevel,
+                        type: child.defaultType,
+                        party_name: chance.first() + ' ' + chance.name(),
+                        party_id: pipBasicGeneratorServices.getObjectId(),
+                        contributor: chance.bool({likelihood: child.isContributorChance}),
+                        manager: isContributor ? chance.bool({likelihood: child.isManagerChance}) : false,
+                        id: pipBasicGeneratorServices.getObjectId()
+                    };
+
+                return obj;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
+ * @file pipPartyDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Party', []);
+
+    thisModule.factory('pipPartyDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+
+            var child = new pipDataGenerator('Parties', []);
+
+            child.defaultType = 'person';
+            child.defaultJoin = 'approve';
+
+            child.generateObj = function generateObj() {
+                var date1 = chance.timestamp(),
+                    date2 = chance.timestamp(),
+                    party = {
+                        name: chance.first() + ' ' + chance.name(),
+                        email: chance.email(),
+                        type: child.defaultType,
+                        gender: chance.gender().toLowerCase(),
+                        loc_name: chance.address(),
+                        loc_pos: {
+                            type: 'Point',
+                            coordinates: [
+                                chance.floating({min: 32, max: 40}),
+                                chance.floating({min: -110, max: -90})
+                            ]
+                        },
+                        join: child.defaultJoin,
+                        updated: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
+                        created: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
+                        id: pipBasicGeneratorServices.getObjectId()
+                    };
+
+                return party;
+            }
+
+            return child;
+    }]);
+
+})();
+ 
+/**
+ * @file pipSessionsDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Sessions', []);
+
+    thisModule.factory('pipSessionsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+            
+            var child = new pipDataGenerator('Sessions', []);
+
+            child.generateObj = function generateObj() {
+                var date = new Date(chance.timestamp()),
+                    session = {
+                        address: chance.ip(),
+                        client: pipBasicGeneratorServices.getOne(['chrome', 'mozilla', 'explorer']), 
+                        platform: pipBasicGeneratorServices.getOne(['windows 8', 'windows 7', 'linux']),
+                        last_req: date.toJSON(),
+                        opened: date.toJSON(),
+                        id: pipBasicGeneratorServices.getObjectId()
+                    };
+
+                return session;
+            }
+
+            return child;
+    }]);
+
+})();
+/**
+ * @file pipSettingsDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.Settings', []);
+
+    thisModule.factory('pipSettingsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+
+            var child = new pipDataGenerator('Settings', []);
+
+            child.generateObj = function generateObj() {
+                var id = pipBasicGeneratorServices.getObjectId(),
+                    date = chance.timestamp(),
+                    setting = {
+                        settings: {
+                            party_id: id,
+                            creator_id: id,
+                            goals: {},
+                            areas: {},
+                            intro: {}
+                        },
+                        updated: new Date(date).toJSON()
+                    };
+
+                return setting;
+            }
+
+            return child;
+    }]);
+
+})();
+ 
+/**
+ * @file pipUserDataGenerator
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+
+(function () {
+    'use strict';
+
+    var thisModule = angular.module('pipGenerators.User', []);
+
+    thisModule.factory('pipUserDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log, 
+        pipPartyAccessDataGenerator, pipSessionsDataGenerator) {
+
+            var refsDefault = {};
+
+            refsDefault['PartyAccess'] = pipPartyAccessDataGenerator.newObjectList(10);
+            refsDefault['Sessions'] = pipSessionsDataGenerator.newObjectList(10);
+
+            var child = new pipDataGenerator('User', refsDefault);
+
+            child.generateObj = function generateObj(refs) {
+                var date1 = chance.timestamp(),
+                    date2 = chance.timestamp(),
+                    nowDate = new Date(),
+                    user,
+                    PartyAccess = [],
+                    Sessions = [],
+                    currentSession = pipSessionsDataGenerator.initObject({
+                        last_req: nowDate.toJSON(),
+                        opened: nowDate.toJSON(),
+                    });
+
+                if (refs && angular.isObject(refs)) {
+                    PartyAccess = refs['PartyAccess'] || [];
+                    Sessions = refs['Sessions'] || [];
+                } else {
+                    PartyAccess = refsDefault['PartyAccess'] || [];
+                    Sessions = refsDefault['Sessions'] || [];
+                }
+
+                    user = {
+                        pwd_last_fail: null,
+                        pwd_fail_count: 0,
+                        name: pipBasicGeneratorServices.getName(),
+                        email: chance.email(),
+                        language: pipBasicGeneratorServices.getOne(['en', 'ru']), 
+                        paid: chance.bool({likelihood: 30}),
+                        admin: false,
+                        party_access: pipBasicGeneratorServices.getMany(PartyAccess),
+                        sessions: pipBasicGeneratorServices.getMany(Sessions),
+                        signin: date1 > date2 ? new Date(date1).toJSON() : new Date(date2).toJSON(),
+                        signup: date1 > date2 ? new Date(date2).toJSON() : new Date(date1).toJSON(),
+                        active: true,
+                        lock: false,
+                        email_ver: false,
+                        id: pipBasicGeneratorServices.getObjectId(),
+                        last_session_id: currentSession.id,
+                        theme: pipBasicGeneratorServices.getOne(['navy', 'blue', 'amber', 'grey', 'orange']),   
+                    };
+
+                    user.sessions.push(currentSession);
+
+                return user;
+            }
+
+            return child;
+    }]);
+
+})();
+ 
 /**
  * @file Rest API enumerations service
  * @copyright Digital Living Software Corp. 2014-2016
