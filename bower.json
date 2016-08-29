@@ -1,7 +1,7 @@
 {
     "name": "pip-webui-test",
     "description": "Test framework for Pip.WebUI",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "main": "",
     "authors": [
         {
