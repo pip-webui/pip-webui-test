@@ -1,5 +1,5 @@
 /**
- * @file pipSettingsDataGenerator
+ * @file pipDataSettingsGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
@@ -8,7 +8,7 @@
 
     var thisModule = angular.module('pipGenerators.Settings', []);
 
-    thisModule.factory('pipSettingsDataGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+    thisModule.factory('pipDataSettingsGenerator', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
 
             var child = new pipDataGenerator('Settings', []);
 

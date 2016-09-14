@@ -17,7 +17,7 @@
             pipBasicGeneratorServices, 
             pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator, pipPartyDataGenerator,
             TestCollection, pipTestDataService,
-            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
+            pipImageResources, pipAvatarsDataGenerator, pipFilesDataGenerator, pipDataSettingsGenerator, pipFeedbackDataGenerator) {
 
             var dataset = prepareData();
 
@@ -134,7 +134,7 @@
                 tcParties.init(parties);
                 dataSet.add(tcParties); 
 
-                tcSettings = new TestCollection(pipSettingsDataGenerator, 'SettingsTestCollection', settings.length);
+                tcSettings = new TestCollection(pipDataSettingsGenerator, 'SettingsTestCollection', settings.length);
                 tcSettings.init(settings);
                 dataSet.add(tcSettings); 
 
@@ -1055,7 +1055,7 @@
                     throw new Error('MocksController: Parties collection is empty');
                 }
 
-                setting = pipSettingsDataGenerator.initObject({
+                setting = pipDataSettingsGenerator.initObject({
                     party_id: party.id,
                     creator_id: party.id
                 });

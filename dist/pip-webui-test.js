@@ -315,9 +315,9 @@
     var thisModule = angular.module('pipTestDataService', []);
 
     thisModule.factory('pipTestDataService', 
-        ['pipTestDataSet', 'pipUserDataGenerator', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', 'pipPartyDataGenerator', 'TestCollection', 'pipNodeDataGenerator', 'pipAvatarsDataGenerator', 'pipEventDataGenerator', 'pipSettingsDataGenerator', 'pipFeedbackDataGenerator', function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
+        ['pipTestDataSet', 'pipUserDataGenerator', 'pipPartyAccessDataGenerator', 'pipSessionsDataGenerator', 'pipPartyDataGenerator', 'TestCollection', 'pipNodeDataGenerator', 'pipAvatarsDataGenerator', 'pipEventDataGenerator', 'pipDataSettingsGenerator', 'pipFeedbackDataGenerator', function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
                  pipPartyDataGenerator, TestCollection, pipNodeDataGenerator, pipAvatarsDataGenerator,
-                 pipEventDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
+                 pipEventDataGenerator, pipDataSettingsGenerator, pipFeedbackDataGenerator) {
 
             // Angular service that holds singleton test dataset that is shared across all
             var dataSet = new pipTestDataSet();
@@ -409,7 +409,7 @@
                 tcParties.init(parties);
                 dataSet.add(tcParties);
 
-                tcSettings = new TestCollection(pipSettingsDataGenerator, 'SettingsTestCollection', settings.length);
+                tcSettings = new TestCollection(pipDataSettingsGenerator, 'SettingsTestCollection', settings.length);
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
@@ -1235,7 +1235,7 @@
 
 })();
 /**
- * @file pipSettingsDataGenerator
+ * @file pipDataSettingsGenerator
  * @copyright Digital Living Software Corp. 2014-2016
  */
 
@@ -1244,7 +1244,7 @@
 
     var thisModule = angular.module('pipGenerators.Settings', []);
 
-    thisModule.factory('pipSettingsDataGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
+    thisModule.factory('pipDataSettingsGenerator', ['pipDataGenerator', 'pipBasicGeneratorServices', '$log', function (pipDataGenerator, pipBasicGeneratorServices, $log) {
 
             var child = new pipDataGenerator('Settings', []);
 

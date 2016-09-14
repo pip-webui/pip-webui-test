@@ -13,7 +13,7 @@
     thisModule.factory('pipTestDataService', 
         function(pipTestDataSet, pipUserDataGenerator, pipPartyAccessDataGenerator, pipSessionsDataGenerator,
                  pipPartyDataGenerator, TestCollection, pipNodeDataGenerator, pipAvatarsDataGenerator,
-                 pipEventDataGenerator, pipSettingsDataGenerator, pipFeedbackDataGenerator) {
+                 pipEventDataGenerator, pipDataSettingsGenerator, pipFeedbackDataGenerator) {
 
             // Angular service that holds singleton test dataset that is shared across all
             var dataSet = new pipTestDataSet();
@@ -105,7 +105,7 @@
                 tcParties.init(parties);
                 dataSet.add(tcParties);
 
-                tcSettings = new TestCollection(pipSettingsDataGenerator, 'SettingsTestCollection', settings.length);
+                tcSettings = new TestCollection(pipDataSettingsGenerator, 'SettingsTestCollection', settings.length);
                 tcSettings.init(settings);
                 dataSet.add(tcSettings);
 
